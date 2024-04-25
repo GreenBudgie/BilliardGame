@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3 uid="uid://b6rmsb7c3jf2a"]
+
+[ext_resource type="PackedScene" uid="uid://cdokpkldvgmps" path="res://scenes/billiard_table.tscn" id="1_e8363"]
+[ext_resource type="PackedScene" uid="uid://dnfowjpbcp587" path="res://scenes/cue_ball.tscn" id="1_wylgy"]
+[ext_resource type="PackedScene" uid="uid://dkpq24jlytnuu" path="res://scenes/ball_triangle.tscn" id="2_l3vn8"]
+
+[node name="Main" type="Node2D"]
+
+[node name="BilliardTable" parent="." instance=ExtResource("1_e8363")]
+position = Vector2(960, 540)
+
+[node name="CueBall" parent="." instance=ExtResource("1_wylgy")]
+position = Vector2(587, 540)
+
+[node name="BallTriangle" parent="." instance=ExtResource("2_l3vn8")]
+position = Vector2(1401, 540)

@@ -1,0 +1,51 @@
+[gd_scene load_steps=9 format=3 uid="uid://8rkc8w2aqbe7"]
+
+[ext_resource type="PhysicsMaterial" uid="uid://c2rdm6hi6yt7i" path="res://scenes/ball_material.tres" id="1_xiiwj"]
+[ext_resource type="Script" path="res://scripts/Ball.cs" id="2_ltq48"]
+[ext_resource type="Texture2D" uid="uid://dws5fmgft1h5a" path="res://sprites/ball_body.png" id="3_4wwjj"]
+[ext_resource type="Texture2D" uid="uid://dw1ht0oao3rqe" path="res://sprites/ball_stripe_overlay.png" id="3_6h38j"]
+[ext_resource type="Texture2D" uid="uid://bjjebri3nb2la" path="res://sprites/ball_solid_overlay.png" id="3_psil0"]
+[ext_resource type="FontFile" uid="uid://bom67i1wbnsx8" path="res://ball_number_theme.ttf" id="6_jgu0r"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_81mj7"]
+radius = 23.0217
+
+[sub_resource type="Theme" id="Theme_6rrht"]
+default_font = ExtResource("6_jgu0r")
+default_font_size = 32
+
+[node name="Ball" type="RigidBody2D"]
+mass = 0.2
+physics_material_override = ExtResource("1_xiiwj")
+continuous_cd = 2
+script = ExtResource("2_ltq48")
+Number = 1
+metadata/_edit_vertical_guides_ = [-950.0]
+
+[node name="BodySprite" type="Sprite2D" parent="."]
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("3_4wwjj")
+
+[node name="StripeOverlaySprite" type="Sprite2D" parent="."]
+visible = false
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("3_6h38j")
+
+[node name="SolidOverlaySprite" type="Sprite2D" parent="."]
+visible = false
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("3_psil0")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_81mj7")
+
+[node name="NumberLabel" type="Label" parent="."]
+offset_left = -24.0
+offset_top = -23.0
+offset_right = 23.0
+offset_bottom = 23.0
+theme = SubResource("Theme_6rrht")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "1"
+horizontal_alignment = 1
+vertical_alignment = 1
