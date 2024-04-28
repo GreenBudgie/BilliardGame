@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Godot;
 
 public partial class Ball : RigidBody2D
@@ -12,12 +13,26 @@ public partial class Ball : RigidBody2D
 
     public override void _Ready()
     {
-        var sprite = GetNode<Sprite2D>(Type.GetSpriteNodeName());
-        sprite.Visible = true;
-        sprite.Modulate = Color.GetRealColor();
+        // Make all sprites invisible at first
+        var sprites = GetChildren().OfType<Sprite2D>();
+        foreach (var sprite in sprites)
+        {
+            sprite.Visible = false;
+        }
         
+        // Make appropriate sprites for the ball type visible and apply ball color to overlay
+        var bodySprite = GetNode<Sprite2D>(Type.GetBodySpriteNodeName());
+        bodySprite.Visible = true;
+        var overlaySprite = GetNode<Sprite2D>(Type.GetOverlaySpriteNodeName());
+        overlaySprite.Visible = true;
+        overlaySprite.Modulate = Color.GetRealColor();
+
         var numberLabel = GetNode<Label>("NumberLabel");
         numberLabel.Text = Number.ToString();
+        if (Number > 9)
+        {
+            //numberLabel.LabelSettings.FontSize = 24;
+        }
     }
-    
+
 }

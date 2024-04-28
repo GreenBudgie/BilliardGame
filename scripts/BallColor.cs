@@ -22,14 +22,14 @@ public static class BallColorExtension
     {
         return ballColor switch
         {
-            BallColor.Yellow => Colors.Yellow,
-            BallColor.Blue => Colors.Blue,
-            BallColor.Red => Colors.Red,
-            BallColor.Purple => Colors.Purple,
-            BallColor.Orange => Colors.Orange,
-            BallColor.Green => Colors.Green,
-            BallColor.Maroon => Colors.Maroon,
-            BallColor.Black => Colors.Black,
+            BallColor.Yellow => new Color(0.95f, 0.9f, 0.1f),
+            BallColor.Blue => new Color(0.2f, 0.2f, 0.7f),
+            BallColor.Red => new Color(0.8f, 0.1f, 0.1f),
+            BallColor.Purple => new Color(0.6f, 0.1f, 0.6f),
+            BallColor.Orange => new Color(0.9f, 0.5f, 0.2f),
+            BallColor.Green => new Color(0.1f, 0.6f, 0.1f),
+            BallColor.Maroon => new Color(0.5f, 0.2f, 0.2f),
+            BallColor.Black => new Color(0.1f, 0.1f, 0.1f),
             _ => throw new ArgumentOutOfRangeException(nameof(ballColor), ballColor, null)
         };
     }

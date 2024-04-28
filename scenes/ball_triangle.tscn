@@ -6,13 +6,13 @@
 
 [node name="Ball" parent="." instance=ExtResource("1_djpae")]
 position = Vector2(40, -72)
-Number = 9
+Number = 13
 Type = 1
 Color = 4
 
 [node name="Ball2" parent="." instance=ExtResource("1_djpae")]
 position = Vector2(40, -24)
-Number = 9
+Number = 15
 Type = 1
 Color = 6
 
@@ -23,12 +23,12 @@ Color = 3
 
 [node name="Ball4" parent="." instance=ExtResource("1_djpae")]
 position = Vector2(40, 72)
-Number = 2
+Number = 9
 Type = 1
 
 [node name="Ball11" parent="." instance=ExtResource("1_djpae")]
 position = Vector2(80, 96)
-Number = 9
+Number = 12
 Type = 1
 Color = 3
 
@@ -39,7 +39,7 @@ Color = 4
 
 [node name="Ball13" parent="." instance=ExtResource("1_djpae")]
 position = Vector2(80, 0)
-Number = 9
+Number = 10
 Type = 1
 Color = 1
 
@@ -55,7 +55,7 @@ Color = 6
 
 [node name="Ball5" parent="." instance=ExtResource("1_djpae")]
 position = Vector2(0, 48)
-Number = 9
+Number = 14
 Type = 1
 Color = 5
 
@@ -70,7 +70,7 @@ Color = 5
 
 [node name="Ball8" parent="." instance=ExtResource("1_djpae")]
 position = Vector2(-40, -24)
-Number = 9
+Number = 11
 Type = 1
 Color = 2
 

@@ -5,10 +5,11 @@
 [node name="BilliardTable" type="Node2D"]
 
 [node name="Sprite" type="Sprite2D" parent="."]
-scale = Vector2(0.5, 0.5)
 texture = ExtResource("1_ghw0p")
 
 [node name="Borders" type="StaticBody2D" parent="."]
+collision_layer = 4
+collision_mask = 0
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Borders"]
 polygon = PackedVector2Array(-636, -323, -668, -355, -669, -427, -43, -427, -44, -375, -40, -355, -54, -323)
