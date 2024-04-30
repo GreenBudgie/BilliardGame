@@ -13,17 +13,19 @@ public partial class Ball : RigidBody2D
 
     public override void _Ready()
     {
+        var parts = GetNode("Parts");
+        
         // Make all sprites invisible at first
-        var sprites = GetChildren().OfType<Sprite2D>();
+        var sprites = parts.GetChildren().OfType<Sprite2D>();
         foreach (var sprite in sprites)
         {
             sprite.Visible = false;
         }
         
         // Make appropriate sprites for the ball type visible and apply ball color to overlay
-        var bodySprite = GetNode<Sprite2D>(Type.GetBodySpriteNodeName());
+        var bodySprite = parts.GetNode<Sprite2D>(Type.GetBodySpriteNodeName());
         bodySprite.Visible = true;
-        var overlaySprite = GetNode<Sprite2D>(Type.GetOverlaySpriteNodeName());
+        var overlaySprite = parts.GetNode<Sprite2D>(Type.GetOverlaySpriteNodeName());
         overlaySprite.Visible = true;
         overlaySprite.Modulate = Color.GetRealColor();
 

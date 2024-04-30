@@ -2,77 +2,67 @@ using Godot;
 
 public partial class CueBall : RigidBody2D
 {
-
     [Export] public float ShotStrength = 10;
 
-    private ShapeCast2D _shapeCast;
-    
-    private bool _isShooting;
-    private bool _ableToShoot;
-
-    private float _radius;
+    public float Radius { get; private set; }
     private Vector2 _collisionPoint;
+
+    public bool IsBallHovered { get; private set; }
+    public bool IsShooting { get; private set; }
+    public Vector2 ShootVector { get; private set; }
+    public ShapeCast2D ShapeCast { get; private set; }
 
     public override void _Ready()
     {
-        _shapeCast = GetNode<ShapeCast2D>("ShapeCast2D");
-        
-        var circleShape = (CircleShape2D) GetNode<CollisionShape2D>("CollisionShape2D").Shape;
-        _radius = circleShape.Radius;
+        ShapeCast = GetNode<ShapeCast2D>("ShapeCast2D");
+
+        var circleShape = (CircleShape2D)GetNode<CollisionShape2D>("CollisionShape2D").Shape;
+        Radius = circleShape.Radius;
     }
 
     public override void _Process(double delta)
     {
         var mousePosition = GetGlobalMousePosition();
-        _ableToShoot = _isShooting || mousePosition.DistanceSquaredTo(Position) <= _radius * _radius;
-        
-        if (!_ableToShoot)
+        IsBallHovered = mousePosition.DistanceSquaredTo(Position) <= Radius * Radius;
+
+        if (IsBallHovered && Input.IsActionJustReleased("shoot"))
+        {
+            IsShooting = false;
+            Input.SetDefaultCursorShape();
+            return;
+        }
+
+        var ableToShoot = IsShooting || IsBallHovered;
+
+        if (!ableToShoot)
         {
             Input.SetDefaultCursorShape();
             return;
         }
+
         Input.SetDefaultCursorShape(Input.CursorShape.PointingHand);
 
-        if (!_isShooting && Input.IsActionJustPressed("shoot"))
+        if (!IsShooting && IsBallHovered && Input.IsActionJustPressed("shoot"))
         {
-            _isShooting = true;
+            IsShooting = true;
             return;
         }
 
-        if (!_isShooting)
+        if (!IsShooting)
         {
             return;
         }
         
-        var shootVector = Position - mousePosition;
 
-        _shapeCast.TargetPosition = shootVector.Normalized() * 1500;
-        _shapeCast.ForceShapecastUpdate();
-
+        ShapeCast.TargetPosition = -GetLocalMousePosition().Normalized() * 1500;
+        ShapeCast.ForceShapecastUpdate();
+        ShootVector = Position - mousePosition;
+        
         if (Input.IsActionJustReleased("shoot"))
         {
-            ApplyCentralForce(shootVector * ShotStrength);
-            _isShooting = false;
+            ApplyCentralForce(ShootVector * ShotStrength);
+            IsShooting = false;
         }
-        
-        QueueRedraw();
     }
 
-    public override void _Draw()
-    {
-        if (!_isShooting)
-        {
-            return;
-        }
-
-        if (!_shapeCast.IsColliding())
-        {
-            return;
-        }
-        
-        var collisionPoint = _shapeCast.GetCollisionPoint(0);
-        DrawLine(Vector2.Zero, collisionPoint - Position, Colors.White, 2, true);
-        DrawCircle(collisionPoint - Position, 8, Colors.Red);
-    }
-    
 }

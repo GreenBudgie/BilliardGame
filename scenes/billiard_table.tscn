@@ -1,6 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://cdokpkldvgmps"]
+[gd_scene load_steps=3 format=3 uid="uid://cdokpkldvgmps"]
 
 [ext_resource type="Texture2D" uid="uid://bwldupelc0o5" path="res://sprites/table.png" id="1_ghw0p"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_nget6"]
+friction = 0.4
+bounce = 0.5
 
 [node name="BilliardTable" type="Node2D"]
 
@@ -10,6 +14,7 @@ texture = ExtResource("1_ghw0p")
 [node name="Borders" type="StaticBody2D" parent="."]
 collision_layer = 4
 collision_mask = 0
+physics_material_override = SubResource("PhysicsMaterial_nget6")
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Borders"]
 polygon = PackedVector2Array(-636, -323, -668, -355, -669, -427, -43, -427, -44, -375, -40, -355, -54, -323)

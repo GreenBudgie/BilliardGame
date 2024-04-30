@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://b6rmsb7c3jf2a"]
+[gd_scene load_steps=6 format=3 uid="uid://b6rmsb7c3jf2a"]
 
 [ext_resource type="PackedScene" uid="uid://cdokpkldvgmps" path="res://scenes/billiard_table.tscn" id="1_e8363"]
 [ext_resource type="PackedScene" uid="uid://dnfowjpbcp587" path="res://scenes/cue_ball.tscn" id="1_wylgy"]
 [ext_resource type="PackedScene" uid="uid://dkpq24jlytnuu" path="res://scenes/ball_triangle.tscn" id="2_l3vn8"]
+[ext_resource type="PackedScene" uid="uid://jprorwadsxa6" path="res://scenes/cue.tscn" id="4_7gumm"]
+[ext_resource type="PackedScene" uid="uid://bpnpvb46w7fu5" path="res://scenes/trajectory_drawer.tscn" id="5_p2u0a"]
 
 [node name="Main" type="Node2D"]
 
@@ -14,3 +16,9 @@ position = Vector2(587, 540)
 
 [node name="BallTriangle" parent="." instance=ExtResource("2_l3vn8")]
 position = Vector2(1401, 540)
+
+[node name="Cue" parent="." node_paths=PackedStringArray("_cueBall") instance=ExtResource("4_7gumm")]
+_cueBall = NodePath("../CueBall")
+
+[node name="TrajectoryDrawer" parent="." node_paths=PackedStringArray("_cueBall") instance=ExtResource("5_p2u0a")]
+_cueBall = NodePath("../CueBall")

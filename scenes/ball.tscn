@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://8rkc8w2aqbe7"]
+[gd_scene load_steps=11 format=3 uid="uid://8rkc8w2aqbe7"]
 
 [ext_resource type="PhysicsMaterial" uid="uid://c2rdm6hi6yt7i" path="res://scenes/ball_material.tres" id="1_xiiwj"]
 [ext_resource type="Script" path="res://scripts/Ball.cs" id="2_ltq48"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://bjjebri3nb2la" path="res://sprites/ball_solid_overlay.png" id="3_psil0"]
 [ext_resource type="Texture2D" uid="uid://mtdfowhcppm2" path="res://sprites/ball_stripe_body.png" id="4_mr61m"]
 [ext_resource type="Texture2D" uid="uid://upe0v1jougs5" path="res://sprites/ball_solid_body.png" id="4_uibvd"]
+[ext_resource type="Texture2D" uid="uid://cymei1uomyron" path="res://sprites/ball_underline.png" id="6_dnrj7"]
 [ext_resource type="FontFile" uid="uid://td811ud27dii" path="res://The Citadels.otf" id="7_3yxam"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_81mj7"]
@@ -28,19 +29,24 @@ script = ExtResource("2_ltq48")
 Number = 1
 metadata/_edit_vertical_guides_ = [-950.0]
 
-[node name="StripeBodySprite" type="Sprite2D" parent="."]
+[node name="Parts" type="Node2D" parent="."]
+
+[node name="StripeBodySprite" type="Sprite2D" parent="Parts"]
 visible = false
 texture = ExtResource("4_mr61m")
 
-[node name="SolidBodySprite" type="Sprite2D" parent="."]
+[node name="SolidBodySprite" type="Sprite2D" parent="Parts"]
 texture = ExtResource("4_uibvd")
 
-[node name="StripeOverlaySprite" type="Sprite2D" parent="."]
+[node name="StripeOverlaySprite" type="Sprite2D" parent="Parts"]
 visible = false
 texture = ExtResource("3_6h38j")
 
-[node name="SolidOverlaySprite" type="Sprite2D" parent="."]
+[node name="SolidOverlaySprite" type="Sprite2D" parent="Parts"]
 texture = ExtResource("3_psil0")
+
+[node name="BallUnderline" type="Sprite2D" parent="."]
+texture = ExtResource("6_dnrj7")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 visible = false
