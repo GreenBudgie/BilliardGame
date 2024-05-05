@@ -12,7 +12,7 @@
 position = Vector2(960, 540)
 
 [node name="CueBall" parent="." instance=ExtResource("1_wylgy")]
-position = Vector2(587, 540)
+position = Vector2(574, 544)
 
 [node name="BallTriangle" parent="." instance=ExtResource("2_l3vn8")]
 position = Vector2(1401, 540)

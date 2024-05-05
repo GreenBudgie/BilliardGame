@@ -40,6 +40,7 @@ shoot={
 2d_physics/layer_1="cue_ball"
 2d_physics/layer_2="balls"
 2d_physics/layer_3="table"
+2d_physics/layer_4="pocket"
 
 [physics]
 
@@ -47,6 +48,7 @@ common/physics_ticks_per_second=180
 2d/default_gravity=0.0
 2d/default_linear_damp=0.5
 2d/default_angular_damp=0.5
+2d/sleep_threshold_linear=4.0
 2d/solver/solver_iterations=32
 
 [rendering]

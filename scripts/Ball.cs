@@ -1,8 +1,8 @@
-using System;
 using System.Linq;
+using Billiard.scripts;
 using Godot;
 
-public partial class Ball : RigidBody2D
+public partial class Ball : AbstractBall
 {
 
     [Export(PropertyHint.Range, "1,99")] public int Number { get; set; }
@@ -13,6 +13,7 @@ public partial class Ball : RigidBody2D
 
     public override void _Ready()
     {
+        base._Ready();
         var parts = GetNode("Parts");
         
         // Make all sprites invisible at first
@@ -37,4 +38,9 @@ public partial class Ball : RigidBody2D
         }
     }
 
+    public override void HandlePocketCollision(Pocket pocket)
+    {
+        QueueFree();
+    }
+    
 }

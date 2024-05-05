@@ -2,11 +2,12 @@ using Godot;
 
 public partial class Cue : Node2D
 {
-
     [Export] private CueBall _cueBall;
 
+    [Export] private float _maxOffset = 300;
+
     private Sprite2D _sprite;
-    
+
     private bool _isVisible;
 
     private Tween _alphaTween;
@@ -38,6 +39,12 @@ public partial class Cue : Node2D
         {
             HideCue();
         }
+
+        var shootVectorLength = _cueBall.ShootVector.Length();
+        var weight = (shootVectorLength - _cueBall.MinShootStrength) /
+                     (_cueBall.MaxShootStrength - _cueBall.MinShootStrength);
+        var offset = Mathf.Lerp(0, _maxOffset, weight);
+        _sprite.Offset = new Vector2(-offset, _sprite.Offset.Y);
     }
 
     private void HideCue()
@@ -46,7 +53,7 @@ public partial class Cue : Node2D
         {
             return;
         }
-        
+
         _isVisible = false;
 
         _alphaTween?.Kill();
@@ -62,7 +69,7 @@ public partial class Cue : Node2D
         {
             return;
         }
-        
+
         _isVisible = true;
 
         _alphaTween?.Kill();
@@ -71,5 +78,4 @@ public partial class Cue : Node2D
             .SetTrans(Tween.TransitionType.Cubic)
             .SetEase(Tween.EaseType.Out);
     }
-    
- }
+}
