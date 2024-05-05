@@ -1,7 +1,7 @@
 using Billiard.scripts;
 using Godot;
 
-public partial class CueBall : AbstractBall
+public partial class CueBall : Ball
 {
     [Export] public float BaseShootStrengthMultiplier = 200;
     [Export] public float ShootStartThreshold = 6000;
@@ -33,6 +33,8 @@ public partial class CueBall : AbstractBall
         _font = GD.Load<Font>("res://The Citadels.otf");
 
         _initialGlobalPosition = Transform.Origin;
+
+        PocketScored += HandlePocketCollision;
     }
 
     public override void _Process(double delta)
@@ -104,13 +106,14 @@ public partial class CueBall : AbstractBall
         //DrawString(_font, new Vector2(0, -70), ShootVector.Length().ToString(), HorizontalAlignment.Center, -1, 32);
     }
     
-    public override void HandlePocketCollision(Pocket pocket)
+    private void HandlePocketCollision(Pocket pocket)
     {
         LinearVelocity = Vector2.Zero;
         AngularVelocity = 0;
         Rotation = 0;
         var transform = Transform;
         transform.Origin = _initialGlobalPosition;
+        EventBus.Instance.EmitSignal(EventBus.SignalName.CueBallScored, this, pocket);
     }
     
 }

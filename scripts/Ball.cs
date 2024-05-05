@@ -1,46 +1,41 @@
-using System.Linq;
-using Billiard.scripts;
-using Godot;
+﻿using Godot;
 
-public partial class Ball : AbstractBall
+namespace Billiard.scripts;
+
+public abstract partial class Ball : RigidBody2D
 {
 
-    [Export(PropertyHint.Range, "1,99")] public int Number { get; set; }
+    [Export] public float FastDampVelocityThreshold = 150;
+    [Export] public float FastDamp = 0.7f;
 
-    [Export] public BallType Type { get; set; }
-
-    [Export] public BallColor Color { get; set; }
+    [Signal]
+    public delegate void PocketScoredEventHandler(Pocket pocket);
 
     public override void _Ready()
     {
-        base._Ready();
-        var parts = GetNode("Parts");
-        
-        // Make all sprites invisible at first
-        var sprites = parts.GetChildren().OfType<Sprite2D>();
-        foreach (var sprite in sprites)
-        {
-            sprite.Visible = false;
-        }
-        
-        // Make appropriate sprites for the ball type visible and apply ball color to overlay
-        var bodySprite = parts.GetNode<Sprite2D>(Type.GetBodySpriteNodeName());
-        bodySprite.Visible = true;
-        var overlaySprite = parts.GetNode<Sprite2D>(Type.GetOverlaySpriteNodeName());
-        overlaySprite.Visible = true;
-        overlaySprite.Modulate = Color.GetRealColor();
-
-        var numberLabel = GetNode<Label>("NumberLabel");
-        numberLabel.Text = Number.ToString();
-        if (Number > 9)
-        {
-            //numberLabel.LabelSettings.FontSize = 24;
-        }
+        BodyEntered += OnBodyEntered;
     }
 
-    public override void HandlePocketCollision(Pocket pocket)
+    public override void _PhysicsProcess(double delta)
     {
-        QueueFree();
+        if (LinearVelocity.Length() < FastDampVelocityThreshold)
+        {
+            LinearDamp = FastDamp;
+            AngularDamp = FastDamp;
+        }
+        else
+        {
+            LinearDamp = 0;
+            AngularDamp = 0;
+        }
     }
-    
+
+    private void OnBodyEntered(Node node)
+    {
+        if (node is Pocket pocket)
+        {
+            EmitSignal(SignalName.PocketScored, pocket);
+        }
+    }
+
 }

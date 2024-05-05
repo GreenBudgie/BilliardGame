@@ -1,24 +1,31 @@
-[gd_scene load_steps=6 format=3 uid="uid://b6rmsb7c3jf2a"]
+[gd_scene load_steps=8 format=3 uid="uid://b6rmsb7c3jf2a"]
 
 [ext_resource type="PackedScene" uid="uid://cdokpkldvgmps" path="res://scenes/billiard_table.tscn" id="1_e8363"]
 [ext_resource type="PackedScene" uid="uid://dnfowjpbcp587" path="res://scenes/cue_ball.tscn" id="1_wylgy"]
+[ext_resource type="PackedScene" uid="uid://8rkc8w2aqbe7" path="res://scenes/pocket_ball.tscn" id="2_k4r3l"]
 [ext_resource type="PackedScene" uid="uid://dkpq24jlytnuu" path="res://scenes/ball_triangle.tscn" id="2_l3vn8"]
 [ext_resource type="PackedScene" uid="uid://jprorwadsxa6" path="res://scenes/cue.tscn" id="4_7gumm"]
 [ext_resource type="PackedScene" uid="uid://bpnpvb46w7fu5" path="res://scenes/trajectory_drawer.tscn" id="5_p2u0a"]
+[ext_resource type="PackedScene" uid="uid://dlftc7oew26gh" path="res://scenes/score_manager.tscn" id="6_qsycm"]
 
 [node name="Main" type="Node2D"]
 
 [node name="BilliardTable" parent="." instance=ExtResource("1_e8363")]
-position = Vector2(960, 540)
+position = Vector2(816, 544)
+
+[node name="PocketBall" parent="." instance=ExtResource("2_k4r3l")]
+position = Vector2(793, 241)
 
 [node name="CueBall" parent="." instance=ExtResource("1_wylgy")]
-position = Vector2(574, 544)
+position = Vector2(477, 546)
 
 [node name="BallTriangle" parent="." instance=ExtResource("2_l3vn8")]
-position = Vector2(1401, 540)
+position = Vector2(1235, 544)
 
 [node name="Cue" parent="." node_paths=PackedStringArray("_cueBall") instance=ExtResource("4_7gumm")]
 _cueBall = NodePath("../CueBall")
 
 [node name="TrajectoryDrawer" parent="." node_paths=PackedStringArray("_cueBall") instance=ExtResource("5_p2u0a")]
 _cueBall = NodePath("../CueBall")
+
+[node name="ScoreManager" parent="." instance=ExtResource("6_qsycm")]
