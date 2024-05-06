@@ -1,4 +1,3 @@
-using Billiard.scripts;
 using Godot;
 
 public partial class CueBall : Ball

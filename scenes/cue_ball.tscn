@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://dnfowjpbcp587"]
+[gd_scene load_steps=7 format=3 uid="uid://dnfowjpbcp587"]
 
 [ext_resource type="PhysicsMaterial" uid="uid://c2rdm6hi6yt7i" path="res://scenes/ball_material.tres" id="1_887od"]
 [ext_resource type="Script" path="res://scripts/CueBall.cs" id="1_noah2"]
 [ext_resource type="Texture2D" uid="uid://dws5fmgft1h5a" path="res://sprites/ball_body.png" id="3_2p8gx"]
+[ext_resource type="AudioStream" uid="uid://b81p8kqbwwyvi" path="res://sound/ball_hit_ball_soft.wav" id="3_c0guk"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_81mj7"]
 radius = 23.0
@@ -18,6 +19,7 @@ continuous_cd = 2
 max_contacts_reported = 4
 contact_monitor = true
 script = ExtResource("1_noah2")
+BallHitSound = ExtResource("3_c0guk")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("3_2p8gx")
