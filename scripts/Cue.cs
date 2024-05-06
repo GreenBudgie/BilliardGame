@@ -4,7 +4,7 @@ public partial class Cue : Node2D
 {
     [Export] private CueBall _cueBall;
 
-    [Export] private float _maxOffset = 300;
+    [Export] private float _maxOffset = 130;
 
     private Sprite2D _sprite;
 
@@ -29,9 +29,12 @@ public partial class Cue : Node2D
     {
         Position = _cueBall.Position;
         LookAt(GetGlobalMousePosition());
-        Rotation += Mathf.Pi;
+        if (_cueBall.IsInverseShot)
+        {
+            Rotation += Mathf.Pi;
+        }
 
-        if (_cueBall.IsShooting)
+        if (_cueBall.State == CueBall.BallState.ShotPrepare)
         {
             ShowCue();
         }

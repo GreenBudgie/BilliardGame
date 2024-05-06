@@ -8,13 +8,18 @@ public partial class CueBall : Ball
     [Export] public float MinShootStrength = 500;
     [Export] public float MaxShootStrength = 85000;
 
+    private static readonly string SHOOT_ACTION = "shoot";
+    private static readonly string INVERSE_SHOOT_ACTION = "inverse_shoot";
+    
     private Vector2 _initialGlobalPosition;
 
     public float Radius { get; private set; }
+    
+    public BallState State { get; private set; }
 
     public bool IsBallHovered { get; private set; }
 
-    public bool IsShooting { get; private set; }
+    public bool IsInverseShot { get; private set; }
 
     // Vector that the ball is going to be hit, always normalized
     public Vector2 ShootVector { get; private set; }
@@ -35,6 +40,7 @@ public partial class CueBall : Ball
         _initialGlobalPosition = Transform.Origin;
 
         PocketScored += HandlePocketCollision;
+        SleepingStateChanged += MakeIdleIfSleeping;
     }
 
     public override void _Process(double delta)
@@ -42,14 +48,12 @@ public partial class CueBall : Ball
         var mousePosition = GetGlobalMousePosition();
         IsBallHovered = mousePosition.DistanceSquaredTo(Position) <= Radius * Radius;
 
-        if (IsBallHovered && Input.IsActionJustReleased("shoot"))
+        if (ShouldCancelShot())
         {
-            IsShooting = false;
-            Input.SetDefaultCursorShape();
-            return;
+            State = BallState.Idle;
         }
 
-        var ableToShoot = IsShooting || IsBallHovered;
+        var ableToShoot = State == BallState.ShotPrepare || IsBallHovered;
 
         if (!ableToShoot)
         {
@@ -59,21 +63,24 @@ public partial class CueBall : Ball
 
         Input.SetDefaultCursorShape(Input.CursorShape.PointingHand);
 
-        if (!IsShooting && IsBallHovered && Input.IsActionJustPressed("shoot"))
+        if (State == BallState.Idle && IsBallHovered && ShotPressed())
         {
-            IsShooting = true;
+            State = BallState.ShotPrepare;
+            IsInverseShot = Input.IsActionJustPressed(INVERSE_SHOOT_ACTION);
             return;
         }
 
-        if (!IsShooting)
+        if (State != BallState.ShotPrepare)
         {
             return;
         }
 
-        ShapeCast.TargetPosition = -GetLocalMousePosition().Normalized() * 1500;
-        ShapeCast.ForceShapecastUpdate();
+        var inverseShotSign = IsInverseShot ? -1 : 1;
+        ShootVector = (mousePosition - Position) * BaseShootStrengthMultiplier * inverseShotSign;
         
-        ShootVector = (Position - mousePosition) * BaseShootStrengthMultiplier;
+        ShapeCast.TargetPosition = GetLocalMousePosition().Normalized() * 1500 * inverseShotSign;
+        ShapeCast.ForceShapecastUpdate();
+
         if (ShootVector.LengthSquared() < ShootStartThreshold * ShootStartThreshold)
         {
             ShootVector = Vector2.Zero;
@@ -92,18 +99,44 @@ public partial class CueBall : Ball
             ShootVector = ShootVector.Normalized() * MaxShootStrength;
         }
 
-        if (Input.IsActionJustReleased("shoot"))
+        if (ShouldPerformShot())
         {
             ApplyCentralForce(ShootVector);
-            IsShooting = false;
+            State = BallState.Rolling;
         }
-        
-        QueueRedraw();
+    }
+    
+    private bool ShotPressed()
+    {
+        return Input.IsActionJustPressed(SHOOT_ACTION) || Input.IsActionJustPressed(INVERSE_SHOOT_ACTION);
+    }
+    
+    private bool ShotReleased()
+    {
+        return Input.IsActionJustReleased(SHOOT_ACTION) || Input.IsActionJustReleased(INVERSE_SHOOT_ACTION);
     }
 
-    public override void _Draw()
+    private bool ShouldPerformShot()
     {
-        //DrawString(_font, new Vector2(0, -70), ShootVector.Length().ToString(), HorizontalAlignment.Center, -1, 32);
+        return Input.IsActionJustReleased(IsInverseShot ? INVERSE_SHOOT_ACTION : SHOOT_ACTION);
+    }
+
+    private bool ShouldCancelShot()
+    {
+        return IsInverseShot switch
+        {
+            true when Input.IsActionJustPressed(SHOOT_ACTION) => true,
+            false when Input.IsActionJustPressed(INVERSE_SHOOT_ACTION) => true,
+            _ => IsBallHovered && ShotReleased()
+        };
+    }
+
+    private void MakeIdleIfSleeping()
+    {
+        if (State == BallState.Rolling && Sleeping)
+        {
+            State = BallState.Idle;
+        }
     }
     
     private void HandlePocketCollision(Pocket pocket)
@@ -115,5 +148,12 @@ public partial class CueBall : Ball
         transform.Origin = _initialGlobalPosition;
         EventBus.Instance.EmitSignal(EventBus.SignalName.CueBallScored, this, pocket);
     }
-    
+
+    public enum BallState
+    {
+        
+        Idle, Rolling, ShotPrepare
+        
+    }
+
 }
