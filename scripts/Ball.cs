@@ -3,6 +3,7 @@
 public abstract partial class Ball : RigidBody2D
 {
     [Export] public AudioStream BallHitSound;
+    [Export] public AudioStream TableHitSound;
 
     [Signal]
     public delegate void PocketScoredEventHandler(Pocket pocket);
@@ -64,9 +65,20 @@ public abstract partial class Ball : RigidBody2D
 
     private void OnBodyEntered(Node node)
     {
+        if (node is not PhysicsBody2D physicsBody)
+        {
+            return;
+        }
+
+        if (physicsBody.GetCollisionLayerValue(3))
+        {
+            HandleCollision(TableHitSound);
+            return;
+        }
+        
         if (node is Ball)
         {
-            HandleBallToBallCollision();
+            HandleCollision(BallHitSound);
         }
 
         if (node is Pocket pocket)
@@ -75,7 +87,7 @@ public abstract partial class Ball : RigidBody2D
         }
     }
 
-    private void HandleBallToBallCollision()
+    private void HandleCollision(AudioStream soundToPlay)
     {
         var velocity = LinearVelocity.Length();
         if (velocity < MinSoundVelocityThreshold)
@@ -84,7 +96,7 @@ public abstract partial class Ball : RigidBody2D
         }
         
         var velocityWeight = Mathf.Clamp(velocity / MaxSoundVelocityThreshold, 0, 1);
-        var sound = SoundManager.Instance.PlayPositionalSound(this, BallHitSound);
+        var sound = SoundManager.Instance.PlayPositionalSound(this, soundToPlay);
         
         sound.VolumeDb = Mathf.Lerp(CollisionVolumeDbMin, CollisionVolumeDbMax, velocityWeight);
         sound.PitchScale = Mathf.Lerp(CollisionPitchMin, CollisionPitchMax, velocityWeight);

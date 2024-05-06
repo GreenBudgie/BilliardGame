@@ -1,10 +1,11 @@
-[gd_scene load_steps=12 format=3 uid="uid://8rkc8w2aqbe7"]
+[gd_scene load_steps=13 format=3 uid="uid://8rkc8w2aqbe7"]
 
 [ext_resource type="PhysicsMaterial" uid="uid://c2rdm6hi6yt7i" path="res://scenes/ball_material.tres" id="1_l15de"]
 [ext_resource type="Script" path="res://scripts/PocketBall.cs" id="2_5bpcy"]
 [ext_resource type="AudioStream" uid="uid://b81p8kqbwwyvi" path="res://sound/ball_hit_ball_soft.wav" id="3_kr4yi"]
 [ext_resource type="Texture2D" uid="uid://mtdfowhcppm2" path="res://sprites/ball_stripe_body.png" id="3_qhdba"]
 [ext_resource type="Texture2D" uid="uid://upe0v1jougs5" path="res://sprites/ball_solid_body.png" id="4_ru231"]
+[ext_resource type="AudioStream" uid="uid://dtsd0w6ghqbyn" path="res://sound/hit_table.wav" id="4_wjfex"]
 [ext_resource type="Texture2D" uid="uid://dw1ht0oao3rqe" path="res://sprites/ball_stripe_overlay.png" id="5_2asxx"]
 [ext_resource type="Texture2D" uid="uid://bjjebri3nb2la" path="res://sprites/ball_solid_overlay.png" id="6_xy3gj"]
 [ext_resource type="Texture2D" uid="uid://cymei1uomyron" path="res://sprites/ball_underline.png" id="7_58rgr"]
@@ -30,6 +31,7 @@ max_contacts_reported = 4
 contact_monitor = true
 script = ExtResource("2_5bpcy")
 BallHitSound = ExtResource("3_kr4yi")
+TableHitSound = ExtResource("4_wjfex")
 metadata/_edit_vertical_guides_ = [-950.0]
 
 [node name="Parts" type="Node2D" parent="."]
