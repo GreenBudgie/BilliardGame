@@ -22,7 +22,7 @@ public partial class TrajectoryDrawer : Node2D
 
     public override void _Draw()
     {
-        if (_cueBall.State != CueBall.BallState.ShotPrepare)
+        if (_cueBall.State != CueBall.BallState.ShotPrepare || _cueBall.IsBallHovered)
         {
             return;
         }

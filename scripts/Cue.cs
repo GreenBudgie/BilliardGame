@@ -6,6 +6,7 @@ public partial class Cue : Node2D
 
     [Export] private float _maxOffset = 130;
 
+    [Node]
     private Sprite2D _sprite;
 
     private bool _isVisible;
@@ -14,6 +15,7 @@ public partial class Cue : Node2D
 
     public override void _Ready()
     {
+        this.InitAttributes();
         if (_cueBall == null)
         {
             GD.PrintErr("Cue ball is not assigned for the cue");
@@ -21,11 +23,38 @@ public partial class Cue : Node2D
             return;
         }
 
-        _sprite = GetNode<Sprite2D>("Sprite2D");
         _sprite.Modulate = new Color(1, 1, 1, 0);
+
+        _cueBall.ShotInitialized += HandleShotAnimation;
     }
 
     public override void _Process(double delta)
+    {
+        if (_cueBall.State == CueBall.BallState.ShotAnimation)
+        {
+            return;
+        }
+        
+        if (_cueBall.State == CueBall.BallState.ShotPrepare)
+        {
+            HandleShotPreparation();
+        }
+        else
+        {
+            HideCue();
+        }
+    }
+
+    private void HandleShotAnimation()
+    {
+        var shotTween = CreateTween();
+        shotTween.TweenProperty(_sprite, "offset", new Vector2(0, _sprite.Offset.Y), 0.4)
+            .SetTrans(Tween.TransitionType.Back)
+            .SetEase(Tween.EaseType.In);
+        shotTween.Finished += () => _cueBall.PerformShot();
+    }
+
+    private void HandleShotPreparation()
     {
         Position = _cueBall.Position;
         LookAt(GetGlobalMousePosition());
@@ -34,19 +63,12 @@ public partial class Cue : Node2D
             Rotation += Mathf.Pi;
         }
 
-        if (_cueBall.State == CueBall.BallState.ShotPrepare)
-        {
-            ShowCue();
-        }
-        else
-        {
-            HideCue();
-        }
+        ShowCue();
 
         var shootVectorLength = _cueBall.ShootVector.Length();
         var weight = (shootVectorLength - _cueBall.MinShootStrength) /
                      (_cueBall.MaxShootStrength - _cueBall.MinShootStrength);
-        var offset = Mathf.Lerp(0, _maxOffset, weight);
+        var offset = Mathf.Lerp(0, _maxOffset, weight) + _cueBall.Radius;
         _sprite.Offset = new Vector2(-offset, _sprite.Offset.Y);
     }
 
@@ -77,7 +99,7 @@ public partial class Cue : Node2D
 
         _alphaTween?.Kill();
         _alphaTween = CreateTween();
-        _alphaTween.TweenProperty(_sprite, "modulate", new Color(1, 1, 1, 1), 0.5)
+        _alphaTween.TweenProperty(_sprite, "modulate", new Color(1, 1, 1), 0.5)
             .SetTrans(Tween.TransitionType.Cubic)
             .SetEase(Tween.EaseType.Out);
     }

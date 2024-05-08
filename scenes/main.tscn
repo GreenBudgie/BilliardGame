@@ -14,7 +14,7 @@
 position = Vector2(816, 544)
 
 [node name="PocketBall" parent="." instance=ExtResource("2_k4r3l")]
-position = Vector2(804, 248)
+position = Vector2(332, 843)
 
 [node name="CueBall" parent="." instance=ExtResource("1_wylgy")]
 position = Vector2(337, 558)

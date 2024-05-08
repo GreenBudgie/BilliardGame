@@ -7,9 +7,12 @@ public partial class CueBall : Ball
     [Export] public float MinShootStrength = 500;
     [Export] public float MaxShootStrength = 85000;
 
-    private static readonly string SHOOT_ACTION = "shoot";
-    private static readonly string INVERSE_SHOOT_ACTION = "inverse_shoot";
-    
+    private const string ShootAction = "shoot";
+    private const string InverseShootAction = "inverse_shoot";
+
+    [Signal]
+    public delegate void ShotInitializedEventHandler();
+
     private Vector2 _initialGlobalPosition;
 
     public float Radius { get; private set; }
@@ -65,7 +68,7 @@ public partial class CueBall : Ball
         if (State == BallState.Idle && IsBallHovered && ShotPressed())
         {
             State = BallState.ShotPrepare;
-            IsInverseShot = Input.IsActionJustPressed(INVERSE_SHOOT_ACTION);
+            IsInverseShot = Input.IsActionJustPressed(InverseShootAction);
             return;
         }
 
@@ -100,32 +103,38 @@ public partial class CueBall : Ball
 
         if (ShouldPerformShot())
         {
-            ApplyCentralForce(ShootVector);
-            State = BallState.Rolling;
+            State = BallState.ShotAnimation;
+            EmitSignal(SignalName.ShotInitialized);
         }
+    }
+
+    public void PerformShot()
+    {
+        ApplyCentralForce(ShootVector);
+        State = BallState.Rolling;
     }
     
     private bool ShotPressed()
     {
-        return Input.IsActionJustPressed(SHOOT_ACTION) || Input.IsActionJustPressed(INVERSE_SHOOT_ACTION);
+        return Input.IsActionJustPressed(ShootAction) || Input.IsActionJustPressed(InverseShootAction);
     }
     
     private bool ShotReleased()
     {
-        return Input.IsActionJustReleased(SHOOT_ACTION) || Input.IsActionJustReleased(INVERSE_SHOOT_ACTION);
+        return Input.IsActionJustReleased(ShootAction) || Input.IsActionJustReleased(InverseShootAction);
     }
 
     private bool ShouldPerformShot()
     {
-        return Input.IsActionJustReleased(IsInverseShot ? INVERSE_SHOOT_ACTION : SHOOT_ACTION);
+        return Input.IsActionJustReleased(IsInverseShot ? InverseShootAction : ShootAction);
     }
 
     private bool ShouldCancelShot()
     {
         return IsInverseShot switch
         {
-            true when Input.IsActionJustPressed(SHOOT_ACTION) => true,
-            false when Input.IsActionJustPressed(INVERSE_SHOOT_ACTION) => true,
+            true when Input.IsActionJustPressed(ShootAction) => true,
+            false when Input.IsActionJustPressed(InverseShootAction) => true,
             _ => IsBallHovered && ShotReleased()
         };
     }
@@ -151,7 +160,7 @@ public partial class CueBall : Ball
     public enum BallState
     {
         
-        Idle, Rolling, ShotPrepare
+        Idle, Rolling, ShotPrepare, ShotAnimation
         
     }
 
