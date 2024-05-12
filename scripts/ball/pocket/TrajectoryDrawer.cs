@@ -1,3 +1,4 @@
+using System;
 using Godot;
 
 public partial class TrajectoryDrawer : Node2D
@@ -22,12 +23,12 @@ public partial class TrajectoryDrawer : Node2D
 
     public override void _Draw()
     {
-        if (_cueBall.State != CueBall.BallState.ShotPrepare || _cueBall.IsBallHovered)
+        if (_cueBall.State != CueBall.BallState.ShotPrepare)
         {
             return;
         }
 
-        if (!_cueBall.ShapeCast.IsColliding())
+        if (_cueBall.ShotData.Strength == 0 || !_cueBall.ShapeCast.IsColliding())
         {
             return;
         }
@@ -35,10 +36,13 @@ public partial class TrajectoryDrawer : Node2D
         var collisionPoint = _cueBall.ShapeCast.GetCollisionPoint(0);
         var collisionVector = collisionPoint - Position;
         var closestPoint =
-            GetBallCenterCollisionPoint(_cueBall.ShotData.Vector, collisionVector, _cueBall.Radius);
+            GetBallCenterCollisionPoint(_cueBall.ShotData.PullVector, collisionVector, _cueBall.Radius);
         DrawLine(Vector2.Zero, closestPoint, Colors.White, 2, true);
         DrawArc(closestPoint, _cueBall.Radius, 0, Mathf.Tau, 64, Colors.White, 2f, true);
         DrawCircle(collisionVector, 4, Colors.Red);
+
+        var angle = Mathf.Pi / 4f * _cueBall.ShotData.Strength;
+        DrawArc(Vector2.Zero, _cueBall.Radius, 0, angle, 64, Colors.Orange, 4f, true);
     }
 
     private Vector2 GetBallCenterCollisionPoint(Vector2 shootVector, Vector2 collisionPoint, float radius)

@@ -2,11 +2,6 @@ using Godot;
 
 public partial class CueBall : Ball
 {
-    [Export] public float BaseShootStrengthMultiplier = 200;
-    [Export] public float ShootStartThreshold = 6000;
-    [Export] public float MinShootStrength = 500;
-    [Export] public float MaxShootStrength = 85000;
-
     private const string ShootAction = "shoot";
     private const string InverseShootAction = "inverse_shoot";
 
@@ -16,13 +11,13 @@ public partial class CueBall : Ball
     private Vector2 _initialGlobalPosition;
 
     public float Radius { get; private set; }
-    
+
     public BallState State { get; private set; }
 
     public bool IsBallHovered { get; private set; }
 
     public ShotData ShotData { get; private set; } = new(Vector2.Zero, false, 0);
-    
+
     public ShapeCast2D ShapeCast { get; private set; }
 
     private Font _font;
@@ -77,30 +72,21 @@ public partial class CueBall : Ball
         }
 
         var inverseShotSign = shotData.Inverse ? -1 : 1;
-        var shotVector = (mousePosition - Position) * BaseShootStrengthMultiplier * inverseShotSign;
+        var pullVector = (mousePosition - Position) * inverseShotSign;
 
-        ShapeCast.TargetPosition = GetLocalMousePosition().Normalized() * 1500 * inverseShotSign;
-        ShapeCast.ForceShapecastUpdate();
+        var strength = ShotStrengthUtil.GetStrengthForPullVectorLength(pullVector.Length());
 
-        if (shotVector.LengthSquared() < ShootStartThreshold * ShootStartThreshold)
+        ShotData = ShotData with
         {
-            shotVector = Vector2.Zero;
-        }
-        else
-        {
-            shotVector -= shotVector.Normalized() * ShootStartThreshold;
-        }
-        var shootVectorLengthSq = shotVector.LengthSquared();
-        if (shootVectorLengthSq < MinShootStrength * MinShootStrength)
-        {
-            shotVector = shotVector.Normalized() * MinShootStrength;
-        }
-        else if (shootVectorLengthSq > MaxShootStrength * MaxShootStrength)
-        {
-            shotVector = shotVector.Normalized() * MaxShootStrength;
-        }
+            PullVector = pullVector,
+            Strength = strength
+        };
 
-        ShotData = ShotData with { Vector = shotVector };
+        if (strength > 0)
+        {
+            ShapeCast.TargetPosition = GetLocalMousePosition().Normalized() * 1500 * inverseShotSign;
+            ShapeCast.ForceShapecastUpdate();
+        }
 
         if (ShouldPerformShot())
         {
@@ -111,15 +97,16 @@ public partial class CueBall : Ball
 
     public void PerformShot()
     {
-        ApplyCentralForce(ShotData.Vector);
+        var velocity = ShotStrengthUtil.GetVelocityForStrength(ShotData.Strength);
+        ApplyCentralForce(ShotData.PullVector.Normalized() * velocity);
         State = BallState.Rolling;
     }
-    
+
     private bool ShotPressed()
     {
         return Input.IsActionJustPressed(ShootAction) || Input.IsActionJustPressed(InverseShootAction);
     }
-    
+
     private bool ShotReleased()
     {
         return Input.IsActionJustReleased(ShootAction) || Input.IsActionJustReleased(InverseShootAction);
@@ -127,7 +114,7 @@ public partial class CueBall : Ball
 
     private bool ShouldPerformShot()
     {
-        return Input.IsActionJustReleased(ShotData.Inverse ? InverseShootAction : ShootAction);
+        return ShotData.Strength > 0 && Input.IsActionJustReleased(ShotData.Inverse ? InverseShootAction : ShootAction);
     }
 
     private bool ShouldCancelShot()
@@ -136,7 +123,7 @@ public partial class CueBall : Ball
         {
             true when Input.IsActionJustPressed(ShootAction) => true,
             false when Input.IsActionJustPressed(InverseShootAction) => true,
-            _ => IsBallHovered && ShotReleased()
+            _ => ShotData.Strength == 0 && ShotReleased()
         };
     }
 
@@ -147,12 +134,13 @@ public partial class CueBall : Ball
             State = BallState.Idle;
         }
     }
-    
+
     private void HandlePocketCollision(Pocket pocket)
     {
         LinearVelocity = Vector2.Zero;
         AngularVelocity = 0;
         Rotation = 0;
+        // TODO fix, does not teleport
         var transform = Transform;
         transform.Origin = _initialGlobalPosition;
         EventBus.Instance.EmitSignal(EventBus.SignalName.CueBallScored, this, pocket);
@@ -160,9 +148,9 @@ public partial class CueBall : Ball
 
     public enum BallState
     {
-        
-        Idle, Rolling, ShotPrepare, ShotAnimation
-        
+        Idle,
+        Rolling,
+        ShotPrepare,
+        ShotAnimation
     }
-
 }

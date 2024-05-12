@@ -2,7 +2,7 @@
 
 public partial class SoundManager : Node
 {
-    public static SoundManager Instance;
+    public static SoundManager Instance { get; private set; }
 
     private PackedScene _positionalSoundScene;
 

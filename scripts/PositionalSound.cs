@@ -1,5 +1,4 @@
 using Godot;
-using System;
 
 public partial class PositionalSound : AudioStreamPlayer2D
 {
@@ -13,13 +12,13 @@ public partial class PositionalSound : AudioStreamPlayer2D
         PitchScale = (float)GD.RandRange(minPitch, maxPitch);
         return this;
     }
-    
+
     public PositionalSound RandomPitchOffset(float minMaxAmount)
     {
         PitchScale = (float)GD.RandRange(PitchScale - minMaxAmount, PitchScale + minMaxAmount);
         return this;
     }
-    
+
     public PositionalSound RandomVolumeOffset(float minMaxAmount)
     {
         VolumeDb = (float)GD.RandRange(VolumeDb - minMaxAmount, VolumeDb + minMaxAmount);
