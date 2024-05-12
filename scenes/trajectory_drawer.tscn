@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bpnpvb46w7fu5"]
 
-[ext_resource type="Script" path="res://scripts/TrajectoryDrawer.cs" id="1_vjd8x"]
+[ext_resource type="Script" path="res://scripts/ball/pocket/TrajectoryDrawer.cs" id="1_vjd8x"]
 
 [node name="TrajectoryDrawer" type="Node2D"]
 process_priority = 1

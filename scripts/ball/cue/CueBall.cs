@@ -21,10 +21,8 @@ public partial class CueBall : Ball
 
     public bool IsBallHovered { get; private set; }
 
-    public bool IsInverseShot { get; private set; }
-
-    // Vector that the ball is going to be hit, always normalized
-    public Vector2 ShootVector { get; private set; }
+    public ShotData ShotData { get; private set; } = new(Vector2.Zero, false, 0);
+    
     public ShapeCast2D ShapeCast { get; private set; }
 
     private Font _font;
@@ -64,12 +62,13 @@ public partial class CueBall : Ball
         }
 
         Input.SetDefaultCursorShape(Input.CursorShape.PointingHand);
+        var shotData = ShotData;
 
         if (State == BallState.Idle && IsBallHovered && ShotPressed())
         {
             State = BallState.ShotPrepare;
-            IsInverseShot = Input.IsActionJustPressed(InverseShootAction);
-            return;
+            var isInverse = Input.IsActionJustPressed(InverseShootAction);
+            ShotData = ShotData with { Inverse = isInverse };
         }
 
         if (State != BallState.ShotPrepare)
@@ -77,29 +76,31 @@ public partial class CueBall : Ball
             return;
         }
 
-        var inverseShotSign = IsInverseShot ? -1 : 1;
-        ShootVector = (mousePosition - Position) * BaseShootStrengthMultiplier * inverseShotSign;
-        
+        var inverseShotSign = shotData.Inverse ? -1 : 1;
+        var shotVector = (mousePosition - Position) * BaseShootStrengthMultiplier * inverseShotSign;
+
         ShapeCast.TargetPosition = GetLocalMousePosition().Normalized() * 1500 * inverseShotSign;
         ShapeCast.ForceShapecastUpdate();
 
-        if (ShootVector.LengthSquared() < ShootStartThreshold * ShootStartThreshold)
+        if (shotVector.LengthSquared() < ShootStartThreshold * ShootStartThreshold)
         {
-            ShootVector = Vector2.Zero;
+            shotVector = Vector2.Zero;
         }
         else
         {
-            ShootVector -= ShootVector.Normalized() * ShootStartThreshold;
+            shotVector -= shotVector.Normalized() * ShootStartThreshold;
         }
-        var shootVectorLengthSq = ShootVector.LengthSquared();
+        var shootVectorLengthSq = shotVector.LengthSquared();
         if (shootVectorLengthSq < MinShootStrength * MinShootStrength)
         {
-            ShootVector = ShootVector.Normalized() * MinShootStrength;
+            shotVector = shotVector.Normalized() * MinShootStrength;
         }
         else if (shootVectorLengthSq > MaxShootStrength * MaxShootStrength)
         {
-            ShootVector = ShootVector.Normalized() * MaxShootStrength;
+            shotVector = shotVector.Normalized() * MaxShootStrength;
         }
+
+        ShotData = ShotData with { Vector = shotVector };
 
         if (ShouldPerformShot())
         {
@@ -110,7 +111,7 @@ public partial class CueBall : Ball
 
     public void PerformShot()
     {
-        ApplyCentralForce(ShootVector);
+        ApplyCentralForce(ShotData.Vector);
         State = BallState.Rolling;
     }
     
@@ -126,12 +127,12 @@ public partial class CueBall : Ball
 
     private bool ShouldPerformShot()
     {
-        return Input.IsActionJustReleased(IsInverseShot ? InverseShootAction : ShootAction);
+        return Input.IsActionJustReleased(ShotData.Inverse ? InverseShootAction : ShootAction);
     }
 
     private bool ShouldCancelShot()
     {
-        return IsInverseShot switch
+        return ShotData.Inverse switch
         {
             true when Input.IsActionJustPressed(ShootAction) => true,
             false when Input.IsActionJustPressed(InverseShootAction) => true,

@@ -35,7 +35,7 @@ public partial class TrajectoryDrawer : Node2D
         var collisionPoint = _cueBall.ShapeCast.GetCollisionPoint(0);
         var collisionVector = collisionPoint - Position;
         var closestPoint =
-            GetBallCenterCollisionPoint(_cueBall.ShootVector, collisionVector, _cueBall.Radius);
+            GetBallCenterCollisionPoint(_cueBall.ShotData.Vector, collisionVector, _cueBall.Radius);
         DrawLine(Vector2.Zero, closestPoint, Colors.White, 2, true);
         DrawArc(closestPoint, _cueBall.Radius, 0, Mathf.Tau, 64, Colors.White, 2f, true);
         DrawCircle(collisionVector, 4, Colors.Red);

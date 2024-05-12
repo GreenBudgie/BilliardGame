@@ -10,8 +10,8 @@ public abstract partial class Ball : RigidBody2D
     
     // Damping
     private const float FastDampVelocityThreshold = 150;
-    private const float FastDamp = 0.5f;
-    private const float ExtremeDampVelocityThreshold = 50;
+    private const float FastDamp = 0.4f;
+    private const float ExtremeDampVelocityThreshold = 40;
     private const float ExtremeDamp = 2f;
     private const float FastDampVelocityThresholdSq = FastDampVelocityThreshold * FastDampVelocityThreshold;
     private const float ExtremeDampVelocityThresholdSq = ExtremeDampVelocityThreshold * ExtremeDampVelocityThreshold;

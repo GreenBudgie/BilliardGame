@@ -58,14 +58,14 @@ public partial class Cue : Node2D
     {
         Position = _cueBall.Position;
         LookAt(GetGlobalMousePosition());
-        if (_cueBall.IsInverseShot)
+        if (_cueBall.ShotData.Inverse)
         {
             Rotation += Mathf.Pi;
         }
 
         ShowCue();
 
-        var shootVectorLength = _cueBall.ShootVector.Length();
+        var shootVectorLength = _cueBall.ShotData.Vector.Length();
         var weight = (shootVectorLength - _cueBall.MinShootStrength) /
                      (_cueBall.MaxShootStrength - _cueBall.MinShootStrength);
         var offset = Mathf.Lerp(0, _maxOffset, weight) + _cueBall.Radius;

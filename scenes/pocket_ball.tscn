@@ -1,7 +1,7 @@
 [gd_scene load_steps=13 format=3 uid="uid://8rkc8w2aqbe7"]
 
 [ext_resource type="PhysicsMaterial" uid="uid://c2rdm6hi6yt7i" path="res://scenes/ball_material.tres" id="1_l15de"]
-[ext_resource type="Script" path="res://scripts/PocketBall.cs" id="2_5bpcy"]
+[ext_resource type="Script" path="res://scripts/ball/pocket/PocketBall.cs" id="2_4xbno"]
 [ext_resource type="AudioStream" uid="uid://b81p8kqbwwyvi" path="res://sound/ball_hit_ball_soft.wav" id="3_kr4yi"]
 [ext_resource type="Texture2D" uid="uid://mtdfowhcppm2" path="res://sprites/ball_stripe_body.png" id="3_qhdba"]
 [ext_resource type="Texture2D" uid="uid://upe0v1jougs5" path="res://sprites/ball_solid_body.png" id="4_ru231"]
@@ -29,7 +29,7 @@ physics_material_override = ExtResource("1_l15de")
 continuous_cd = 2
 max_contacts_reported = 4
 contact_monitor = true
-script = ExtResource("2_5bpcy")
+script = ExtResource("2_4xbno")
 BallHitSound = ExtResource("3_kr4yi")
 TableHitSound = ExtResource("4_wjfex")
 metadata/_edit_vertical_guides_ = [-950.0]

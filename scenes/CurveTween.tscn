@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://drqr6cdxm850t"]
-
-[ext_resource type="Script" path="res://scripts/CurveTween.cs" id="1_fueec"]
-
-[node name="CurveTween" type="Node"]
-script = ExtResource("1_fueec")
