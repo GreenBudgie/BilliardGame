@@ -1,8 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://b6rmsb7c3jf2a"]
+[gd_scene load_steps=7 format=3 uid="uid://b6rmsb7c3jf2a"]
 
 [ext_resource type="PackedScene" uid="uid://cdokpkldvgmps" path="res://scenes/billiard_table.tscn" id="1_e8363"]
 [ext_resource type="PackedScene" uid="uid://dnfowjpbcp587" path="res://scenes/cue_ball.tscn" id="1_wylgy"]
-[ext_resource type="PackedScene" uid="uid://8rkc8w2aqbe7" path="res://scenes/pocket_ball.tscn" id="2_k4r3l"]
 [ext_resource type="PackedScene" uid="uid://dkpq24jlytnuu" path="res://scenes/ball_triangle.tscn" id="2_l3vn8"]
 [ext_resource type="PackedScene" uid="uid://jprorwadsxa6" path="res://scenes/cue.tscn" id="4_7gumm"]
 [ext_resource type="PackedScene" uid="uid://bpnpvb46w7fu5" path="res://scenes/trajectory_drawer.tscn" id="5_p2u0a"]
@@ -13,14 +12,11 @@
 [node name="BilliardTable" parent="." instance=ExtResource("1_e8363")]
 position = Vector2(816, 544)
 
-[node name="PocketBall" parent="." instance=ExtResource("2_k4r3l")]
-position = Vector2(332, 843)
-
 [node name="CueBall" parent="." instance=ExtResource("1_wylgy")]
-position = Vector2(337, 558)
+position = Vector2(263, 560)
 
 [node name="BallTriangle" parent="." instance=ExtResource("2_l3vn8")]
-position = Vector2(1235, 544)
+position = Vector2(1317, 557)
 
 [node name="Cue" parent="." node_paths=PackedStringArray("_cueBall") instance=ExtResource("4_7gumm")]
 _cueBall = NodePath("../CueBall")

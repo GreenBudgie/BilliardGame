@@ -84,7 +84,8 @@ public partial class CueBall : Ball
 
         if (strength > 0)
         {
-            ShapeCast.TargetPosition = GetLocalMousePosition().Normalized() * 1500 * inverseShotSign;
+            var travelDistance = ShotStrengthUtil.GetBallTravelDistanceForStrength(strength);
+            ShapeCast.TargetPosition = GetLocalMousePosition().Normalized() * travelDistance * inverseShotSign;
             ShapeCast.ForceShapecastUpdate();
         }
 

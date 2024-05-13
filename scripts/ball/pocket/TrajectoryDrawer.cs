@@ -28,18 +28,29 @@ public partial class TrajectoryDrawer : Node2D
             return;
         }
 
-        if (_cueBall.ShotData.Strength == 0 || !_cueBall.ShapeCast.IsColliding())
+        if (_cueBall.ShotData.Strength == 0)
         {
             return;
         }
 
-        var collisionPoint = _cueBall.ShapeCast.GetCollisionPoint(0);
-        var collisionVector = collisionPoint - Position;
-        var closestPoint =
-            GetBallCenterCollisionPoint(_cueBall.ShotData.PullVector, collisionVector, _cueBall.Radius);
-        DrawLine(Vector2.Zero, closestPoint, Colors.White, 2, true);
-        DrawArc(closestPoint, _cueBall.Radius, 0, Mathf.Tau, 64, Colors.White, 2f, true);
-        DrawCircle(collisionVector, 4, Colors.Red);
+        Vector2 stopPoint;
+        if (_cueBall.ShapeCast.IsColliding())
+        {
+            var collisionPoint = _cueBall.ShapeCast.GetCollisionPoint(0);
+            var collisionVector = collisionPoint - Position;
+            stopPoint =
+                GetBallCenterCollisionPoint(_cueBall.ShotData.PullVector, collisionVector, _cueBall.Radius);
+
+            DrawCircle(collisionVector, 4, Colors.Red);
+        }
+        else
+        {
+            var travelDistance = ShotStrengthUtil.GetBallTravelDistanceForStrength(_cueBall.ShotData.Strength);
+            stopPoint = _cueBall.ShotData.PullVector.Normalized() * travelDistance;
+        }
+
+        DrawLine(Vector2.Zero, stopPoint, Colors.White, 2, true);
+        DrawArc(stopPoint, _cueBall.Radius, 0, Mathf.Tau, 64, Colors.White, 2f, true);
 
         var angle = Mathf.Pi / 4f * _cueBall.ShotData.Strength;
         DrawArc(Vector2.Zero, _cueBall.Radius, 0, angle, 64, Colors.Orange, 4f, true);

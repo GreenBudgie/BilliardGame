@@ -34,4 +34,4 @@ shape = SubResource("CircleShape2D_81mj7")
 visible = false
 enabled = false
 shape = SubResource("CircleShape2D_5kyv3")
-collision_mask = 6
+collision_mask = 14
