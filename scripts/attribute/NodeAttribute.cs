@@ -6,7 +6,7 @@
 /// Invoke <see cref="NodeExtension.InitAttributes"/> at the first line of <see cref="Node._Ready"/> method
 /// for this to work.
 /// </summary>
-[AttributeUsage(AttributeTargets.Field)]
+[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
 public class NodeAttribute : Attribute
 {
 

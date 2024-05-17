@@ -18,19 +18,19 @@ public partial class CueBall : Ball
 
     public ShotData ShotData { get; private set; } = new(Vector2.Zero, false, 0);
 
+    [Node]
     public ShapeCast2D ShapeCast { get; private set; }
 
-    private Font _font;
+    [Node]
+    private CollisionShape2D _collisionShape;
 
     public override void _Ready()
     {
+        this.InitAttributes();
         base._Ready();
-        ShapeCast = GetNode<ShapeCast2D>("ShapeCast2D");
 
-        var circleShape = (CircleShape2D)GetNode<CollisionShape2D>("CollisionShape2D").Shape;
+        var circleShape = (CircleShape2D)_collisionShape.Shape;
         Radius = circleShape.Radius;
-
-        _font = GD.Load<Font>("res://The Citadels.otf");
 
         _initialGlobalPosition = Transform.Origin;
 
