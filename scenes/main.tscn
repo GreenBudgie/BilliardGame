@@ -24,4 +24,4 @@ _cueBall = NodePath("../CueBall")
 [node name="TrajectoryDrawer" parent="." node_paths=PackedStringArray("_cueBall") instance=ExtResource("5_p2u0a")]
 _cueBall = NodePath("../CueBall")
 
-[node name="ScoreManager" parent="." instance=ExtResource("6_qsycm")]
+[node name="RightBar" parent="." instance=ExtResource("6_qsycm")]
