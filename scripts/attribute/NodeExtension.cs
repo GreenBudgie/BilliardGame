@@ -9,57 +9,21 @@ public static class NodeExtension
 
     public static void InitAttributes(this Node node)
     {
-        foreach (var field in node.GetType().GetFields(Flags))
+        var fields = node.GetType().GetFields(Flags);
+        var properties = node.GetType().GetProperties(Flags);
+        var fieldsAndProperties = fields.Concat(properties.Cast<MemberInfo>());
+        foreach (var member in fieldsAndProperties)
         {
-            InitNodeAttribute(node, field);
-        }
-        foreach (var property in node.GetType().GetProperties(Flags))
-        {
-            InitNodeAttribute(node, property);
+            InitAttribute(node, member);
         }
     }
 
-    private static void InitNodeAttribute(Node node, MemberInfo member)
+    private static void InitAttribute(Node node, MemberInfo member)
     {
         var attribute = Attribute.GetCustomAttribute(member, typeof(NodeAttribute));
-        if (attribute is not NodeAttribute nodeAttribute)
+        if (attribute is NodeAttribute nodeAttribute)
         {
-            return;
+            nodeAttribute.Init(node, member);
         }
-
-        var nodeName = nodeAttribute.NodeName;
-
-        var childNode = nodeName == null
-            ? FindNodeByType(node, member)
-            : node.GetNode(nodeName) ??
-              throw new Exception($"No node with name {nodeName} exist on {node.Name}");
-        switch (member)
-        {
-            case FieldInfo field:
-                field.SetValue(node, childNode);
-                break;
-            case PropertyInfo property:
-                property.SetValue(node, childNode);
-                break;
-        }
-    }
-
-    private static Node FindNodeByType(Node rootNode, MemberInfo member)
-    {
-        Type nodeType;
-        switch (member)
-        {
-            case FieldInfo field:
-                nodeType = field.FieldType;
-                break;
-            case PropertyInfo property:
-                nodeType = property.PropertyType;
-                break;
-            default:
-                throw new Exception("Unexpected member used for node attribute");
-        }
-        var childNode = rootNode.GetChildren().FirstOrDefault(child => nodeType.IsInstanceOfType(child)) ??
-                        throw new Exception($"No node of type {nodeType} exist on {rootNode.Name}");
-        return childNode;
     }
 }
