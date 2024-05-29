@@ -37,7 +37,7 @@ public partial class PocketBall : Ball
 
     private void HandlePocketCollision(Pocket pocket)
     {
-        EventBus.Instance.EmitSignal(EventBus.SignalName.PocketScored, this, pocket);
+        EventBus.Instance.EmitSignal(EventBus.SignalName.BallScored, this, pocket);
         QueueFree();
     }
     

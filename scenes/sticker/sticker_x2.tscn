@@ -1,0 +1,14 @@
+[gd_scene load_steps=4 format=3 uid="uid://8r1hdcogffdg"]
+
+[ext_resource type="Script" path="res://scripts/sticker/Sticker.cs" id="1_p6ksc"]
+[ext_resource type="Texture2D" uid="uid://cq00ctj2u6sdc" path="res://sprites/sticker/sticker_x2.png" id="2_vcwne"]
+[ext_resource type="PackedScene" uid="uid://ci2nmq2t60vse" path="res://scenes/sticker/actions/sticker_action_multiply.tscn" id="3_qb32b"]
+
+[node name="StickerMultiply2" type="Node2D"]
+script = ExtResource("1_p6ksc")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_vcwne")
+
+[node name="StickerActionMultiply" parent="." instance=ExtResource("3_qb32b")]
+_times = 2.0

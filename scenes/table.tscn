@@ -1,0 +1,99 @@
+[gd_scene load_steps=12 format=3 uid="uid://cdokpkldvgmps"]
+
+[ext_resource type="Script" path="res://scripts/Table.cs" id="1_6ns3v"]
+[ext_resource type="Texture2D" uid="uid://bwldupelc0o5" path="res://sprites/table.png" id="1_ghw0p"]
+[ext_resource type="PackedScene" uid="uid://dnfowjpbcp587" path="res://scenes/ball/cue_ball.tscn" id="2_sbviq"]
+[ext_resource type="PackedScene" uid="uid://8rkc8w2aqbe7" path="res://scenes/ball/pocket_ball.tscn" id="3_bfqdw"]
+[ext_resource type="PackedScene" uid="uid://cfuk62rk78gl3" path="res://scenes/pocket/corner_pocket.tscn" id="3_cvwsn"]
+[ext_resource type="PackedScene" uid="uid://dkpq24jlytnuu" path="res://scenes/ball/ball_rack.tscn" id="3_nsswf"]
+[ext_resource type="PackedScene" uid="uid://58klbpi2i1kg" path="res://scenes/pocket/side_pocket.tscn" id="4_0v0a5"]
+[ext_resource type="PackedScene" uid="uid://bpnpvb46w7fu5" path="res://scenes/trajectory_drawer.tscn" id="5_qus0d"]
+[ext_resource type="PackedScene" uid="uid://jprorwadsxa6" path="res://scenes/cue.tscn" id="6_bek7c"]
+[ext_resource type="Script" path="res://scripts/sticker/StickerManager.cs" id="9_rs601"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_nget6"]
+friction = 0.4
+bounce = 0.5
+
+[node name="Table" type="Node2D"]
+script = ExtResource("1_6ns3v")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("1_ghw0p")
+
+[node name="PocketBall" parent="." instance=ExtResource("3_bfqdw")]
+position = Vector2(-1, -275)
+
+[node name="CueBall" parent="." instance=ExtResource("2_sbviq")]
+position = Vector2(-483, -2)
+
+[node name="BallRack" parent="." instance=ExtResource("3_nsswf")]
+position = Vector2(442, 0)
+
+[node name="TrajectoryDrawer" parent="." node_paths=PackedStringArray("_cueBall") instance=ExtResource("5_qus0d")]
+_cueBall = NodePath("../CueBall")
+
+[node name="Cue" parent="." node_paths=PackedStringArray("_cueBall") instance=ExtResource("6_bek7c")]
+_cueBall = NodePath("../CueBall")
+
+[node name="Borders" type="StaticBody2D" parent="."]
+collision_layer = 4
+collision_mask = 0
+physics_material_override = SubResource("PhysicsMaterial_nget6")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Borders"]
+visible = false
+polygon = PackedVector2Array(-636, -323, -668, -355, -669, -427, -43, -427, -44, -375, -40, -355, -54, -323)
+
+[node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="Borders"]
+visible = false
+scale = Vector2(-1, 1)
+polygon = PackedVector2Array(-636, -323, -668, -355, -669, -427, -43, -427, -44, -375, -40, -355, -54, -323)
+
+[node name="CollisionPolygon2D3" type="CollisionPolygon2D" parent="Borders"]
+visible = false
+scale = Vector2(1, -1)
+polygon = PackedVector2Array(-636, -323, -668, -355, -669, -427, -43, -427, -44, -375, -40, -355, -54, -323)
+
+[node name="CollisionPolygon2D4" type="CollisionPolygon2D" parent="Borders"]
+visible = false
+scale = Vector2(-1, -1)
+polygon = PackedVector2Array(-636, -323, -668, -355, -669, -427, -43, -427, -44, -375, -40, -355, -54, -323)
+
+[node name="CollisionPolygon2D5" type="CollisionPolygon2D" parent="Borders"]
+visible = false
+position = Vector2(663, 279)
+polygon = PackedVector2Array(27, -548, 59, -580, 131, -580, 131, 22, 59, 22, 27, -10)
+
+[node name="CollisionPolygon2D6" type="CollisionPolygon2D" parent="Borders"]
+visible = false
+position = Vector2(-663, 279)
+scale = Vector2(-1, 1)
+polygon = PackedVector2Array(27, -548, 59, -580, 131, -580, 131, 22, 59, 22, 27, -10)
+
+[node name="Pockets" type="Node2D" parent="."]
+
+[node name="TopLeftPocket" parent="Pockets" instance=ExtResource("3_cvwsn")]
+position = Vector2(-711, -344)
+
+[node name="TopPocket" parent="Pockets" instance=ExtResource("4_0v0a5")]
+position = Vector2(0, -375)
+
+[node name="TopRightPocket" parent="Pockets" instance=ExtResource("3_cvwsn")]
+position = Vector2(711, -344)
+rotation = 1.5708
+
+[node name="BottomRightPocket" parent="Pockets" instance=ExtResource("3_cvwsn")]
+position = Vector2(711, 344)
+rotation = 3.14159
+
+[node name="BottomPocket" parent="Pockets" instance=ExtResource("4_0v0a5")]
+position = Vector2(0, 375)
+rotation = 3.14159
+
+[node name="BottomLeftPocket" parent="Pockets" instance=ExtResource("3_cvwsn")]
+position = Vector2(-711, 344)
+rotation = 4.71239
+
+[node name="StickerManager" type="Node2D" parent="."]
+script = ExtResource("9_rs601")

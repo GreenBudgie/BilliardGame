@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://ci2nmq2t60vse"]
+
+[ext_resource type="Script" path="res://scripts/sticker/StickerActionMultiply.cs" id="1_5cn8k"]
+
+[node name="StickerActionMultiply" type="Node2D"]
+script = ExtResource("1_5cn8k")

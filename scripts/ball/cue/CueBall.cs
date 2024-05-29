@@ -18,16 +18,16 @@ public partial class CueBall : Ball
 
     public ShotData ShotData { get; private set; } = new(Vector2.Zero, false, 0);
 
-    [Node]
     public ShapeCast2D ShapeCast { get; private set; }
 
-    [Node]
     private CollisionShape2D _collisionShape;
 
     public override void _Ready()
     {
-        this.InitAttributes();
         base._Ready();
+
+        ShapeCast = GetNode<ShapeCast2D>("ShapeCast2D");
+        _collisionShape = GetNode<CollisionShape2D>("CollisionShape2D");
 
         var circleShape = (CircleShape2D)_collisionShape.Shape;
         Radius = circleShape.Radius;
@@ -41,7 +41,7 @@ public partial class CueBall : Ball
     public override void _Process(double delta)
     {
         var mousePosition = GetGlobalMousePosition();
-        IsBallHovered = mousePosition.DistanceSquaredTo(Position) <= Radius * Radius;
+        IsBallHovered = mousePosition.DistanceSquaredTo(GlobalPosition) <= Radius * Radius;
 
         if (ShouldCancelShot())
         {
@@ -72,7 +72,7 @@ public partial class CueBall : Ball
         }
 
         var inverseShotSign = shotData.Inverse ? -1 : 1;
-        var pullVector = (mousePosition - Position) * inverseShotSign;
+        var pullVector = (mousePosition - GlobalPosition) * inverseShotSign;
 
         var strength = ShotStrengthUtil.GetStrengthForPullVectorLength(pullVector.Length());
 
@@ -144,7 +144,8 @@ public partial class CueBall : Ball
         // TODO fix, does not teleport
         var transform = Transform;
         transform.Origin = _initialGlobalPosition;
-        EventBus.Instance.EmitSignal(EventBus.SignalName.CueBallScored, this, pocket);
+        Transform = transform;
+        EventBus.Instance.EmitSignal(EventBus.SignalName.BallScored, this, pocket);
     }
 
     public enum BallState

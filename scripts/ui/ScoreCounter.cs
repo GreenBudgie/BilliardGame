@@ -1,16 +1,16 @@
-﻿public partial class ScoreCounter : CounterLabel
+﻿using Godot;
+
+public partial class ScoreCounter : CounterLabel
 {
 
     public override void _Ready()
     {
-        this.InitAttributes();
-
-        EventBus.Instance.PocketScored += (ball, _) => _HandlePocketScore(ball);
+        EventBus.Instance.ScoringEnded += HandleScoringEnd;
     }
 
-    private void _HandlePocketScore(PocketBall ball)
+    private void HandleScoringEnd(PocketScoreContext context)
     {
-        Count += ball.Number;
+        Count += Mathf.RoundToInt(context.Score);
     }
 
 }

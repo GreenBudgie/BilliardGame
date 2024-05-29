@@ -1,0 +1,13 @@
+[gd_scene load_steps=4 format=3 uid="uid://b6rmsb7c3jf2a"]
+
+[ext_resource type="PackedScene" uid="uid://cdokpkldvgmps" path="res://scenes/table.tscn" id="1_3cvqc"]
+[ext_resource type="Script" path="res://scripts/Game.cs" id="1_qveh4"]
+[ext_resource type="PackedScene" uid="uid://dlftc7oew26gh" path="res://scenes/right_bar.tscn" id="6_12npv"]
+
+[node name="Game" type="Node2D"]
+script = ExtResource("1_qveh4")
+
+[node name="Table" parent="." instance=ExtResource("1_3cvqc")]
+position = Vector2(816, 544)
+
+[node name="RightBar" parent="." instance=ExtResource("6_12npv")]

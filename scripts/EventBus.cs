@@ -3,16 +3,16 @@
 public partial class EventBus : Node
 {
     /*
-     * Called whenever a ball is scored into the pocket
+     * Called whenever a ball is scored into the pocket. Also called when cue ball is scored.
      */
     [Signal]
-    public delegate void PocketScoredEventHandler(PocketBall pocketBall, Pocket pocket);
-
+    public delegate void BallScoredEventHandler(Ball ball, Pocket pocket);
+    
     /*
-     * Called whenever a cue ball is scored into the pocket
+     * Called whenever every sticker was applied and the score is ready to be processed by any other game mechanic.
      */
     [Signal]
-    public delegate void CueBallScoredEventHandler(CueBall cueBall, Pocket pocket);
+    public delegate void ScoringEndedEventHandler(PocketScoreContext context);
 
     public static EventBus Instance { get; private set; }
 

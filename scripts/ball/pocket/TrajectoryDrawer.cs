@@ -37,7 +37,7 @@ public partial class TrajectoryDrawer : Node2D
         if (_cueBall.ShapeCast.IsColliding())
         {
             var collisionPoint = _cueBall.ShapeCast.GetCollisionPoint(0);
-            var collisionVector = collisionPoint - Position;
+            var collisionVector = collisionPoint - GlobalPosition;
             stopPoint =
                 GetBallCenterCollisionPoint(_cueBall.ShotData.PullVector, collisionVector, _cueBall.Radius);
 

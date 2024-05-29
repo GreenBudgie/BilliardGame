@@ -6,7 +6,6 @@ public partial class Cue : Node2D
 
     [Export] private float _maxOffset = 130;
 
-    [Node]
     private Sprite2D _sprite;
 
     private bool _isVisible;
@@ -15,7 +14,7 @@ public partial class Cue : Node2D
 
     public override void _Ready()
     {
-        this.InitAttributes();
+        _sprite = GetNode<Sprite2D>("Sprite2D");
         if (_cueBall == null)
         {
             GD.PrintErr("Cue ball is not assigned for the cue");

@@ -1,0 +1,34 @@
+[gd_scene load_steps=5 format=3 uid="uid://58klbpi2i1kg"]
+
+[ext_resource type="Script" path="res://scripts/pocket/Pocket.cs" id="1_2vrob"]
+[ext_resource type="Texture2D" uid="uid://yyiqpayolhpg" path="res://sprites/pocket/side_pocket.png" id="2_d718d"]
+[ext_resource type="PackedScene" uid="uid://cxxibhu6k60gt" path="res://scenes/pocket/sticker_position.tscn" id="3_gfkqv"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_5i2nl"]
+radius = 22.0
+
+[node name="SidePocket" type="StaticBody2D"]
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("1_2vrob")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -4)
+texture = ExtResource("2_d718d")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_5i2nl")
+
+[node name="StickerPositions" type="Node2D" parent="."]
+
+[node name="StickerPosition1" parent="StickerPositions" instance=ExtResource("3_gfkqv")]
+position = Vector2(-161, -16)
+
+[node name="StickerPosition2" parent="StickerPositions" instance=ExtResource("3_gfkqv")]
+position = Vector2(-93, -16)
+
+[node name="StickerPosition3" parent="StickerPositions" instance=ExtResource("3_gfkqv")]
+position = Vector2(93, -16)
+
+[node name="StickerPosition4" parent="StickerPositions" instance=ExtResource("3_gfkqv")]
+position = Vector2(161, -16)
