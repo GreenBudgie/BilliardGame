@@ -8,7 +8,10 @@ public partial class StickerActionMultiply : StickerAction
     public override void Trigger(PocketScoreContext context)
     {
         context.Score *= _times;
-        GD.Print($"Triggered: {context.Score}");
+        var effectLabel = EffectLabel.Create();
+        effectLabel.Position += Vector2.Up * 40;
+        effectLabel.Text = $"x{_times}";
+        Sticker.AddChild(effectLabel);
     }
 
 }

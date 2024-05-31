@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=3 uid="uid://ii0tt70gr8yo"]
+
+[ext_resource type="FontFile" uid="uid://td811ud27dii" path="res://The Citadels.otf" id="1_fqvuo"]
+[ext_resource type="Script" path="res://scripts/effects/EffectLabel.cs" id="2_mh2g3"]
+
+[node name="EffectLabel" type="Label"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -0.5
+offset_top = -25.5
+offset_right = 0.5
+offset_bottom = 25.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+theme_override_fonts/font = ExtResource("1_fqvuo")
+theme_override_font_sizes/font_size = 48
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("2_mh2g3")
