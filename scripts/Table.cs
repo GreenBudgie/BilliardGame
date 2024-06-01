@@ -6,15 +6,26 @@ public partial class Table : Node2D
 {
     
     public List<Pocket> Pockets { get; private set; }
-    public List<PocketBall> PocketBalls { get; private set; }
-    public CueBall CueBall { get; private set; }
     public StickerManager StickerManager { get; private set; }
-    
+
     public override void _Ready()
     {
         Pockets = GetNode("Pockets").GetChildren().Cast<Pocket>().ToList();
-        PocketBalls = GetNode("BallRack").GetChildren().Cast<PocketBall>().ToList();
-        CueBall = GetNode<CueBall>("CueBall");
         StickerManager = GetNode<StickerManager>("StickerManager");
+    }
+
+    public List<PocketBall> GetPocketBalls()
+    {
+        return GetNode("BallRack").GetChildren().Cast<PocketBall>().ToList();
+    }
+    
+    public CueBall GetCueBall()
+    {
+        return GetNode<CueBall>("CueBall");
+    }
+
+    public List<Ball> GetBalls()
+    {
+        return GetPocketBalls().Concat<Ball>(new[] { GetCueBall() }).ToList();
     }
 }

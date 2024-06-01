@@ -32,6 +32,10 @@ window/stretch/mode="canvas_items"
 
 project/assembly_name="Billiard"
 
+[gui]
+
+theme/custom_font="res://resources/fonts/font_baloo.ttf"
+
 [input]
 
 shoot={

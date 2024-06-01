@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://dlftc7oew26gh"]
 
-[ext_resource type="FontFile" uid="uid://td811ud27dii" path="res://The Citadels.otf" id="1_xwaat"]
+[ext_resource type="FontFile" uid="uid://td811ud27dii" path="res://resources/fonts/The Citadels.otf" id="1_xwaat"]
 [ext_resource type="Texture2D" uid="uid://b707ta0oekog4" path="res://sprites/right_bar.png" id="3_2pecr"]
 [ext_resource type="Script" path="res://scripts/ui/ScoreCounter.cs" id="3_nf2pr"]
 [ext_resource type="Texture2D" uid="uid://b7ww1fh0gppsq" path="res://sprites/ui/chip.png" id="4_ki7cm"]

@@ -1,14 +1,15 @@
-﻿using System.Linq;
-using Godot;
+﻿using Godot;
 
 public partial class Game : Node2D
 {
     
     public Table Table { get; private set; }
+    public ShotContext ShotContext { get; private set; }
 
     public override void _Ready()
     {
         Table = GetNode<Table>("Table");
+        ShotContext = GetNode<ShotContext>("ShotContext");
         var stickerX2 = GD.Load<PackedScene>("res://scenes/sticker/sticker_x2.tscn");
         foreach (var pocket in Table.Pockets)
         {

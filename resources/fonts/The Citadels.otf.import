@@ -3,12 +3,12 @@
 importer="font_data_dynamic"
 type="FontFile"
 uid="uid://td811ud27dii"
-path="res://.godot/imported/The Citadels.otf-8dfceb45a4f13f4b7755600ba9c2e099.fontdata"
+path="res://.godot/imported/The Citadels.otf-178956a58c52e334eb975bed8b185780.fontdata"
 
 [deps]
 
-source_file="res://The Citadels.otf"
-dest_files=["res://.godot/imported/The Citadels.otf-8dfceb45a4f13f4b7755600ba9c2e099.fontdata"]
+source_file="res://resources/fonts/The Citadels.otf"
+dest_files=["res://.godot/imported/The Citadels.otf-178956a58c52e334eb975bed8b185780.fontdata"]
 
 [params]
 

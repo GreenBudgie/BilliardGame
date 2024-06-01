@@ -4,10 +4,11 @@ public abstract partial class Ball : RigidBody2D
 {
     [Export] public AudioStream BallHitSound;
     [Export] public AudioStream TableHitSound;
+    [Export] public BallInfo BallInfo { get; private set; }
 
     [Signal]
     public delegate void PocketScoredEventHandler(Pocket pocket);
-    
+
     // Damping
     private const float FastDampVelocityThreshold = 150;
     private const float FastDamp = 0.4f;
@@ -27,6 +28,7 @@ public abstract partial class Ball : RigidBody2D
     public override void _Ready()
     {
         BodyEntered += OnBodyEntered;
+        SleepingStateChanged += HandleSleepStateChange;
     }
 
     public override void _PhysicsProcess(double delta)
@@ -101,5 +103,13 @@ public abstract partial class Ball : RigidBody2D
         sound.VolumeDb = Mathf.Lerp(CollisionVolumeDbMin, CollisionVolumeDbMax, velocityWeight);
         sound.PitchScale = Mathf.Lerp(CollisionPitchMin, CollisionPitchMax, velocityWeight);
         sound.RandomPitchOffset(0.05f);
+    }
+
+    private void HandleSleepStateChange()
+    {
+        if (Sleeping)
+        {
+            EventBus.Instance.EmitSignal(EventBus.SignalName.BallStopped, this);
+        }
     }
 }

@@ -13,6 +13,12 @@ public partial class EventBus : Node
      */
     [Signal]
     public delegate void ScoringEndedEventHandler(PocketScoreContext context);
+    
+    /*
+    * Called when any ball has stopped rolling completely.
+    */
+    [Signal]
+    public delegate void BallStoppedEventHandler(Ball ball);
 
     public static EventBus Instance { get; private set; }
 

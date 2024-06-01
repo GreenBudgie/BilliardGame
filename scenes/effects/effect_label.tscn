@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://ii0tt70gr8yo"]
 
-[ext_resource type="FontFile" uid="uid://td811ud27dii" path="res://The Citadels.otf" id="1_fqvuo"]
+[ext_resource type="FontFile" uid="uid://td811ud27dii" path="res://resources/fonts/The Citadels.otf" id="1_fqvuo"]
 [ext_resource type="Script" path="res://scripts/effects/EffectLabel.cs" id="2_mh2g3"]
 
 [node name="EffectLabel" type="Label"]
