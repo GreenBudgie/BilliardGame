@@ -83,9 +83,9 @@ public abstract partial class Ball : RigidBody2D
             HandleCollision(BallHitSound);
         }
 
-        if (node is Pocket pocket)
+        if (node is PocketBody pocketBody)
         {
-            EmitSignal(SignalName.PocketScored, pocket);
+            EmitSignal(SignalName.PocketScored, pocketBody.Pocket);
         }
     }
 

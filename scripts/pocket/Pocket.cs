@@ -1,18 +1,17 @@
-using Godot;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Godot;
 
-public partial class Pocket : StaticBody2D
+public partial class Pocket : Node2D
 {
 
     [Export] public PocketPosition PocketPosition { get; private set; }
     
     public List<StickerPosition> StickerPositions { get; private set; }
 
-    public List<BallInfo> ScoredBalls { get; private set; } = new();
-    public List<BallInfo> ScoredBallsPerShot { get; private set; } = new();
+    public List<BallInfo> ScoredBalls { get; } = new();
+    public List<BallInfo> ScoredBallsPerShot { get; } = new();
     
     public override void _Ready()
     {
@@ -27,12 +26,24 @@ public partial class Pocket : StaticBody2D
         EventBus.Instance.BallScored += HandleBallScore;
     }
 
+    public List<StickerPosition> GetEmptyPositions()
+    {
+        return StickerPositions.Where(stickerPosition => !stickerPosition.HasSticker()).ToList();
+    }
+
+    public List<Sticker> GetStickers()
+    {
+        return StickerPositions
+            .Select(stickerPosition => stickerPosition.GetSticker())
+            .Where(sticker => sticker != null)
+            .ToList();
+    }
+
     public async Task TriggerScoring()
     {
         var initialScore = ScoredBallsPerShot.Sum(ball => ball.Number);
         var context = new PocketScoreContext(initialScore);
-        var stickers = GameManager.Game.Table.StickerManager.GetStickersForPocket(this);
-        foreach (var sticker in stickers)
+        foreach (var sticker in GetStickers())
         {
             await sticker.Trigger(context);
         }

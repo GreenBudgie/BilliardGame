@@ -4,19 +4,19 @@ public partial class Game : Node2D
 {
     
     public Table Table { get; private set; }
-    public ShotContext ShotContext { get; private set; }
+    public ScoringManager ScoringManager { get; private set; }
 
     public override void _Ready()
     {
         Table = GetNode<Table>("Table");
-        ShotContext = GetNode<ShotContext>("ShotContext");
+        ScoringManager = GetNode<ScoringManager>("ScoringManager");
         var stickerX2 = GD.Load<PackedScene>("res://scenes/sticker/sticker_x2.tscn");
         foreach (var pocket in Table.Pockets)
         {
             var sticker1 = stickerX2.Instantiate<Sticker>();
-            Table.StickerManager.AddSticker(sticker1, pocket.StickerPositions[0]);
+            pocket.StickerPositions[0].SetSticker(sticker1);
             var sticker2 = stickerX2.Instantiate<Sticker>();
-            Table.StickerManager.AddSticker(sticker2, pocket.StickerPositions[1]);
+            pocket.StickerPositions[1].SetSticker(sticker2);
         }
     }
 }

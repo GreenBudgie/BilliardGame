@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dy8k6t6dye03o"]
+
+[ext_resource type="Script" path="res://scripts/pocket/Pocket.cs" id="1_cqvel"]
+
+[node name="Pocket" type="Node2D"]
+script = ExtResource("1_cqvel")

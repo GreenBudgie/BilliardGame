@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://cdokpkldvgmps"]
+[gd_scene load_steps=13 format=3 uid="uid://cdokpkldvgmps"]
 
 [ext_resource type="Script" path="res://scripts/Table.cs" id="1_6ns3v"]
 [ext_resource type="Texture2D" uid="uid://bwldupelc0o5" path="res://sprites/table.png" id="1_ghw0p"]
@@ -9,7 +9,8 @@
 [ext_resource type="PackedScene" uid="uid://58klbpi2i1kg" path="res://scenes/pocket/side_pocket.tscn" id="4_0v0a5"]
 [ext_resource type="PackedScene" uid="uid://bpnpvb46w7fu5" path="res://scenes/trajectory_drawer.tscn" id="5_qus0d"]
 [ext_resource type="PackedScene" uid="uid://jprorwadsxa6" path="res://scenes/cue.tscn" id="6_bek7c"]
-[ext_resource type="Script" path="res://scripts/sticker/StickerManager.cs" id="9_rs601"]
+[ext_resource type="PackedScene" uid="uid://dy8k6t6dye03o" path="res://scenes/pocket/pocket.tscn" id="8_4reo7"]
+[ext_resource type="PackedScene" uid="uid://cxxibhu6k60gt" path="res://scenes/pocket/sticker_position.tscn" id="10_j7oqd"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_nget6"]
 friction = 0.4
@@ -73,27 +74,131 @@ polygon = PackedVector2Array(27, -548, 59, -580, 131, -580, 131, 22, 59, 22, 27,
 
 [node name="Pockets" type="Node2D" parent="."]
 
-[node name="TopLeftPocket" parent="Pockets" instance=ExtResource("3_cvwsn")]
+[node name="TopLeftPocket" parent="Pockets" instance=ExtResource("8_4reo7")]
 position = Vector2(-711, -344)
 
-[node name="TopPocket" parent="Pockets" instance=ExtResource("4_0v0a5")]
+[node name="CornerPocket" parent="Pockets/TopLeftPocket" node_paths=PackedStringArray("Pocket") instance=ExtResource("3_cvwsn")]
+Pocket = NodePath("..")
+
+[node name="StickerPositions" type="Node2D" parent="Pockets/TopLeftPocket"]
+
+[node name="StickerPosition1" parent="Pockets/TopLeftPocket/StickerPositions" instance=ExtResource("10_j7oqd")]
+position = Vector2(-47, 169)
+
+[node name="StickerPosition2" parent="Pockets/TopLeftPocket/StickerPositions" instance=ExtResource("10_j7oqd")]
+position = Vector2(-47, 101)
+
+[node name="StickerPosition3" parent="Pockets/TopLeftPocket/StickerPositions" instance=ExtResource("10_j7oqd")]
+position = Vector2(101, -47)
+
+[node name="StickerPosition4" parent="Pockets/TopLeftPocket/StickerPositions" instance=ExtResource("10_j7oqd")]
+position = Vector2(169, -47)
+
+[node name="TopPocket" parent="Pockets" instance=ExtResource("8_4reo7")]
 position = Vector2(0, -375)
+PocketPosition = 1
 
-[node name="TopRightPocket" parent="Pockets" instance=ExtResource("3_cvwsn")]
+[node name="SidePocket" parent="Pockets/TopPocket" node_paths=PackedStringArray("Pocket") instance=ExtResource("4_0v0a5")]
+Pocket = NodePath("..")
+
+[node name="StickerPositions" type="Node2D" parent="Pockets/TopPocket"]
+
+[node name="StickerPosition1" parent="Pockets/TopPocket/StickerPositions" instance=ExtResource("10_j7oqd")]
+position = Vector2(-161, -16)
+
+[node name="StickerPosition2" parent="Pockets/TopPocket/StickerPositions" instance=ExtResource("10_j7oqd")]
+position = Vector2(-93, -16)
+
+[node name="StickerPosition3" parent="Pockets/TopPocket/StickerPositions" instance=ExtResource("10_j7oqd")]
+position = Vector2(93, -16)
+
+[node name="StickerPosition4" parent="Pockets/TopPocket/StickerPositions" instance=ExtResource("10_j7oqd")]
+position = Vector2(161, -16)
+
+[node name="TopRightPocket" parent="Pockets" instance=ExtResource("8_4reo7")]
 position = Vector2(711, -344)
+PocketPosition = 2
+
+[node name="CornerPocket" parent="Pockets/TopRightPocket" node_paths=PackedStringArray("Pocket") instance=ExtResource("3_cvwsn")]
 rotation = 1.5708
+Pocket = NodePath("..")
 
-[node name="BottomRightPocket" parent="Pockets" instance=ExtResource("3_cvwsn")]
+[node name="StickerPositions" type="Node2D" parent="Pockets/TopRightPocket"]
+
+[node name="StickerPosition1" parent="Pockets/TopRightPocket/StickerPositions" instance=ExtResource("10_j7oqd")]
+position = Vector2(-169, -47)
+
+[node name="StickerPosition2" parent="Pockets/TopRightPocket/StickerPositions" instance=ExtResource("10_j7oqd")]
+position = Vector2(-101, -47)
+
+[node name="StickerPosition3" parent="Pockets/TopRightPocket/StickerPositions" instance=ExtResource("10_j7oqd")]
+position = Vector2(47, 101)
+
+[node name="StickerPosition4" parent="Pockets/TopRightPocket/StickerPositions" instance=ExtResource("10_j7oqd")]
+position = Vector2(47, 169)
+
+[node name="BottomRightPocket" parent="Pockets" instance=ExtResource("8_4reo7")]
 position = Vector2(711, 344)
-rotation = 3.14159
+PocketPosition = 3
 
-[node name="BottomPocket" parent="Pockets" instance=ExtResource("4_0v0a5")]
+[node name="CornerPocket" parent="Pockets/BottomRightPocket" node_paths=PackedStringArray("Pocket") instance=ExtResource("3_cvwsn")]
+rotation = 3.14159
+Pocket = NodePath("..")
+
+[node name="StickerPositions" type="Node2D" parent="Pockets/BottomRightPocket"]
+
+[node name="StickerPosition1" parent="Pockets/BottomRightPocket/StickerPositions" instance=ExtResource("10_j7oqd")]
+position = Vector2(47, -101)
+
+[node name="StickerPosition2" parent="Pockets/BottomRightPocket/StickerPositions" instance=ExtResource("10_j7oqd")]
+position = Vector2(47, -169)
+
+[node name="StickerPosition3" parent="Pockets/BottomRightPocket/StickerPositions" instance=ExtResource("10_j7oqd")]
+position = Vector2(-101, 47)
+
+[node name="StickerPosition4" parent="Pockets/BottomRightPocket/StickerPositions" instance=ExtResource("10_j7oqd")]
+position = Vector2(-169, 47)
+
+[node name="BottomPocket" parent="Pockets" instance=ExtResource("8_4reo7")]
 position = Vector2(0, 375)
+PocketPosition = 4
+
+[node name="SidePocket" parent="Pockets/BottomPocket" node_paths=PackedStringArray("Pocket") instance=ExtResource("4_0v0a5")]
 rotation = 3.14159
+Pocket = NodePath("..")
 
-[node name="BottomLeftPocket" parent="Pockets" instance=ExtResource("3_cvwsn")]
+[node name="StickerPositions" type="Node2D" parent="Pockets/BottomPocket"]
+
+[node name="StickerPosition1" parent="Pockets/BottomPocket/StickerPositions" instance=ExtResource("10_j7oqd")]
+position = Vector2(161, 16)
+
+[node name="StickerPosition2" parent="Pockets/BottomPocket/StickerPositions" instance=ExtResource("10_j7oqd")]
+position = Vector2(93, 16)
+
+[node name="StickerPosition3" parent="Pockets/BottomPocket/StickerPositions" instance=ExtResource("10_j7oqd")]
+position = Vector2(-93, 16)
+
+[node name="StickerPosition4" parent="Pockets/BottomPocket/StickerPositions" instance=ExtResource("10_j7oqd")]
+position = Vector2(-161, 16)
+
+[node name="BottomLeftPocket" parent="Pockets" instance=ExtResource("8_4reo7")]
 position = Vector2(-711, 344)
-rotation = 4.71239
+PocketPosition = 5
 
-[node name="StickerManager" type="Node2D" parent="."]
-script = ExtResource("9_rs601")
+[node name="CornerPocket" parent="Pockets/BottomLeftPocket" node_paths=PackedStringArray("Pocket") instance=ExtResource("3_cvwsn")]
+rotation = 4.71239
+Pocket = NodePath("..")
+
+[node name="StickerPositions" type="Node2D" parent="Pockets/BottomLeftPocket"]
+
+[node name="StickerPosition1" parent="Pockets/BottomLeftPocket/StickerPositions" instance=ExtResource("10_j7oqd")]
+position = Vector2(167, 47)
+
+[node name="StickerPosition2" parent="Pockets/BottomLeftPocket/StickerPositions" instance=ExtResource("10_j7oqd")]
+position = Vector2(101, 47)
+
+[node name="StickerPosition3" parent="Pockets/BottomLeftPocket/StickerPositions" instance=ExtResource("10_j7oqd")]
+position = Vector2(-47, -101)
+
+[node name="StickerPosition4" parent="Pockets/BottomLeftPocket/StickerPositions" instance=ExtResource("10_j7oqd")]
+position = Vector2(-47, -169)

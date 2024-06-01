@@ -1,8 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://cfuk62rk78gl3"]
+[gd_scene load_steps=4 format=3 uid="uid://cfuk62rk78gl3"]
 
-[ext_resource type="Script" path="res://scripts/pocket/Pocket.cs" id="1_coko4"]
+[ext_resource type="Script" path="res://scripts/pocket/PocketBody.cs" id="1_1uy5a"]
 [ext_resource type="Texture2D" uid="uid://bsd4b48l71mvb" path="res://sprites/pocket/corner_pocket.png" id="2_i4ent"]
-[ext_resource type="PackedScene" uid="uid://cxxibhu6k60gt" path="res://scenes/pocket/sticker_position.tscn" id="3_yd4sb"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_5i2nl"]
 radius = 22.0
@@ -10,7 +9,7 @@ radius = 22.0
 [node name="CornerPocket" type="StaticBody2D"]
 collision_layer = 8
 collision_mask = 0
-script = ExtResource("1_coko4")
+script = ExtResource("1_1uy5a")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(-11, -11)
@@ -18,17 +17,3 @@ texture = ExtResource("2_i4ent")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_5i2nl")
-
-[node name="StickerPositions" type="Node2D" parent="."]
-
-[node name="StickerPosition1" parent="StickerPositions" instance=ExtResource("3_yd4sb")]
-position = Vector2(-47, 169)
-
-[node name="StickerPosition2" parent="StickerPositions" instance=ExtResource("3_yd4sb")]
-position = Vector2(-47, 101)
-
-[node name="StickerPosition3" parent="StickerPositions" instance=ExtResource("3_yd4sb")]
-position = Vector2(101, -47)
-
-[node name="StickerPosition4" parent="StickerPositions" instance=ExtResource("3_yd4sb")]
-position = Vector2(169, -47)

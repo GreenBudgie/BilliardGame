@@ -6,12 +6,10 @@ public partial class Table : Node2D
 {
     
     public List<Pocket> Pockets { get; private set; }
-    public StickerManager StickerManager { get; private set; }
 
     public override void _Ready()
     {
         Pockets = GetNode("Pockets").GetChildren().Cast<Pocket>().ToList();
-        StickerManager = GetNode<StickerManager>("StickerManager");
     }
 
     public List<PocketBall> GetPocketBalls()
