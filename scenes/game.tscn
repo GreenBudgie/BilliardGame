@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://b6rmsb7c3jf2a"]
+[gd_scene load_steps=6 format=3 uid="uid://b6rmsb7c3jf2a"]
 
 [ext_resource type="PackedScene" uid="uid://cdokpkldvgmps" path="res://scenes/table.tscn" id="1_3cvqc"]
 [ext_resource type="Script" path="res://scripts/Game.cs" id="1_qveh4"]
-[ext_resource type="Script" path="res://scripts/ScoringManager.cs" id="4_0vuc6"]
+[ext_resource type="Script" path="res://scripts/manager/ScoringManager.cs" id="4_0vuc6"]
+[ext_resource type="Script" path="res://scripts/manager/GameStateManager.cs" id="5_a5gdf"]
 [ext_resource type="PackedScene" uid="uid://dlftc7oew26gh" path="res://scenes/right_bar.tscn" id="6_12npv"]
 
 [node name="Game" type="Node2D"]
@@ -15,3 +16,6 @@ position = Vector2(816, 544)
 
 [node name="ScoringManager" type="Node" parent="."]
 script = ExtResource("4_0vuc6")
+
+[node name="GameStateManager" type="Node" parent="."]
+script = ExtResource("5_a5gdf")

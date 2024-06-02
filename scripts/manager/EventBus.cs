@@ -19,6 +19,9 @@ public partial class EventBus : Node
     */
     [Signal]
     public delegate void BallStoppedEventHandler(Ball ball);
+    
+    [Signal]
+    public delegate void ScoreChangedEventHandler(int score);
 
     public static EventBus Instance { get; private set; }
 

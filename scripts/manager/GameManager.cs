@@ -9,14 +9,7 @@ public partial class GameManager : Node
 
     public static Game Game
     {
-        get
-        {
-            if (_cachedGame == null)
-            {
-                _cachedGame = Instance.GetNode<Game>("/root/Game");
-            }
-            return _cachedGame;
-        }
+        get { return _cachedGame ??= Instance.GetNode<Game>("/root/Game"); }
     }
 
     public override void _Ready()

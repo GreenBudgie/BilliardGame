@@ -7,12 +7,12 @@ public partial class TrajectoryDrawer : Node2D
 
     public override void _Ready()
     {
-        if (_cueBall == null)
+        if (_cueBall != null)
         {
-            GD.PrintErr("Cue ball is not assigned for the trajectory drawer");
-            QueueFree();
             return;
         }
+        GD.PrintErr("Cue ball is not assigned for the trajectory drawer");
+        QueueFree();
     }
 
     public override void _Process(double delta)

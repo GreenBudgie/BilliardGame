@@ -17,10 +17,6 @@ public partial class Pocket : Node2D
     {
         var stickerPositionsNode = GetNode<Node2D>("StickerPositions");
         StickerPositions = stickerPositionsNode.GetChildren().Cast<StickerPosition>().ToList();
-        foreach (var stickerPosition in StickerPositions)
-        {
-            stickerPosition.Pocket = this;
-        }
 
         EventBus.Instance.BallScored += HandleBallScore;
     }
@@ -38,14 +34,21 @@ public partial class Pocket : Node2D
             .ToList();
     }
 
-    public async Task TriggerScoring()
+    public async ValueTask<PocketScoreContext> TriggerScoring()
     {
+        if (ScoredBallsPerShot.Count == 0)
+        {
+            return null;
+        }
         var initialScore = ScoredBallsPerShot.Sum(ball => ball.Number);
         var context = new PocketScoreContext(initialScore);
         foreach (var sticker in GetStickers())
         {
             await sticker.Trigger(context);
         }
+        ScoredBallsPerShot.Clear();
+
+        return context;
     }
     
     private void HandleBallScore(Ball ball, Pocket pocket)

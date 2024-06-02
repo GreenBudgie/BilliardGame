@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://dast5eh1lp762"]
 
-[ext_resource type="Script" path="res://scripts/PositionalSound.cs" id="1_tvasw"]
+[ext_resource type="Script" path="res://scripts/util/PositionalSound.cs" id="1_tvasw"]
 
 [node name="PositionalSound" type="AudioStreamPlayer2D"]
 script = ExtResource("1_tvasw")

@@ -3,6 +3,9 @@
 public partial class StickerPosition : Node2D
 {
     
+    private const string StickerNodeName = "Sticker";
+    
+    [Export]
     public Pocket Pocket { get; set; }
 
     public override void _Ready()
@@ -12,13 +15,14 @@ public partial class StickerPosition : Node2D
 
     public void SetSticker(Sticker sticker)
     {
-        AddChild(sticker);
+        sticker.Name = StickerNodeName;
         sticker.Pocket = Pocket;
+        AddChild(sticker);
     }
 
     public Sticker GetSticker()
     {
-        return GetChildOrNull<Sticker>(0);
+        return GetNodeOrNull<Sticker>(StickerNodeName);
     }
     
     public bool HasSticker()

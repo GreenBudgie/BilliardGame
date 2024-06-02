@@ -1,15 +1,18 @@
-﻿using Godot;
+﻿using System;
+using Godot;
 
 public partial class Game : Node2D
 {
     
     public Table Table { get; private set; }
     public ScoringManager ScoringManager { get; private set; }
+    public GameStateManager GameStateManager { get; private set; }
 
     public override void _Ready()
     {
         Table = GetNode<Table>("Table");
         ScoringManager = GetNode<ScoringManager>("ScoringManager");
+        GameStateManager = GetNode<GameStateManager>("GameStateManager");
         var stickerX2 = GD.Load<PackedScene>("res://scenes/sticker/sticker_x2.tscn");
         foreach (var pocket in Table.Pockets)
         {

@@ -48,9 +48,11 @@ public partial class CueBall : Ball
             State = BallState.Idle;
         }
 
+        var allowedToShootByGameState =
+            GameManager.Game.GameStateManager.State == GameState.ShotPreparation;
         var ableToShoot = State == BallState.ShotPrepare || IsBallHovered;
 
-        if (!ableToShoot)
+        if (!allowedToShootByGameState || !ableToShoot)
         {
             Input.SetDefaultCursorShape();
             return;
@@ -92,6 +94,7 @@ public partial class CueBall : Ball
         if (ShouldPerformShot())
         {
             State = BallState.ShotAnimation;
+            GameManager.Game.GameStateManager.ChangeState(GameState.ShotExecution);
             EmitSignal(SignalName.ShotInitialized);
         }
     }
