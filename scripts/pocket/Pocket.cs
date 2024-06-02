@@ -19,7 +19,6 @@ public partial class Pocket : Node2D
         StickerPositions = stickerPositionsNode.GetChildren().Cast<StickerPosition>().ToList();
         foreach (var stickerPosition in StickerPositions)
         {
-            stickerPosition.Visible = false;
             stickerPosition.Pocket = this;
         }
 

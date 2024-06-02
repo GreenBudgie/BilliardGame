@@ -5,6 +5,11 @@ public partial class StickerPosition : Node2D
     
     public Pocket Pocket { get; set; }
 
+    public override void _Ready()
+    {
+        GetNode<Sprite2D>("Sprite2D").Visible = false;
+    }
+
     public void SetSticker(Sticker sticker)
     {
         AddChild(sticker);

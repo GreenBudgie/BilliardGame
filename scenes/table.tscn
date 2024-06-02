@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://cdokpkldvgmps"]
+[gd_scene load_steps=15 format=3 uid="uid://cdokpkldvgmps"]
 
 [ext_resource type="Script" path="res://scripts/Table.cs" id="1_6ns3v"]
 [ext_resource type="Texture2D" uid="uid://bwldupelc0o5" path="res://sprites/table.png" id="1_ghw0p"]
@@ -7,10 +7,18 @@
 [ext_resource type="PackedScene" uid="uid://cfuk62rk78gl3" path="res://scenes/pocket/corner_pocket.tscn" id="3_cvwsn"]
 [ext_resource type="PackedScene" uid="uid://dkpq24jlytnuu" path="res://scenes/ball/ball_rack.tscn" id="3_nsswf"]
 [ext_resource type="PackedScene" uid="uid://58klbpi2i1kg" path="res://scenes/pocket/side_pocket.tscn" id="4_0v0a5"]
+[ext_resource type="Script" path="res://scripts/ball/BallInfo.cs" id="4_g5xyx"]
 [ext_resource type="PackedScene" uid="uid://bpnpvb46w7fu5" path="res://scenes/trajectory_drawer.tscn" id="5_qus0d"]
 [ext_resource type="PackedScene" uid="uid://jprorwadsxa6" path="res://scenes/cue.tscn" id="6_bek7c"]
 [ext_resource type="PackedScene" uid="uid://dy8k6t6dye03o" path="res://scenes/pocket/pocket.tscn" id="8_4reo7"]
 [ext_resource type="PackedScene" uid="uid://cxxibhu6k60gt" path="res://scenes/pocket/sticker_position.tscn" id="10_j7oqd"]
+
+[sub_resource type="Resource" id="Resource_v3nix"]
+script = ExtResource("4_g5xyx")
+IsCueBall = false
+Number = 1
+Color = 0
+Type = 0
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_nget6"]
 friction = 0.4
@@ -24,6 +32,7 @@ texture = ExtResource("1_ghw0p")
 
 [node name="PocketBall" parent="." instance=ExtResource("3_bfqdw")]
 position = Vector2(-1, -275)
+BallInfo = SubResource("Resource_v3nix")
 
 [node name="CueBall" parent="." instance=ExtResource("2_sbviq")]
 position = Vector2(-483, -2)

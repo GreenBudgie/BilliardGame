@@ -4,12 +4,6 @@ using Godot;
 public partial class PocketBall : Ball
 {
 
-    [Export(PropertyHint.Range, "1,99")] public int Number { get; set; } = 1;
-
-    [Export] public BallType Type { get; set; }
-
-    [Export] public BallColor Color { get; set; }
-
     public override void _Ready()
     {
         base._Ready();
@@ -23,14 +17,14 @@ public partial class PocketBall : Ball
         }
         
         // Make appropriate sprites for the ball type visible and apply ball color to overlay
-        var bodySprite = parts.GetNode<Sprite2D>(Type.GetBodySpriteNodeName());
+        var bodySprite = parts.GetNode<Sprite2D>(BallInfo.Type.GetBodySpriteNodeName());
         bodySprite.Visible = true;
-        var overlaySprite = parts.GetNode<Sprite2D>(Type.GetOverlaySpriteNodeName());
+        var overlaySprite = parts.GetNode<Sprite2D>(BallInfo.Type.GetOverlaySpriteNodeName());
         overlaySprite.Visible = true;
-        overlaySprite.Modulate = Color.GetRealColor();
+        overlaySprite.Modulate = BallInfo.Color.GetRealColor();
 
         var numberLabel = GetNode<Label>("NumberLabel");
-        numberLabel.Text = Number.ToString();
+        numberLabel.Text = BallInfo.Number.ToString();
 
         PocketScored += HandlePocketCollision;
     }
