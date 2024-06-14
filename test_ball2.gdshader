@@ -1,6 +1,7 @@
 shader_type canvas_item;
 
 uniform vec4 rotation = vec4(0.0, 0.0, 1.0, 0.0);
+uniform sampler2D ball_texture;
 
 vec4 quat_conj(vec4 q)
 { 
@@ -44,9 +45,9 @@ void fragment() {
 	vec2 uv = UV * 2.0 - 1.0;
 	
 	// For now, uv.x = [-2;2], uv.y = [-1;1]
-	
+		
 	if (4.0 * uv.x * uv.x + uv.y * uv.y >= 1.0) {
-		//discard;
+		discard;
 	}
 
 	float x = sqrt(1.0 - (4.0 * uv.x * uv.x) - (uv.y * uv.y));
@@ -57,7 +58,7 @@ void fragment() {
 	vec3 r_vector = rotate_vertex_position(
 		vector, 
 		normalize(rotation.xyz),
-		rotation.w
+		TIME * rotation.w
 	);
 	x = r_vector.x;
 	y = r_vector.y;
@@ -71,6 +72,6 @@ void fragment() {
 		new_u = 1.0 - y / 4.0;
 	}
 	float new_v = 0.5 * z + 0.5;
-	
-	COLOR = texture(TEXTURE, vec2(new_u, new_v));
+
+	COLOR = texture(ball_texture, vec2(new_u, new_v));
 }

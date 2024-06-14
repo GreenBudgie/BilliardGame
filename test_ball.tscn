@@ -1,18 +1,57 @@
-[gd_scene load_steps=5 format=3 uid="uid://dlc00bof7e440"]
+[gd_scene load_steps=8 format=3 uid="uid://dlc00bof7e440"]
 
 [ext_resource type="Shader" path="res://test_ball.gdshader" id="1_tsacp"]
 [ext_resource type="Texture2D" uid="uid://deepuy377g5wa" path="res://test_ball7.png" id="2_5bigc"]
-[ext_resource type="Script" path="res://TestBall.cs" id="3_pt80s"]
+[ext_resource type="Shader" path="res://test_ball2.gdshader" id="2_tj8gw"]
+[ext_resource type="Script" path="res://scripts/TestBall.cs" id="3_a2kcq"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_lhce6"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_m83uj"]
 shader = ExtResource("1_tsacp")
 shader_parameter/rotation = Vector4(0, 0, 1, 0)
 
-[node name="TestBall" type="Sprite2D"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vgffa"]
+shader = ExtResource("2_tj8gw")
+shader_parameter/rotation = Vector4(0, 0, 1, 0.615)
+shader_parameter/ball_texture = ExtResource("2_5bigc")
+
+[sub_resource type="LabelSettings" id="LabelSettings_dwjhf"]
+font_size = 91
+font_color = Color(0.0745098, 0.756863, 1, 1)
+
+[node name="TestBall" type="Node2D"]
 texture_repeat = 2
-material = SubResource("ShaderMaterial_lhce6")
-position = Vector2(122, 92)
-texture = ExtResource("2_5bigc")
-script = ExtResource("3_pt80s")
+material = SubResource("ShaderMaterial_m83uj")
+position = Vector2(112, 72)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_vgffa")
+texture = ExtResource("2_5bigc")
+script = ExtResource("3_a2kcq")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 98.0
+offset_top = -18.0
+offset_right = 282.0
+offset_bottom = 74.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+disable_3d = true
+use_hdr_2d = true
+size = Vector2i(184, 92)
+
+[node name="CenterContainer" type="CenterContainer" parent="SubViewportContainer/SubViewport"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/CenterContainer"]
+layout_mode = 2
+text = "2"
+label_settings = SubResource("LabelSettings_dwjhf")
