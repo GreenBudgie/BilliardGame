@@ -16,8 +16,9 @@ Color = 0
 Type = 0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_gdxx3"]
+resource_local_to_scene = true
 shader = ExtResource("6_oyglm")
-shader_parameter/rotation = Vector4(0, 0, 1, 0)
+shader_parameter/rotation = Vector4(0, 0, 0, 1)
 shader_parameter/base_color = Color(0.956863, 0.956863, 0.956863, 1)
 shader_parameter/paint_color = Color(0.114897, 0.114897, 0.114897, 1)
 
@@ -32,6 +33,7 @@ collision_mask = 14
 mass = 0.2
 physics_material_override = ExtResource("1_887od")
 sleeping = true
+lock_rotation = true
 continuous_cd = 2
 max_contacts_reported = 4
 contact_monitor = true
@@ -40,7 +42,7 @@ BallHitSound = ExtResource("3_c0guk")
 TableHitSound = ExtResource("4_2eddj")
 BallInfo = SubResource("Resource_5uneu")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="BallSprite" type="Sprite2D" parent="."]
 material = SubResource("ShaderMaterial_gdxx3")
 texture = ExtResource("7_cboy1")
 region_rect = Rect2(-10, 0, 68, 60)

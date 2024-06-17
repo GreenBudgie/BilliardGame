@@ -24,6 +24,10 @@ public abstract partial class Ball : RigidBody2D
     private const float CollisionPitchMax = 1.15f;
     private const float MinSoundVelocityThreshold = 20;
     private const float MaxSoundVelocityThreshold = 400;
+    
+    private Quaternion _rotation = Quaternion.Identity;
+
+    protected abstract void RotateSprites(Vector4 finalRotation);
 
     public override void _Ready()
     {
@@ -33,6 +37,7 @@ public abstract partial class Ball : RigidBody2D
 
     public override void _PhysicsProcess(double delta)
     {
+        HandleRotation(delta);
         if (LinearVelocity.IsZeroApprox())
         {
             return;
@@ -51,6 +56,24 @@ public abstract partial class Ball : RigidBody2D
 
         LinearDamp = 0;
         AngularDamp = 0;
+    }
+
+    private void HandleRotation(double delta)
+    {
+        if (Sleeping || LinearVelocity.IsZeroApprox())
+        {
+            return;
+        }
+
+        var rotationAngle = LinearVelocity.Length() * 0.1f * (float)delta;
+        var rotationAxis = LinearVelocity.Orthogonal().Normalized();
+        var rotation3DAxis = new Vector3(0, rotationAxis.X, rotationAxis.Y);
+
+        var newRotation = new Quaternion(rotation3DAxis, rotationAngle);
+        _rotation *= newRotation;
+        var rotationAsVector = new Vector4(_rotation.X, _rotation.Y, _rotation.Z, _rotation.W);
+        
+        RotateSprites(rotationAsVector);
     }
 
     private bool ApplyDamp(float velocity, float threshold, float damp)

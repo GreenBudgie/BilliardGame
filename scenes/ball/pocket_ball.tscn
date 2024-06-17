@@ -7,24 +7,25 @@
 [ext_resource type="Shader" path="res://scenes/ball/ball.gdshader" id="5_1t0me"]
 [ext_resource type="Texture2D" uid="uid://bjipt1lqgd272" path="res://sprites/ball/solid_ball_mask.png" id="6_4o8lj"]
 [ext_resource type="Shader" path="res://scenes/ball/ball_overlay.gdshader" id="7_l56w6"]
-[ext_resource type="FontFile" uid="uid://d4f8x3qebovd6" path="res://resources/fonts/font_baloo.ttf" id="8_yel64"]
+[ext_resource type="FontFile" uid="uid://td811ud27dii" path="res://resources/fonts/The Citadels.otf" id="8_noa3e"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_5n7ow"]
 resource_local_to_scene = true
 shader = ExtResource("5_1t0me")
-shader_parameter/rotation = Vector4(0, 0, 1, 0)
+shader_parameter/rotation = Vector4(0, 0, 0, 1)
 shader_parameter/base_color = Color(0.956863, 0.956863, 0.956863, 1)
 shader_parameter/paint_color = Color(0.911222, 0.641606, 1.15514e-06, 1)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_rq1tg"]
+resource_local_to_scene = true
 shader = ExtResource("7_l56w6")
-shader_parameter/rotation = Vector4(0, 0, 1, 0)
+shader_parameter/rotation = Vector4(0, 0, 0, 1)
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_y66wa"]
 viewport_path = NodePath("SubViewport")
 
 [sub_resource type="LabelSettings" id="LabelSettings_vwkwu"]
-font = ExtResource("8_yel64")
+font = ExtResource("8_noa3e")
 font_size = 32
 font_color = Color(0, 0, 0, 1)
 
@@ -37,6 +38,7 @@ collision_mask = 15
 mass = 0.2
 physics_material_override = ExtResource("1_l15de")
 sleeping = true
+lock_rotation = true
 continuous_cd = 2
 max_contacts_reported = 4
 contact_monitor = true
@@ -63,6 +65,10 @@ render_target_update_mode = 4
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 1.0
+offset_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 

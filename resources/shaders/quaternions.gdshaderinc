@@ -33,6 +33,18 @@ vec4 quat_from_axis_angle(vec3 axis, float angle)
 	return qr;
 }
 
+// Rotates a 3D vertex position by the given quaternion
+vec3 rotate(vec3 position, vec4 quaternion)
+{ 
+	vec4 qr_conj = quat_conj(quaternion);
+	vec4 q_pos = vec4(position.x, position.y, position.z, 0);
+
+	vec4 q_tmp = quat_mult(quaternion, q_pos);
+	vec4 qr = quat_mult(q_tmp, qr_conj);
+
+	return vec3(qr.x, qr.y, qr.z);
+}
+
 // Rotates a 3D vertex position around a given axis by a specified angle
 // Uses quaternion rotation to perform the rotation
 // The axis must be a normalized vector, and the angle is in radians

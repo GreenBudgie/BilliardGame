@@ -17,7 +17,7 @@
 script = ExtResource("4_g5xyx")
 IsCueBall = false
 Number = 1
-Color = 0
+Color = 2
 Type = 0
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_nget6"]
@@ -35,7 +35,7 @@ position = Vector2(-1, -275)
 BallInfo = SubResource("Resource_v3nix")
 
 [node name="PocketBall2" parent="." instance=ExtResource("13_18dpp")]
-position = Vector2(659, -291)
+position = Vector2(-487, -93)
 BallInfo = SubResource("Resource_v3nix")
 
 [node name="CueBall" parent="." instance=ExtResource("2_sbviq")]

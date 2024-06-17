@@ -21,11 +21,14 @@ public partial class CueBall : Ball
     public ShapeCast2D ShapeCast { get; private set; }
 
     private CollisionShape2D _collisionShape;
+    private Sprite2D _ballSprite;
 
     public override void _Ready()
     {
         base._Ready();
 
+        _ballSprite = GetNode<Sprite2D>("BallSprite");
+        
         ShapeCast = GetNode<ShapeCast2D>("ShapeCast2D");
         _collisionShape = GetNode<CollisionShape2D>("CollisionShape2D");
 
@@ -106,6 +109,12 @@ public partial class CueBall : Ball
         State = BallState.Rolling;
     }
 
+    protected override void RotateSprites(Vector4 finalRotation)
+    {
+        var ballSpriteMaterial = (ShaderMaterial)_ballSprite.Material;
+        ballSpriteMaterial.SetShaderParameter("rotation", finalRotation);
+    }
+    
     private bool ShotPressed()
     {
         return Input.IsActionJustPressed(ShootAction) || Input.IsActionJustPressed(InverseShootAction);

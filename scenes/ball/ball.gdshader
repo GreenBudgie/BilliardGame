@@ -1,6 +1,6 @@
 shader_type canvas_item;
 
-uniform vec4 rotation = vec4(0.0, 0.0, 1.0, 0.0);
+uniform vec4 rotation = vec4(0.0, 0.0, 0.0, 1.0);
 uniform vec3 base_color : source_color;
 uniform vec3 paint_color : source_color;
 
@@ -18,11 +18,7 @@ void fragment() {
 	float z = uv.y;
 	vec3 vector = vec3(x, y, z);
 	
-	vec3 r_vector = rotate_vertex_position(
-		vector, 
-		normalize(rotation.xyz),
-		rotation.w
-	);
+	vec3 r_vector = rotate(vector, rotation);
 	x = r_vector.x;
 	y = r_vector.y;
 	z = r_vector.z;
