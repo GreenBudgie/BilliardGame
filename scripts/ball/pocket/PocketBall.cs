@@ -1,30 +1,28 @@
-using System.Linq;
+using System;
 using Godot;
 
 public partial class PocketBall : Ball
 {
+    private static readonly Texture2D SolidBallMask = GD.Load<Texture2D>("res://sprites/ball/solid_ball_mask.png");
+    private static readonly Texture2D StripeBallMask = GD.Load<Texture2D>("res://sprites/ball/stripe_ball_mask.png");
 
     public override void _Ready()
     {
         base._Ready();
-        var parts = GetNode("Parts");
-        
-        // Make all sprites invisible at first
-        var sprites = parts.GetChildren().OfType<Sprite2D>();
-        foreach (var sprite in sprites)
-        {
-            sprite.Visible = false;
-        }
-        
-        // Make appropriate sprites for the ball type visible and apply ball color to overlay
-        var bodySprite = parts.GetNode<Sprite2D>(BallInfo.Type.GetBodySpriteNodeName());
-        bodySprite.Visible = true;
-        var overlaySprite = parts.GetNode<Sprite2D>(BallInfo.Type.GetOverlaySpriteNodeName());
-        overlaySprite.Visible = true;
-        overlaySprite.Modulate = BallInfo.Color.GetRealColor();
 
-        var numberLabel = GetNode<Label>("NumberLabel");
-        numberLabel.Text = BallInfo.Number.ToString();
+        var ballSprite = GetNode<Sprite2D>("BallSprite");
+        ballSprite.Texture = BallInfo.Type switch
+        {
+            BallType.Solid => SolidBallMask,
+            BallType.Stripe => StripeBallMask,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+        var ballSpriteMaterial = (ShaderMaterial)ballSprite.Material;
+        ballSpriteMaterial.SetShaderParameter("paint_color", BallInfo.Color.GetRealColor());
+
+        var ballNumber = GetNode<Label>("SubViewport/CenterContainer/BallNumber");
+        ballNumber.Text = BallInfo?.Number.ToString();
 
         PocketScored += HandlePocketCollision;
     }
@@ -34,5 +32,4 @@ public partial class PocketBall : Ball
         EventBus.Instance.EmitSignal(EventBus.SignalName.BallScored, this, pocket);
         QueueFree();
     }
-    
 }

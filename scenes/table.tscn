@@ -1,9 +1,8 @@
-[gd_scene load_steps=16 format=3 uid="uid://cdokpkldvgmps"]
+[gd_scene load_steps=15 format=3 uid="uid://cdokpkldvgmps"]
 
 [ext_resource type="Script" path="res://scripts/Table.cs" id="1_6ns3v"]
 [ext_resource type="Texture2D" uid="uid://bwldupelc0o5" path="res://sprites/table.png" id="1_ghw0p"]
 [ext_resource type="PackedScene" uid="uid://dnfowjpbcp587" path="res://scenes/ball/cue_ball.tscn" id="2_sbviq"]
-[ext_resource type="PackedScene" uid="uid://8rkc8w2aqbe7" path="res://scenes/ball/pocket_ball.tscn" id="3_bfqdw"]
 [ext_resource type="PackedScene" uid="uid://cfuk62rk78gl3" path="res://scenes/pocket/corner_pocket.tscn" id="3_cvwsn"]
 [ext_resource type="PackedScene" uid="uid://dkpq24jlytnuu" path="res://scenes/ball/ball_rack.tscn" id="3_nsswf"]
 [ext_resource type="PackedScene" uid="uid://58klbpi2i1kg" path="res://scenes/pocket/side_pocket.tscn" id="4_0v0a5"]
@@ -12,7 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://jprorwadsxa6" path="res://scenes/cue.tscn" id="6_bek7c"]
 [ext_resource type="PackedScene" uid="uid://dy8k6t6dye03o" path="res://scenes/pocket/pocket.tscn" id="8_4reo7"]
 [ext_resource type="PackedScene" uid="uid://cxxibhu6k60gt" path="res://scenes/pocket/sticker_position.tscn" id="10_j7oqd"]
-[ext_resource type="PackedScene" uid="uid://d2tf6ct6ufq7e" path="res://scenes/ball/new_pocket_ball.tscn" id="13_18dpp"]
+[ext_resource type="PackedScene" uid="uid://d2tf6ct6ufq7e" path="res://scenes/ball/pocket_ball.tscn" id="13_18dpp"]
 
 [sub_resource type="Resource" id="Resource_v3nix"]
 script = ExtResource("4_g5xyx")
@@ -31,11 +30,11 @@ script = ExtResource("1_6ns3v")
 [node name="Sprite" type="Sprite2D" parent="."]
 texture = ExtResource("1_ghw0p")
 
-[node name="PocketBall" parent="." instance=ExtResource("3_bfqdw")]
+[node name="PocketBall" parent="." instance=ExtResource("13_18dpp")]
 position = Vector2(-1, -275)
 BallInfo = SubResource("Resource_v3nix")
 
-[node name="PocketBall2" parent="." instance=ExtResource("3_bfqdw")]
+[node name="PocketBall2" parent="." instance=ExtResource("13_18dpp")]
 position = Vector2(659, -291)
 BallInfo = SubResource("Resource_v3nix")
 
@@ -240,6 +239,3 @@ Pocket = NodePath("../..")
 [node name="StickerPosition4" parent="Pockets/BottomLeftPocket/StickerPositions" node_paths=PackedStringArray("Pocket") instance=ExtResource("10_j7oqd")]
 position = Vector2(-47, -169)
 Pocket = NodePath("../..")
-
-[node name="PocketBall3" parent="." instance=ExtResource("13_18dpp")]
-position = Vector2(60, -274)

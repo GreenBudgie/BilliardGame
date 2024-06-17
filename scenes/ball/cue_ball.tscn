@@ -1,11 +1,12 @@
-[gd_scene load_steps=10 format=3 uid="uid://dnfowjpbcp587"]
+[gd_scene load_steps=12 format=3 uid="uid://dnfowjpbcp587"]
 
 [ext_resource type="PhysicsMaterial" uid="uid://c2rdm6hi6yt7i" path="res://scenes/ball/ball_material.tres" id="1_887od"]
 [ext_resource type="Script" path="res://scripts/ball/cue/CueBall.cs" id="2_sxovh"]
 [ext_resource type="AudioStream" uid="uid://b81p8kqbwwyvi" path="res://sound/ball_hit_ball_soft.wav" id="3_c0guk"]
 [ext_resource type="AudioStream" uid="uid://dtsd0w6ghqbyn" path="res://sound/hit_table.wav" id="4_2eddj"]
 [ext_resource type="Script" path="res://scripts/ball/BallInfo.cs" id="5_r210g"]
-[ext_resource type="Texture2D" uid="uid://c05fnabmgwmcc" path="res://sprites/cue_ball.png" id="6_vckix"]
+[ext_resource type="Shader" path="res://scenes/ball/ball.gdshader" id="6_oyglm"]
+[ext_resource type="Texture2D" uid="uid://hkyn6egu4bmi" path="res://sprites/ball/cue_ball_mask.png" id="7_cboy1"]
 
 [sub_resource type="Resource" id="Resource_5uneu"]
 script = ExtResource("5_r210g")
@@ -13,6 +14,12 @@ IsCueBall = true
 Number = 0
 Color = 0
 Type = 0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_gdxx3"]
+shader = ExtResource("6_oyglm")
+shader_parameter/rotation = Vector4(0, 0, 1, 0)
+shader_parameter/base_color = Color(0.956863, 0.956863, 0.956863, 1)
+shader_parameter/paint_color = Color(0.114897, 0.114897, 0.114897, 1)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_81mj7"]
 radius = 23.0
@@ -34,7 +41,8 @@ TableHitSound = ExtResource("4_2eddj")
 BallInfo = SubResource("Resource_5uneu")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("6_vckix")
+material = SubResource("ShaderMaterial_gdxx3")
+texture = ExtResource("7_cboy1")
 region_rect = Rect2(-10, 0, 68, 60)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

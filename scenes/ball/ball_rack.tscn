@@ -1,6 +1,6 @@
 [gd_scene load_steps=18 format=3 uid="uid://dkpq24jlytnuu"]
 
-[ext_resource type="PackedScene" uid="uid://8rkc8w2aqbe7" path="res://scenes/ball/pocket_ball.tscn" id="1_32g3v"]
+[ext_resource type="PackedScene" uid="uid://d2tf6ct6ufq7e" path="res://scenes/ball/pocket_ball.tscn" id="1_32g3v"]
 [ext_resource type="Script" path="res://scripts/ball/BallInfo.cs" id="2_mxela"]
 
 [sub_resource type="Resource" id="Resource_ar5bk"]
