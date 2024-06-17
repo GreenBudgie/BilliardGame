@@ -41,8 +41,10 @@ grow_vertical = 2
 
 [node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
 disable_3d = true
+handle_input_locally = false
 use_hdr_2d = true
 size = Vector2i(184, 92)
+render_target_update_mode = 4
 
 [node name="CenterContainer" type="CenterContainer" parent="SubViewportContainer/SubViewport"]
 anchors_preset = 15

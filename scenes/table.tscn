@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://cdokpkldvgmps"]
+[gd_scene load_steps=16 format=3 uid="uid://cdokpkldvgmps"]
 
 [ext_resource type="Script" path="res://scripts/Table.cs" id="1_6ns3v"]
 [ext_resource type="Texture2D" uid="uid://bwldupelc0o5" path="res://sprites/table.png" id="1_ghw0p"]
@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://jprorwadsxa6" path="res://scenes/cue.tscn" id="6_bek7c"]
 [ext_resource type="PackedScene" uid="uid://dy8k6t6dye03o" path="res://scenes/pocket/pocket.tscn" id="8_4reo7"]
 [ext_resource type="PackedScene" uid="uid://cxxibhu6k60gt" path="res://scenes/pocket/sticker_position.tscn" id="10_j7oqd"]
+[ext_resource type="PackedScene" uid="uid://d2tf6ct6ufq7e" path="res://scenes/ball/new_pocket_ball.tscn" id="13_18dpp"]
 
 [sub_resource type="Resource" id="Resource_v3nix"]
 script = ExtResource("4_g5xyx")
@@ -239,3 +240,6 @@ Pocket = NodePath("../..")
 [node name="StickerPosition4" parent="Pockets/BottomLeftPocket/StickerPositions" node_paths=PackedStringArray("Pocket") instance=ExtResource("10_j7oqd")]
 position = Vector2(-47, -169)
 Pocket = NodePath("../..")
+
+[node name="PocketBall3" parent="." instance=ExtResource("13_18dpp")]
+position = Vector2(60, -274)
