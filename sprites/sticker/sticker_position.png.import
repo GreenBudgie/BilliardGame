@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dsq0jqeyf8ngp"
-path="res://.godot/imported/empty_ball_mask.png-ea4a73d2fc4aef7bb514bca8eb1b48a5.ctex"
+uid="uid://breu2yn42no73"
+path="res://.godot/imported/sticker_position.png-3db0a56fa456a12cf0b733d07ef196ea.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/ball/empty_ball_mask.png"
-dest_files=["res://.godot/imported/empty_ball_mask.png-ea4a73d2fc4aef7bb514bca8eb1b48a5.ctex"]
+source_file="res://sprites/sticker/sticker_position.png"
+dest_files=["res://.godot/imported/sticker_position.png-3db0a56fa456a12cf0b733d07ef196ea.ctex"]
 
 [params]
 

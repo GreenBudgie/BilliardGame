@@ -1,10 +1,10 @@
 [gd_scene load_steps=3 format=3 uid="uid://cxxibhu6k60gt"]
 
 [ext_resource type="Script" path="res://scripts/sticker/StickerPosition.cs" id="1_03kji"]
-[ext_resource type="Texture2D" uid="uid://cjn1hq4v63j31" path="res://sprites/sticker/empty_sticker.png" id="1_314mk"]
+[ext_resource type="Texture2D" uid="uid://breu2yn42no73" path="res://sprites/sticker/sticker_position.png" id="2_vqqjc"]
 
 [node name="StickerPosition" type="Node2D"]
 script = ExtResource("1_03kji")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("1_314mk")
+texture = ExtResource("2_vqqjc")

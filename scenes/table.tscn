@@ -1,8 +1,8 @@
 [gd_scene load_steps=15 format=3 uid="uid://cdokpkldvgmps"]
 
 [ext_resource type="Script" path="res://scripts/Table.cs" id="1_6ns3v"]
-[ext_resource type="Texture2D" uid="uid://bwldupelc0o5" path="res://sprites/table.png" id="1_ghw0p"]
 [ext_resource type="PackedScene" uid="uid://dnfowjpbcp587" path="res://scenes/ball/cue_ball.tscn" id="2_sbviq"]
+[ext_resource type="Texture2D" uid="uid://brktowfyqa3tc" path="res://sprites/table2.png" id="2_y1kq5"]
 [ext_resource type="PackedScene" uid="uid://cfuk62rk78gl3" path="res://scenes/pocket/corner_pocket.tscn" id="3_cvwsn"]
 [ext_resource type="PackedScene" uid="uid://dkpq24jlytnuu" path="res://scenes/ball/ball_rack.tscn" id="3_nsswf"]
 [ext_resource type="PackedScene" uid="uid://58klbpi2i1kg" path="res://scenes/pocket/side_pocket.tscn" id="4_0v0a5"]
@@ -28,21 +28,21 @@ bounce = 0.5
 script = ExtResource("1_6ns3v")
 
 [node name="Sprite" type="Sprite2D" parent="."]
-texture = ExtResource("1_ghw0p")
+texture = ExtResource("2_y1kq5")
 
 [node name="PocketBall" parent="." instance=ExtResource("13_18dpp")]
-position = Vector2(-1, -275)
+position = Vector2(-85, -70)
 BallInfo = SubResource("Resource_v3nix")
 
 [node name="PocketBall2" parent="." instance=ExtResource("13_18dpp")]
-position = Vector2(-487, -93)
+position = Vector2(-151, -57)
 BallInfo = SubResource("Resource_v3nix")
 
 [node name="CueBall" parent="." instance=ExtResource("2_sbviq")]
-position = Vector2(-483, -2)
+position = Vector2(-136, -1)
 
 [node name="BallRack" parent="." instance=ExtResource("3_nsswf")]
-position = Vector2(442, 0)
+position = Vector2(145, 0)
 
 [node name="TrajectoryDrawer" parent="." node_paths=PackedStringArray("_cueBall") instance=ExtResource("5_qus0d")]
 _cueBall = NodePath("../CueBall")
@@ -56,31 +56,25 @@ collision_mask = 0
 physics_material_override = SubResource("PhysicsMaterial_nget6")
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Borders"]
-visible = false
 polygon = PackedVector2Array(-636, -323, -668, -355, -669, -427, -43, -427, -44, -375, -40, -355, -54, -323)
 
 [node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="Borders"]
-visible = false
 scale = Vector2(-1, 1)
 polygon = PackedVector2Array(-636, -323, -668, -355, -669, -427, -43, -427, -44, -375, -40, -355, -54, -323)
 
 [node name="CollisionPolygon2D3" type="CollisionPolygon2D" parent="Borders"]
-visible = false
 scale = Vector2(1, -1)
 polygon = PackedVector2Array(-636, -323, -668, -355, -669, -427, -43, -427, -44, -375, -40, -355, -54, -323)
 
 [node name="CollisionPolygon2D4" type="CollisionPolygon2D" parent="Borders"]
-visible = false
 scale = Vector2(-1, -1)
 polygon = PackedVector2Array(-636, -323, -668, -355, -669, -427, -43, -427, -44, -375, -40, -355, -54, -323)
 
 [node name="CollisionPolygon2D5" type="CollisionPolygon2D" parent="Borders"]
-visible = false
 position = Vector2(663, 279)
 polygon = PackedVector2Array(27, -548, 59, -580, 131, -580, 131, 22, 59, 22, 27, -10)
 
 [node name="CollisionPolygon2D6" type="CollisionPolygon2D" parent="Borders"]
-visible = false
 position = Vector2(-663, 279)
 scale = Vector2(-1, 1)
 polygon = PackedVector2Array(27, -548, 59, -580, 131, -580, 131, 22, 59, 22, 27, -10)
@@ -88,7 +82,7 @@ polygon = PackedVector2Array(27, -548, 59, -580, 131, -580, 131, 22, 59, 22, 27,
 [node name="Pockets" type="Node2D" parent="."]
 
 [node name="TopLeftPocket" parent="Pockets" instance=ExtResource("8_4reo7")]
-position = Vector2(-711, -344)
+position = Vector2(-224, -112)
 
 [node name="CornerPocket" parent="Pockets/TopLeftPocket" node_paths=PackedStringArray("Pocket") instance=ExtResource("3_cvwsn")]
 Pocket = NodePath("..")
@@ -96,23 +90,23 @@ Pocket = NodePath("..")
 [node name="StickerPositions" type="Node2D" parent="Pockets/TopLeftPocket"]
 
 [node name="StickerPosition1" parent="Pockets/TopLeftPocket/StickerPositions" node_paths=PackedStringArray("Pocket") instance=ExtResource("10_j7oqd")]
-position = Vector2(-47, 169)
+position = Vector2(-16, 67)
 Pocket = NodePath("../..")
 
 [node name="StickerPosition2" parent="Pockets/TopLeftPocket/StickerPositions" node_paths=PackedStringArray("Pocket") instance=ExtResource("10_j7oqd")]
-position = Vector2(-47, 101)
+position = Vector2(-16, 37)
 Pocket = NodePath("../..")
 
 [node name="StickerPosition3" parent="Pockets/TopLeftPocket/StickerPositions" node_paths=PackedStringArray("Pocket") instance=ExtResource("10_j7oqd")]
-position = Vector2(101, -47)
+position = Vector2(37, -16)
 Pocket = NodePath("../..")
 
 [node name="StickerPosition4" parent="Pockets/TopLeftPocket/StickerPositions" node_paths=PackedStringArray("Pocket") instance=ExtResource("10_j7oqd")]
-position = Vector2(169, -47)
+position = Vector2(67, -16)
 Pocket = NodePath("../..")
 
 [node name="TopPocket" parent="Pockets" instance=ExtResource("8_4reo7")]
-position = Vector2(0, -375)
+position = Vector2(0, -128)
 PocketPosition = 1
 
 [node name="SidePocket" parent="Pockets/TopPocket" node_paths=PackedStringArray("Pocket") instance=ExtResource("4_0v0a5")]
@@ -121,121 +115,118 @@ Pocket = NodePath("..")
 [node name="StickerPositions" type="Node2D" parent="Pockets/TopPocket"]
 
 [node name="StickerPosition1" parent="Pockets/TopPocket/StickerPositions" node_paths=PackedStringArray("Pocket") instance=ExtResource("10_j7oqd")]
-position = Vector2(-161, -16)
+position = Vector2(-73, 0)
 Pocket = NodePath("../..")
 
 [node name="StickerPosition2" parent="Pockets/TopPocket/StickerPositions" node_paths=PackedStringArray("Pocket") instance=ExtResource("10_j7oqd")]
-position = Vector2(-93, -16)
+position = Vector2(-43, 0)
 Pocket = NodePath("../..")
 
 [node name="StickerPosition3" parent="Pockets/TopPocket/StickerPositions" node_paths=PackedStringArray("Pocket") instance=ExtResource("10_j7oqd")]
-position = Vector2(93, -16)
+position = Vector2(43, 0)
 Pocket = NodePath("../..")
 
 [node name="StickerPosition4" parent="Pockets/TopPocket/StickerPositions" node_paths=PackedStringArray("Pocket") instance=ExtResource("10_j7oqd")]
-position = Vector2(161, -16)
+position = Vector2(73, 0)
 Pocket = NodePath("../..")
 
 [node name="TopRightPocket" parent="Pockets" instance=ExtResource("8_4reo7")]
-position = Vector2(711, -344)
-PocketPosition = 2
+position = Vector2(224, -112)
 
 [node name="CornerPocket" parent="Pockets/TopRightPocket" node_paths=PackedStringArray("Pocket") instance=ExtResource("3_cvwsn")]
 rotation = 1.5708
-Pocket = NodePath("..")
+Pocket = NodePath("../../TopLeftPocket")
 
 [node name="StickerPositions" type="Node2D" parent="Pockets/TopRightPocket"]
 
 [node name="StickerPosition1" parent="Pockets/TopRightPocket/StickerPositions" node_paths=PackedStringArray("Pocket") instance=ExtResource("10_j7oqd")]
-position = Vector2(-169, -47)
-Pocket = NodePath("../..")
+position = Vector2(-67, -16)
+Pocket = NodePath("../../../TopLeftPocket")
 
 [node name="StickerPosition2" parent="Pockets/TopRightPocket/StickerPositions" node_paths=PackedStringArray("Pocket") instance=ExtResource("10_j7oqd")]
-position = Vector2(-101, -47)
-Pocket = NodePath("../..")
+position = Vector2(-37, -16)
+Pocket = NodePath("../../../TopLeftPocket")
 
 [node name="StickerPosition3" parent="Pockets/TopRightPocket/StickerPositions" node_paths=PackedStringArray("Pocket") instance=ExtResource("10_j7oqd")]
-position = Vector2(47, 101)
-Pocket = NodePath("../..")
+position = Vector2(16, 37)
+Pocket = NodePath("../../../TopLeftPocket")
 
 [node name="StickerPosition4" parent="Pockets/TopRightPocket/StickerPositions" node_paths=PackedStringArray("Pocket") instance=ExtResource("10_j7oqd")]
-position = Vector2(47, 169)
-Pocket = NodePath("../..")
+position = Vector2(16, 67)
+Pocket = NodePath("../../../TopLeftPocket")
 
 [node name="BottomRightPocket" parent="Pockets" instance=ExtResource("8_4reo7")]
-position = Vector2(711, 344)
-PocketPosition = 3
+position = Vector2(224, 112)
 
 [node name="CornerPocket" parent="Pockets/BottomRightPocket" node_paths=PackedStringArray("Pocket") instance=ExtResource("3_cvwsn")]
 rotation = 3.14159
-Pocket = NodePath("..")
+Pocket = NodePath("../../TopLeftPocket")
 
 [node name="StickerPositions" type="Node2D" parent="Pockets/BottomRightPocket"]
 
 [node name="StickerPosition1" parent="Pockets/BottomRightPocket/StickerPositions" node_paths=PackedStringArray("Pocket") instance=ExtResource("10_j7oqd")]
-position = Vector2(47, -101)
-Pocket = NodePath("../..")
+position = Vector2(16, -67)
+Pocket = NodePath("../../../TopLeftPocket")
 
 [node name="StickerPosition2" parent="Pockets/BottomRightPocket/StickerPositions" node_paths=PackedStringArray("Pocket") instance=ExtResource("10_j7oqd")]
-position = Vector2(47, -169)
-Pocket = NodePath("../..")
+position = Vector2(16, -37)
+Pocket = NodePath("../../../TopLeftPocket")
 
 [node name="StickerPosition3" parent="Pockets/BottomRightPocket/StickerPositions" node_paths=PackedStringArray("Pocket") instance=ExtResource("10_j7oqd")]
-position = Vector2(-101, 47)
-Pocket = NodePath("../..")
+position = Vector2(-37, 16)
+Pocket = NodePath("../../../TopLeftPocket")
 
 [node name="StickerPosition4" parent="Pockets/BottomRightPocket/StickerPositions" node_paths=PackedStringArray("Pocket") instance=ExtResource("10_j7oqd")]
-position = Vector2(-169, 47)
-Pocket = NodePath("../..")
+position = Vector2(-67, 16)
+Pocket = NodePath("../../../TopLeftPocket")
 
 [node name="BottomPocket" parent="Pockets" instance=ExtResource("8_4reo7")]
-position = Vector2(0, 375)
-PocketPosition = 4
+position = Vector2(0, 128)
+PocketPosition = 1
 
 [node name="SidePocket" parent="Pockets/BottomPocket" node_paths=PackedStringArray("Pocket") instance=ExtResource("4_0v0a5")]
 rotation = 3.14159
-Pocket = NodePath("..")
+Pocket = NodePath("../../TopPocket")
 
 [node name="StickerPositions" type="Node2D" parent="Pockets/BottomPocket"]
 
 [node name="StickerPosition1" parent="Pockets/BottomPocket/StickerPositions" node_paths=PackedStringArray("Pocket") instance=ExtResource("10_j7oqd")]
-position = Vector2(161, 16)
-Pocket = NodePath("../..")
+position = Vector2(73, 0)
+Pocket = NodePath("../../../TopPocket")
 
 [node name="StickerPosition2" parent="Pockets/BottomPocket/StickerPositions" node_paths=PackedStringArray("Pocket") instance=ExtResource("10_j7oqd")]
-position = Vector2(93, 16)
-Pocket = NodePath("../..")
+position = Vector2(43, 0)
+Pocket = NodePath("../../../TopPocket")
 
 [node name="StickerPosition3" parent="Pockets/BottomPocket/StickerPositions" node_paths=PackedStringArray("Pocket") instance=ExtResource("10_j7oqd")]
-position = Vector2(-93, 16)
-Pocket = NodePath("../..")
+position = Vector2(-43, 0)
+Pocket = NodePath("../../../TopPocket")
 
 [node name="StickerPosition4" parent="Pockets/BottomPocket/StickerPositions" node_paths=PackedStringArray("Pocket") instance=ExtResource("10_j7oqd")]
-position = Vector2(-161, 16)
-Pocket = NodePath("../..")
+position = Vector2(-73, 0)
+Pocket = NodePath("../../../TopPocket")
 
 [node name="BottomLeftPocket" parent="Pockets" instance=ExtResource("8_4reo7")]
-position = Vector2(-711, 344)
-PocketPosition = 5
+position = Vector2(-224, 112)
 
 [node name="CornerPocket" parent="Pockets/BottomLeftPocket" node_paths=PackedStringArray("Pocket") instance=ExtResource("3_cvwsn")]
 rotation = 4.71239
-Pocket = NodePath("..")
+Pocket = NodePath("../../TopLeftPocket")
 
 [node name="StickerPositions" type="Node2D" parent="Pockets/BottomLeftPocket"]
 
 [node name="StickerPosition1" parent="Pockets/BottomLeftPocket/StickerPositions" node_paths=PackedStringArray("Pocket") instance=ExtResource("10_j7oqd")]
-position = Vector2(167, 47)
-Pocket = NodePath("../..")
+position = Vector2(67, 16)
+Pocket = NodePath("../../../TopLeftPocket")
 
 [node name="StickerPosition2" parent="Pockets/BottomLeftPocket/StickerPositions" node_paths=PackedStringArray("Pocket") instance=ExtResource("10_j7oqd")]
-position = Vector2(101, 47)
-Pocket = NodePath("../..")
+position = Vector2(37, 16)
+Pocket = NodePath("../../../TopLeftPocket")
 
 [node name="StickerPosition3" parent="Pockets/BottomLeftPocket/StickerPositions" node_paths=PackedStringArray("Pocket") instance=ExtResource("10_j7oqd")]
-position = Vector2(-47, -101)
-Pocket = NodePath("../..")
+position = Vector2(-16, -38)
+Pocket = NodePath("../../../TopLeftPocket")
 
 [node name="StickerPosition4" parent="Pockets/BottomLeftPocket/StickerPositions" node_paths=PackedStringArray("Pocket") instance=ExtResource("10_j7oqd")]
-position = Vector2(-47, -169)
-Pocket = NodePath("../..")
+position = Vector2(-16, -68)
+Pocket = NodePath("../../../TopLeftPocket")

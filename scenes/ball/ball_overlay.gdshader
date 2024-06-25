@@ -2,13 +2,27 @@ shader_type canvas_item;
 
 uniform vec4 rotation = vec4(0.0, 0.0, 0.0, 1.0);
 
+uniform vec2 texture_size = vec2(31.0, 15.0);
+
 #include "res://resources/shaders/quaternions.gdshaderinc"
+
+vec2 get_pixel_center_uv(vec2 uv) {
+	float pixel_x = floor(uv.x * texture_size.x) + 0.5;
+	float pixel_y = floor(uv.y * texture_size.y) + 0.5;
+	return vec2(pixel_x, pixel_y);
+}
+
+bool should_discard(vec2 uv) {
+	vec2 center = vec2(texture_size.x * 0.5, texture_size.y * 0.5);
+	vec2 center_vector = center - get_pixel_center_uv(uv);
+	return length(center_vector) > texture_size.y * 0.5;
+}
 
 void fragment() {
 	vec2 uv = UV * 2.0 - 1.0;
 	
 	float distance_from_center = 4.0 * uv.x * uv.x + uv.y * uv.y;
-	if (distance_from_center >= 1.0) {
+	if (should_discard(UV)) {
 		discard;
 	}
 	float x = sqrt(1.0 - (4.0 * uv.x * uv.x) - (uv.y * uv.y));
@@ -30,8 +44,4 @@ void fragment() {
 	float new_v = 0.5 * z + 0.5;
 	
 	COLOR = texture(TEXTURE, vec2(new_u, new_v));
-	
-	float distance_from_edge = 1.0 - distance_from_center;
-	float threshold_width = 0.1;
-	COLOR.a = clamp((distance_from_edge / threshold_width), 0, COLOR.a);
 }

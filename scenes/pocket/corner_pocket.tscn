@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://bsd4b48l71mvb" path="res://sprites/pocket/corner_pocket.png" id="2_i4ent"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_5i2nl"]
-radius = 22.0
+radius = 7.0
 
 [node name="CornerPocket" type="StaticBody2D"]
 collision_layer = 8
@@ -12,8 +12,9 @@ collision_mask = 0
 script = ExtResource("1_1uy5a")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(-11, -11)
+position = Vector2(-5.5, -5.5)
 texture = ExtResource("2_i4ent")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(2, 2)
 shape = SubResource("CircleShape2D_5i2nl")

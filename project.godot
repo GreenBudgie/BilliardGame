@@ -27,8 +27,8 @@ GameManager="res://scripts/manager/GameManager.cs"
 
 [display]
 
-window/size/viewport_width=1920
-window/size/viewport_height=1080
+window/size/viewport_width=640
+window/size/viewport_height=360
 window/size/window_width_override=1280
 window/size/window_height_override=720
 window/stretch/mode="canvas_items"
@@ -39,7 +39,8 @@ project/assembly_name="Billiard"
 
 [gui]
 
-theme/custom_font="res://resources/fonts/font_baloo.ttf"
+theme/custom_font="res://resources/fonts/font_silkscreen.ttf"
+theme/default_font_antialiasing=0
 
 [input]
 
@@ -72,7 +73,10 @@ common/physics_ticks_per_second=180
 
 [rendering]
 
-textures/canvas_textures/default_texture_filter=2
+textures/canvas_textures/default_texture_filter=0
+textures/default_filters/use_nearest_mipmap_filter=true
+textures/decals/filter=0
+textures/light_projectors/filter=0
 anti_aliasing/quality/msaa_2d=3
 anti_aliasing/quality/screen_space_aa=1
 anti_aliasing/quality/use_taa=true

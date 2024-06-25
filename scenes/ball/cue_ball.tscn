@@ -21,9 +21,10 @@ shader = ExtResource("6_oyglm")
 shader_parameter/rotation = Vector4(0, 0, 0, 1)
 shader_parameter/base_color = Color(0.956863, 0.956863, 0.956863, 1)
 shader_parameter/paint_color = Color(0.114897, 0.114897, 0.114897, 1)
+shader_parameter/texture_size = Vector2(31, 15)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_81mj7"]
-radius = 23.0
+radius = 8.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_5kyv3"]
 radius = 23.0
@@ -43,12 +44,12 @@ TableHitSound = ExtResource("4_2eddj")
 BallInfo = SubResource("Resource_5uneu")
 
 [node name="BallSprite" type="Sprite2D" parent="."]
+texture_filter = 1
 material = SubResource("ShaderMaterial_gdxx3")
 texture = ExtResource("7_cboy1")
 region_rect = Rect2(-10, 0, 68, 60)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-visible = false
 shape = SubResource("CircleShape2D_81mj7")
 
 [node name="ShapeCast2D" type="ShapeCast2D" parent="."]

@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://cdmuc5shmh4ps"]
+
+[ext_resource type="Texture2D" uid="uid://brktowfyqa3tc" path="res://sprites/table2.png" id="1_qr2yf"]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Table" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(950, 547)
+texture = ExtResource("1_qr2yf")

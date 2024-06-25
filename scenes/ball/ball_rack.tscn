@@ -111,60 +111,60 @@ Type = 0
 [node name="BallRack" type="Node2D"]
 
 [node name="Ball1" parent="." instance=ExtResource("1_32g3v")]
-position = Vector2(-80, 0)
+position = Vector2(-28, 0)
 BallInfo = SubResource("Resource_ar5bk")
 
 [node name="Ball13" parent="." instance=ExtResource("1_32g3v")]
-position = Vector2(40, -72)
+position = Vector2(14, -24)
 BallInfo = SubResource("Resource_v7cdm")
 
 [node name="Ball15" parent="." instance=ExtResource("1_32g3v")]
-position = Vector2(40, -24)
+position = Vector2(14, -8)
 BallInfo = SubResource("Resource_mybef")
 
 [node name="Ball4" parent="." instance=ExtResource("1_32g3v")]
-position = Vector2(40, 24)
+position = Vector2(14, 8)
 BallInfo = SubResource("Resource_w7due")
 
 [node name="Ball9" parent="." instance=ExtResource("1_32g3v")]
-position = Vector2(40, 72)
+position = Vector2(14, 24)
 BallInfo = SubResource("Resource_nof1x")
 
 [node name="Ball12" parent="." instance=ExtResource("1_32g3v")]
-position = Vector2(80, 96)
+position = Vector2(28, 32)
 BallInfo = SubResource("Resource_7ylwc")
 
 [node name="Ball5" parent="." instance=ExtResource("1_32g3v")]
-position = Vector2(80, 48)
+position = Vector2(28, 16)
 BallInfo = SubResource("Resource_rpswn")
 
 [node name="Ball10" parent="." instance=ExtResource("1_32g3v")]
-position = Vector2(80, 0)
+position = Vector2(28, 0)
 BallInfo = SubResource("Resource_wbnti")
 
 [node name="Ball2" parent="." instance=ExtResource("1_32g3v")]
-position = Vector2(80, -48)
+position = Vector2(28, -16)
 BallInfo = SubResource("Resource_02juc")
 
 [node name="Ball7" parent="." instance=ExtResource("1_32g3v")]
-position = Vector2(80, -96)
+position = Vector2(28, -32)
 BallInfo = SubResource("Resource_4kubo")
 
 [node name="Ball14" parent="." instance=ExtResource("1_32g3v")]
-position = Vector2(0, 48)
+position = Vector2(0, 16)
 BallInfo = SubResource("Resource_108cf")
 
 [node name="Ball8" parent="." instance=ExtResource("1_32g3v")]
 BallInfo = SubResource("Resource_ia6j2")
 
 [node name="Ball6" parent="." instance=ExtResource("1_32g3v")]
-position = Vector2(0, -48)
+position = Vector2(0, -16)
 BallInfo = SubResource("Resource_2mseb")
 
 [node name="Ball11" parent="." instance=ExtResource("1_32g3v")]
-position = Vector2(-40, -24)
+position = Vector2(-14, -8)
 BallInfo = SubResource("Resource_x843f")
 
 [node name="Ball3" parent="." instance=ExtResource("1_32g3v")]
-position = Vector2(-40, 24)
+position = Vector2(-14, 8)
 BallInfo = SubResource("Resource_a3x8l")

@@ -10,9 +10,10 @@
 script = ExtResource("1_qveh4")
 
 [node name="Table" parent="." instance=ExtResource("1_3cvqc")]
-position = Vector2(816, 544)
+position = Vector2(288, 190)
 
 [node name="RightBar" parent="." instance=ExtResource("6_12npv")]
+visible = false
 
 [node name="ScoringManager" type="Node" parent="."]
 script = ExtResource("4_0vuc6")
