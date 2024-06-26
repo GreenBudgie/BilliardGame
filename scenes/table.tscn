@@ -51,33 +51,33 @@ _cueBall = NodePath("../CueBall")
 _cueBall = NodePath("../CueBall")
 
 [node name="Borders" type="StaticBody2D" parent="."]
+visible = false
 collision_layer = 4
 collision_mask = 0
 physics_material_override = SubResource("PhysicsMaterial_nget6")
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Borders"]
-polygon = PackedVector2Array(-636, -323, -668, -355, -669, -427, -43, -427, -44, -375, -40, -355, -54, -323)
+[node name="TopLeftPolygon" type="CollisionPolygon2D" parent="Borders"]
+polygon = PackedVector2Array(-197, -102, -207, -112, -207, -144, -15, -144, -15, -117, -13, -112, -18, -102)
 
-[node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="Borders"]
+[node name="TopRightPolygon" type="CollisionPolygon2D" parent="Borders"]
 scale = Vector2(-1, 1)
-polygon = PackedVector2Array(-636, -323, -668, -355, -669, -427, -43, -427, -44, -375, -40, -355, -54, -323)
+polygon = PackedVector2Array(-197, -102, -207, -112, -207, -144, -15, -144, -15, -117, -13, -112, -18, -102)
 
-[node name="CollisionPolygon2D3" type="CollisionPolygon2D" parent="Borders"]
+[node name="RightPolygon" type="CollisionPolygon2D" parent="Borders"]
+rotation = 3.14159
 scale = Vector2(1, -1)
-polygon = PackedVector2Array(-636, -323, -668, -355, -669, -427, -43, -427, -44, -375, -40, -355, -54, -323)
+polygon = PackedVector2Array(214, -85, 224, -95, 256, -95, 256, 95, 224, 95, 214, 85)
 
-[node name="CollisionPolygon2D4" type="CollisionPolygon2D" parent="Borders"]
+[node name="BottomRightPolygon" type="CollisionPolygon2D" parent="Borders"]
 scale = Vector2(-1, -1)
-polygon = PackedVector2Array(-636, -323, -668, -355, -669, -427, -43, -427, -44, -375, -40, -355, -54, -323)
+polygon = PackedVector2Array(-197, -102, -207, -112, -207, -144, -15, -144, -15, -117, -13, -112, -18, -102)
 
-[node name="CollisionPolygon2D5" type="CollisionPolygon2D" parent="Borders"]
-position = Vector2(663, 279)
-polygon = PackedVector2Array(27, -548, 59, -580, 131, -580, 131, 22, 59, 22, 27, -10)
+[node name="BottomLeftPolygon" type="CollisionPolygon2D" parent="Borders"]
+scale = Vector2(1, -1)
+polygon = PackedVector2Array(-197, -102, -207, -112, -207, -144, -15, -144, -15, -117, -13, -112, -18, -102)
 
-[node name="CollisionPolygon2D6" type="CollisionPolygon2D" parent="Borders"]
-position = Vector2(-663, 279)
-scale = Vector2(-1, 1)
-polygon = PackedVector2Array(27, -548, 59, -580, 131, -580, 131, 22, 59, 22, 27, -10)
+[node name="LeftPolygon" type="CollisionPolygon2D" parent="Borders"]
+polygon = PackedVector2Array(214, -85, 224, -95, 256, -95, 256, 95, 224, 95, 214, 85)
 
 [node name="Pockets" type="Node2D" parent="."]
 

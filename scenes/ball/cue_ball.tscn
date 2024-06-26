@@ -27,7 +27,7 @@ shader_parameter/texture_size = Vector2(31, 15)
 radius = 8.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_5kyv3"]
-radius = 23.0
+radius = 8.0
 
 [node name="CueBall" type="RigidBody2D"]
 collision_mask = 14
@@ -53,7 +53,6 @@ region_rect = Rect2(-10, 0, 68, 60)
 shape = SubResource("CircleShape2D_81mj7")
 
 [node name="ShapeCast2D" type="ShapeCast2D" parent="."]
-visible = false
 enabled = false
 shape = SubResource("CircleShape2D_5kyv3")
 collision_mask = 14

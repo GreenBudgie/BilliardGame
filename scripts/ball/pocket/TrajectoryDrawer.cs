@@ -11,6 +11,7 @@ public partial class TrajectoryDrawer : Node2D
         {
             return;
         }
+
         GD.PrintErr("Cue ball is not assigned for the trajectory drawer");
         QueueFree();
     }
@@ -34,14 +35,16 @@ public partial class TrajectoryDrawer : Node2D
         }
 
         Vector2 stopPoint;
+        Vector2? collisionVector = null;
         if (_cueBall.ShapeCast.IsColliding())
         {
             var collisionPoint = _cueBall.ShapeCast.GetCollisionPoint(0);
-            var collisionVector = collisionPoint - GlobalPosition;
-            stopPoint =
-                GetBallCenterCollisionPoint(_cueBall.ShotData.PullVector, collisionVector, _cueBall.Radius);
-
-            DrawCircle(collisionVector, 4, Colors.Red);
+            collisionVector = collisionPoint - GlobalPosition;
+            stopPoint = GetBallCenterCollisionPoint(
+                _cueBall.ShotData.PullVector,
+                collisionVector.Value,
+                _cueBall.Radius
+            );
         }
         else
         {
@@ -49,11 +52,16 @@ public partial class TrajectoryDrawer : Node2D
             stopPoint = _cueBall.ShotData.PullVector.Normalized() * travelDistance;
         }
 
-        DrawLine(Vector2.Zero, stopPoint, Colors.White, 2, true);
-        DrawArc(stopPoint, _cueBall.Radius, 0, Mathf.Tau, 64, Colors.White, 2f, true);
+        DrawLine(Vector2.Zero, stopPoint, Colors.White, 1);
+        DrawArc(stopPoint, _cueBall.Radius, 0, Mathf.Tau, 64, Colors.White, 1.5f);
 
         var angle = Mathf.Pi / 4f * _cueBall.ShotData.Strength;
-        DrawArc(Vector2.Zero, _cueBall.Radius, 0, angle, 64, Colors.Orange, 4f, true);
+        DrawArc(Vector2.Zero, _cueBall.Radius, 0, angle, 64, Colors.Orange, 1.5f);
+
+        if (collisionVector.HasValue)
+        {
+            DrawCircle(collisionVector.Value, 2, Colors.Red);
+        }
     }
 
     private Vector2 GetBallCenterCollisionPoint(Vector2 shootVector, Vector2 collisionPoint, float radius)

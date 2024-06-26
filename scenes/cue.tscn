@@ -6,7 +6,8 @@
 [node name="Cue" type="Node2D"]
 process_priority = 1
 script = ExtResource("1_2gq1k")
+_maxOffset = 43.0
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(-394, 0)
+position = Vector2(-131, 0)
 texture = ExtResource("1_8o0s2")
