@@ -12,6 +12,12 @@ vec2 get_pixel_center_uv(vec2 uv) {
 	return vec2(pixel_x, pixel_y);
 }
 
+vec2 get_pixel_center_uv_real(vec2 uv) {
+	float pixel_x = floor(uv.x * texture_size.x) + 0.5;
+	float pixel_y = floor(uv.y * texture_size.y) + 0.5;
+	return vec2(pixel_x / texture_size.x, pixel_y / texture_size.y);
+}
+
 bool should_discard(vec2 uv) {
 	vec2 center = vec2(texture_size.x * 0.5, texture_size.y * 0.5);
 	vec2 center_vector = center - get_pixel_center_uv(uv);
@@ -19,10 +25,11 @@ bool should_discard(vec2 uv) {
 }
 
 void fragment() {
-	vec2 uv = UV * 2.0 - 1.0;
+	vec2 pixelated_uv = get_pixel_center_uv_real(UV);
+	vec2 uv = pixelated_uv * 2.0 - 1.0;
 	
 	float distance_from_center = 4.0 * uv.x * uv.x + uv.y * uv.y;
-	if (should_discard(UV)) {
+	if (should_discard(pixelated_uv)) {
 		discard;
 	}
 	float x = sqrt(1.0 - (4.0 * uv.x * uv.x) - (uv.y * uv.y));

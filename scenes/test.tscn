@@ -1,10 +1,11 @@
-[gd_scene load_steps=2 format=3 uid="uid://cdmuc5shmh4ps"]
+[gd_scene load_steps=3 format=3 uid="uid://cdmuc5shmh4ps"]
 
-[ext_resource type="Texture2D" uid="uid://brktowfyqa3tc" path="res://sprites/table2.png" id="1_qr2yf"]
+[ext_resource type="Script" path="res://scenes/BallOutline.cs" id="2_c4hi0"]
+[ext_resource type="Texture2D" uid="uid://d1bocxc73rv58" path="res://sprites/ball/ball_outline.png" id="2_dbo6b"]
 
 [node name="Node2D" type="Node2D"]
 
-[node name="Table" type="Sprite2D" parent="."]
-texture_filter = 1
-position = Vector2(950, 547)
-texture = ExtResource("1_qr2yf")
+[node name="BallOutline" type="Sprite2D" parent="."]
+position = Vector2(360, 264)
+texture = ExtResource("2_dbo6b")
+script = ExtResource("2_c4hi0")
