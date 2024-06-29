@@ -1,11 +1,17 @@
-[gd_scene load_steps=3 format=3 uid="uid://cdmuc5shmh4ps"]
+[gd_scene load_steps=5 format=3 uid="uid://cdmuc5shmh4ps"]
 
-[ext_resource type="Script" path="res://scenes/BallOutline.cs" id="2_c4hi0"]
-[ext_resource type="Texture2D" uid="uid://d1bocxc73rv58" path="res://sprites/ball/ball_outline.png" id="2_dbo6b"]
+[ext_resource type="Texture2D" uid="uid://d1bocxc73rv58" path="res://sprites/ball/ball_outline.png" id="1_2o722"]
+[ext_resource type="Shader" path="res://resources/shaders/smooth_pixel.gdshader" id="1_ci4qp"]
+[ext_resource type="Script" path="res://scripts/BallOutline.cs" id="2_t3guv"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_yman1"]
+shader = ExtResource("1_ci4qp")
 
 [node name="Node2D" type="Node2D"]
 
 [node name="BallOutline" type="Sprite2D" parent="."]
-position = Vector2(360, 264)
-texture = ExtResource("2_dbo6b")
-script = ExtResource("2_c4hi0")
+texture_filter = 2
+material = SubResource("ShaderMaterial_yman1")
+position = Vector2(311, 213)
+texture = ExtResource("1_2o722")
+script = ExtResource("2_t3guv")

@@ -7,28 +7,26 @@
 [ext_resource type="Shader" path="res://scenes/ball/ball.gdshader" id="5_1t0me"]
 [ext_resource type="Texture2D" uid="uid://besn84t323epf" path="res://sprites/ball/solid_ball_mask.png" id="6_cs5w2"]
 [ext_resource type="Shader" path="res://scenes/ball/ball_overlay.gdshader" id="7_l56w6"]
-[ext_resource type="FontFile" uid="uid://c5jgj36h4xqca" path="res://resources/fonts/font_silkscreen.ttf" id="8_smvir"]
+[ext_resource type="FontFile" uid="uid://s3k8lyeco7ic" path="res://resources/fonts/pixelFJ8pt1__.TTF" id="8_4pf63"]
 [ext_resource type="Texture2D" uid="uid://bo6qil4cq24ju" path="res://sprites/number_one.png" id="9_4hv3f"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_5n7ow"]
 resource_local_to_scene = true
 shader = ExtResource("5_1t0me")
-shader_parameter/rotation = Vector4(0, 0, 0, 1)
 shader_parameter/base_color = Color(0.956863, 0.956863, 0.956863, 1)
 shader_parameter/paint_color = Color(0.911222, 0.641606, 1.15514e-06, 1)
-shader_parameter/texture_size = Vector2(31, 15)
+shader_parameter/rotation = Vector4(0, 0, 0, 1)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_rq1tg"]
 resource_local_to_scene = true
 shader = ExtResource("7_l56w6")
 shader_parameter/rotation = Vector4(0, 0, 0, 1)
-shader_parameter/texture_size = Vector2(31, 15)
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_y66wa"]
 viewport_path = NodePath("SubViewport")
 
 [sub_resource type="LabelSettings" id="LabelSettings_vwkwu"]
-font = ExtResource("8_smvir")
+font = ExtResource("8_4pf63")
 font_size = 8
 font_color = Color(0, 0, 0, 1)
 
@@ -50,11 +48,11 @@ BallHitSound = ExtResource("3_kr4yi")
 TableHitSound = ExtResource("4_wjfex")
 
 [node name="BallSprite" type="Sprite2D" parent="."]
-texture_filter = 1
 material = SubResource("ShaderMaterial_5n7ow")
 texture = ExtResource("6_cs5w2")
 
 [node name="OverlaySprite" type="Sprite2D" parent="."]
+texture_filter = 2
 material = SubResource("ShaderMaterial_rq1tg")
 texture = SubResource("ViewportTexture_y66wa")
 
@@ -62,7 +60,6 @@ texture = SubResource("ViewportTexture_y66wa")
 disable_3d = true
 transparent_bg = true
 handle_input_locally = false
-canvas_item_default_texture_filter = 0
 size = Vector2i(31, 15)
 render_target_update_mode = 4
 
@@ -70,11 +67,12 @@ render_target_update_mode = 4
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 1.0
+offset_right = 0.999983
 grow_horizontal = 2
 grow_vertical = 2
 
 [node name="BallNumber" type="Label" parent="SubViewport/CenterContainer"]
-visible = false
 layout_mode = 2
 text = "1"
 label_settings = SubResource("LabelSettings_vwkwu")
@@ -82,6 +80,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="TextureRect" type="TextureRect" parent="SubViewport/CenterContainer"]
+visible = false
 layout_mode = 2
 texture = ExtResource("9_4hv3f")
 

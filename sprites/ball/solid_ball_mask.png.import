@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cymei1uomyron"
-path="res://.godot/imported/ball_underline.png-4d0da2b357c5b6795283b636afc63c31.ctex"
+uid="uid://besn84t323epf"
+path="res://.godot/imported/solid_ball_mask.png-8595be19bfb3496bb21dfb9d1731fa1e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/ball_underline.png"
-dest_files=["res://.godot/imported/ball_underline.png-4d0da2b357c5b6795283b636afc63c31.ctex"]
+source_file="res://sprites/ball/solid_ball_mask.png"
+dest_files=["res://.godot/imported/solid_ball_mask.png-8595be19bfb3496bb21dfb9d1731fa1e.ctex"]
 
 [params]
 

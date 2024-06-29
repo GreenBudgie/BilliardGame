@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bjjebri3nb2la"
-path="res://.godot/imported/ball_solid_overlay.png-182c52d539278a04b512f04f749369f0.ctex"
+uid="uid://c6ude8b5drosh"
+path="res://.godot/imported/cue.png-6e6bf3db13e186998b0403fab6384715.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/ball_solid_overlay.png"
-dest_files=["res://.godot/imported/ball_solid_overlay.png-182c52d539278a04b512f04f749369f0.ctex"]
+source_file="res://sprites/cue.png"
+dest_files=["res://.godot/imported/cue.png-6e6bf3db13e186998b0403fab6384715.ctex"]
 
 [params]
 

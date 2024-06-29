@@ -1,8 +1,3 @@
-shader_type canvas_item;
-
-uniform vec3 base_color : source_color;
-uniform vec3 paint_color : source_color;
-
 uniform vec4 rotation = vec4(0.0, 0.0, 0.0, 1.0);
 
 #include "res://resources/shaders/quaternions.gdshaderinc"
@@ -52,20 +47,4 @@ float smooth_edges(vec2 uv, float alpha) {
 	float distance_from_edge = 1.0 - distance_from_center;
 	float threshold_width = 0.1;
 	return clamp((distance_from_edge / threshold_width), 0, alpha);
-}
-
-void fragment() {
-	// Discarding pixels outside the circle radius
-	vec2 texture_size = get_texture_size(TEXTURE_PIXEL_SIZE);
-	vec2 pixelated_uv = get_pixelated_uv(UV, texture_size);
-	if (should_discard(pixelated_uv, texture_size)) {
-		discard;
-	}
-	
-	// Mapping to spherical coordinates
-	vec2 uv = pixelated_uv * 2.0 - 1.0;
-	vec2 spherical_uv = get_spherical_uv(uv);
-	COLOR = texture(TEXTURE, spherical_uv);
-	
-	COLOR.rgb = mix(paint_color, base_color, COLOR.r);
 }

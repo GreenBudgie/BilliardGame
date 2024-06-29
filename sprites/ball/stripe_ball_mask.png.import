@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://upe0v1jougs5"
-path="res://.godot/imported/ball_solid_body.png-402a6e0e091e85401023c778bfffea6a.ctex"
+uid="uid://chkoee6wpucd5"
+path="res://.godot/imported/stripe_ball_mask.png-ba5397b9930024378b2bd319c3012b2a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/ball_solid_body.png"
-dest_files=["res://.godot/imported/ball_solid_body.png-402a6e0e091e85401023c778bfffea6a.ctex"]
+source_file="res://sprites/ball/stripe_ball_mask.png"
+dest_files=["res://.godot/imported/stripe_ball_mask.png-ba5397b9930024378b2bd319c3012b2a.ctex"]
 
 [params]
 

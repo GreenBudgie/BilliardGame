@@ -18,10 +18,9 @@ Type = 0
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_gdxx3"]
 resource_local_to_scene = true
 shader = ExtResource("6_oyglm")
-shader_parameter/rotation = Vector4(0, 0, 0, 1)
 shader_parameter/base_color = Color(0.956863, 0.956863, 0.956863, 1)
 shader_parameter/paint_color = Color(0.114897, 0.114897, 0.114897, 1)
-shader_parameter/texture_size = Vector2(31, 15)
+shader_parameter/rotation = Vector4(0, 0, 0, 1)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_81mj7"]
 radius = 8.0
