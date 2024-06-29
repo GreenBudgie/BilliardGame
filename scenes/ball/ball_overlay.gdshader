@@ -14,7 +14,8 @@ void fragment() {
 	// Mapping to spherical coordinates
 	vec2 uv = UV * 2.0 - 1.0;
 	vec2 spherical_uv = get_spherical_uv(uv);
-	COLOR = texture(TEXTURE, spherical_uv);
+	COLOR = texture_point_smooth(TEXTURE, spherical_uv, TEXTURE_PIXEL_SIZE);
+	//COLOR = texture(TEXTURE, spherical_uv);
 	
 	COLOR.a = smooth_edges(uv, COLOR.a);
 }

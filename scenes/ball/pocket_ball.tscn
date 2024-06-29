@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://d2tf6ct6ufq7e"]
+[gd_scene load_steps=14 format=3 uid="uid://d2tf6ct6ufq7e"]
 
 [ext_resource type="PhysicsMaterial" uid="uid://c2rdm6hi6yt7i" path="res://scenes/ball/ball_material.tres" id="1_l15de"]
 [ext_resource type="Script" path="res://scripts/ball/pocket/PocketBall.cs" id="2_4xbno"]
@@ -7,8 +7,7 @@
 [ext_resource type="Shader" path="res://scenes/ball/ball.gdshader" id="5_1t0me"]
 [ext_resource type="Texture2D" uid="uid://besn84t323epf" path="res://sprites/ball/solid_ball_mask.png" id="6_cs5w2"]
 [ext_resource type="Shader" path="res://scenes/ball/ball_overlay.gdshader" id="7_l56w6"]
-[ext_resource type="FontFile" uid="uid://s3k8lyeco7ic" path="res://resources/fonts/pixelFJ8pt1__.TTF" id="8_4pf63"]
-[ext_resource type="Texture2D" uid="uid://bo6qil4cq24ju" path="res://sprites/number_one.png" id="9_4hv3f"]
+[ext_resource type="FontFile" uid="uid://bl6c36f5c4wae" path="res://resources/fonts/tpf-ploxx.regular.ttf" id="8_buq3u"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_5n7ow"]
 resource_local_to_scene = true
@@ -26,8 +25,8 @@ shader_parameter/rotation = Vector4(0, 0, 0, 1)
 viewport_path = NodePath("SubViewport")
 
 [sub_resource type="LabelSettings" id="LabelSettings_vwkwu"]
-font = ExtResource("8_4pf63")
-font_size = 8
+font = ExtResource("8_buq3u")
+font_size = 10
 font_color = Color(0, 0, 0, 1)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_l1t4d"]
@@ -67,8 +66,10 @@ render_target_update_mode = 4
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 1.0
-offset_right = 0.999983
+offset_left = -1.0
+offset_top = -3.0
+offset_right = 3.0
+offset_bottom = 6.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -79,10 +80,6 @@ label_settings = SubResource("LabelSettings_vwkwu")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="TextureRect" type="TextureRect" parent="SubViewport/CenterContainer"]
-visible = false
-layout_mode = 2
-texture = ExtResource("9_4hv3f")
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 shape = SubResource("CircleShape2D_l1t4d")

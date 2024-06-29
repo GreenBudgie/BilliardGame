@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://cpc2iscp6ykfb"]
+
+[ext_resource type="Shader" path="res://resources/shaders/smooth_pixel.gdshader" id="1_117ob"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_x5j5r"]
+shader = ExtResource("1_117ob")
+
+[node name="PixelSprite" type="Sprite2D"]
+texture_filter = 2
+material = SubResource("ShaderMaterial_x5j5r")
