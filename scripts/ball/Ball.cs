@@ -43,6 +43,8 @@ public abstract partial class Ball : RigidBody2D
             return;
         }
 
+        return;
+
         var velocitySq = LinearVelocity.LengthSquared();
         if (ApplyDamp(velocitySq, ExtremeDampVelocityThresholdSq, ExtremeDamp))
         {

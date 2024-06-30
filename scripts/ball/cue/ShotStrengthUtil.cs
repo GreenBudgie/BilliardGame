@@ -3,39 +3,31 @@ using Godot;
 
 public static class ShotStrengthUtil
 {
-    private const float MaxBallTravelDistance = 1650;
+    private const float MaxBallTravelDistance = 560;
 
     private const int MaxStrength = 8;
 
-    private const float MinPullVectorLength = 64;
-    private const float MaxPullVectorLength = 512;
+    private const float MinPullVectorLength = 20;
+    private const float MaxPullVectorLength = 170;
     private static readonly float StrengthStep = (MaxPullVectorLength - MinPullVectorLength) / MaxStrength;
 
-    private static readonly Dictionary<int, float> VelocityForStrength = new()
+    private static readonly Dictionary<int, float> ImpulseForStrength = new()
     {
-        { 1, 4000 },
-        { 2, 8000 },
-        { 3, 15000 },
-        { 4, 24000 },
-        { 5, 35000 },
-        { 6, 48000 },
-        { 7, 63000 },
-        { 8, 80000 },
+        { 1, 5 },
+        { 2, 15 },
+        { 3, 30 },
+        { 4, 55 },
+        { 5, 90 },
+        { 6, 130 },
+        { 7, 180 },
+        { 8, 240 },
     };
 
-    private static readonly float CueOffsetPerStrength = 24;
-
-    private static readonly Dictionary<int, float> BallTravelDistanceForStrength = new()
-    {
-        { 1, 94.5859f },
-        { 2, 282.576f },
-        { 3, 671.474f },
-        { 4, 1171.49f }
-    };
+    private static readonly float CueOffsetPerStrength = 8;
 
     public static float GetVelocityForStrength(int strength)
     {
-        return VelocityForStrength[strength];
+        return ImpulseForStrength[strength];
     }
 
     public static float GetCueOffsetForStrength(int strength)
@@ -43,14 +35,32 @@ public static class ShotStrengthUtil
         return CueOffsetPerStrength * strength;
     }
 
-    public static float GetBallTravelDistanceForStrength(int strength)
+    public static float GetMaxTravelDistanceByStrength(RigidBody2D body, int strength)
     {
-        if (!BallTravelDistanceForStrength.ContainsKey(strength))
+        return GetMaxTravelDistanceByImpulse(body, ImpulseForStrength[strength]);
+    }
+
+    public static float GetMaxTravelDistanceByImpulse(RigidBody2D body, float impulse)
+    {
+        var initialVelocity = impulse / body.Mass;
+        var spaceRid = PhysicsServer2D.BodyGetSpace(body.GetRid());
+        var sleepThreshold = PhysicsServer2D.SpaceGetParam(
+            spaceRid,
+            PhysicsServer2D.SpaceParameter.BodyLinearVelocitySleepThreshold
+        );
+        var linearDamp = body.LinearDamp;
+        var tps = Engine.PhysicsTicksPerSecond;
+        var delta = 1d / tps;
+        
+        var currentVelocity = (double)initialVelocity;
+        var travelDistance = 0d;
+        while (currentVelocity > sleepThreshold)
         {
-            return MaxBallTravelDistance;
+            travelDistance += currentVelocity;
+            currentVelocity *= 1 - delta * linearDamp;
         }
 
-        return BallTravelDistanceForStrength[strength];
+        return (float)(travelDistance / tps);
     }
 
     public static int GetStrengthForPullVectorLength(float length)

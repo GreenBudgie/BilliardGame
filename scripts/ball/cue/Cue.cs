@@ -4,8 +4,6 @@ public partial class Cue : Node2D
 {
     [Export] private CueBall _cueBall;
 
-    [Export] private float _maxOffset = 130;
-
     private Sprite2D _sprite;
 
     private bool _isVisible;

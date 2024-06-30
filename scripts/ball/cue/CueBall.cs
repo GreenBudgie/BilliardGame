@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Godot;
 
 public partial class CueBall : Ball
@@ -89,7 +90,7 @@ public partial class CueBall : Ball
 
         if (strength > 0)
         {
-            var travelDistance = ShotStrengthUtil.GetBallTravelDistanceForStrength(strength);
+            var travelDistance = ShotStrengthUtil.GetMaxTravelDistanceByStrength(this, strength);
             ShapeCast.TargetPosition = GetLocalMousePosition().Normalized() * travelDistance * inverseShotSign;
             ShapeCast.ForceShapecastUpdate();
         }
@@ -105,7 +106,7 @@ public partial class CueBall : Ball
     public void PerformShot()
     {
         var velocity = ShotStrengthUtil.GetVelocityForStrength(ShotData.Strength);
-        ApplyCentralForce(ShotData.PullVector.Normalized() * velocity);
+        ApplyCentralImpulse(ShotData.PullVector.Normalized() * velocity);
         State = BallState.Rolling;
     }
 

@@ -29,7 +29,6 @@ GameManager="res://scripts/manager/GameManager.cs"
 
 window/size/viewport_width=640
 window/size/viewport_height=360
-window/size/mode=3
 window/size/window_width_override=1280
 window/size/window_height_override=720
 window/stretch/mode="canvas_items"
@@ -67,10 +66,10 @@ inverse_shoot={
 
 common/physics_ticks_per_second=180
 2d/default_gravity=0.0
-2d/default_linear_damp=0.5
-2d/default_angular_damp=0.5
+2d/default_linear_damp=0.9
 2d/sleep_threshold_linear=4.0
-2d/solver/solver_iterations=32
+2d/time_before_sleep=0.0
+2d/solver/solver_iterations=48
 
 [rendering]
 

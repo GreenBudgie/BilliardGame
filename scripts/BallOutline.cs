@@ -1,10 +1,12 @@
 using Godot;
 using System;
 
-public partial class BallOutline : Sprite2D
+public partial class BallOutline : RigidBody2D
 {
-    public override void _Process(double delta)
+    
+    public override void _IntegrateForces(PhysicsDirectBodyState2D state)
     {
-        RotationDegrees += (float)delta * 20;
+        state.ApplyForce(Vector2.Right * 100);
     }
+    
 }

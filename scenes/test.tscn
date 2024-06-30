@@ -1,17 +1,28 @@
-[gd_scene load_steps=5 format=3 uid="uid://cdmuc5shmh4ps"]
+[gd_scene load_steps=4 format=3 uid="uid://cdmuc5shmh4ps"]
 
 [ext_resource type="Texture2D" uid="uid://d1bocxc73rv58" path="res://sprites/ball/ball_outline.png" id="1_2o722"]
-[ext_resource type="Shader" path="res://resources/shaders/smooth_pixel.gdshader" id="1_ci4qp"]
 [ext_resource type="Script" path="res://scripts/BallOutline.cs" id="2_t3guv"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_yman1"]
-shader = ExtResource("1_ci4qp")
+[sub_resource type="CircleShape2D" id="CircleShape2D_0at84"]
 
 [node name="Node2D" type="Node2D"]
 
-[node name="BallOutline" type="Sprite2D" parent="."]
-texture_filter = 2
-material = SubResource("ShaderMaterial_yman1")
+[node name="BallOutline" type="RigidBody2D" parent="."]
 position = Vector2(311, 213)
-texture = ExtResource("1_2o722")
 script = ExtResource("2_t3guv")
+
+[node name="Sprite2D" type="Sprite2D" parent="BallOutline"]
+texture = ExtResource("1_2o722")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BallOutline"]
+shape = SubResource("CircleShape2D_0at84")
+
+[node name="BallOutline2" type="RigidBody2D" parent="."]
+position = Vector2(354, 206)
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="BallOutline2"]
+texture = ExtResource("1_2o722")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BallOutline2"]
+shape = SubResource("CircleShape2D_0at84")

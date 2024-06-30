@@ -45,10 +45,11 @@ public partial class TrajectoryDrawer : Node2D
                 collisionVector.Value,
                 _cueBall.Radius
             );
+            
         }
         else
         {
-            var travelDistance = ShotStrengthUtil.GetBallTravelDistanceForStrength(_cueBall.ShotData.Strength);
+            var travelDistance = ShotStrengthUtil.GetMaxTravelDistanceByStrength(_cueBall, _cueBall.ShotData.Strength);
             stopPoint = _cueBall.ShotData.PullVector.Normalized() * travelDistance;
         }
 

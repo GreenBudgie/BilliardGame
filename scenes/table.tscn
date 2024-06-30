@@ -206,7 +206,7 @@ Pocket = NodePath("../..")
 position = Vector2(-136, 0)
 
 [node name="BallRack" parent="." instance=ExtResource("3_nsswf")]
-position = Vector2(145.5, 0.5)
+position = Vector2(120, 0)
 
 [node name="TrajectoryDrawer" parent="." node_paths=PackedStringArray("_cueBall") instance=ExtResource("5_qus0d")]
 _cueBall = NodePath("../CueBall")
