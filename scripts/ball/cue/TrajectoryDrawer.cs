@@ -5,15 +5,18 @@ public partial class TrajectoryDrawer : Node2D
 {
     [Export] private CueBall _cueBall;
 
+    private CharacterBody2D _collisionTester;
+
     public override void _Ready()
     {
-        if (_cueBall != null)
+        if (_cueBall == null)
         {
+            GD.PrintErr("Cue ball is not assigned for the trajectory drawer");
+            QueueFree();
             return;
         }
 
-        GD.PrintErr("Cue ball is not assigned for the trajectory drawer");
-        QueueFree();
+        _collisionTester = GetNode<CharacterBody2D>("CollisionTester");
     }
 
     public override void _Process(double delta)
@@ -34,35 +37,65 @@ public partial class TrajectoryDrawer : Node2D
             return;
         }
 
-        Vector2 stopPoint;
-        Vector2? collisionVector = null;
-        if (_cueBall.ShapeCast.IsColliding())
+        var impulse = ShotStrengthUtil.GetImpulseForStrength(_cueBall.ShotData.Strength);
+        var initialVelocityMagnitude = impulse / _cueBall.Mass;
+        var initialVelocity = _cueBall.ShotData.PullVector.Normalized() * initialVelocityMagnitude;
+        var shotPrediction = ShotPredictor.GetShotPrediction(_cueBall, _collisionTester, initialVelocity);
+        var stopPoint = shotPrediction.StopPoint - GlobalPosition;
+        DrawCircle(stopPoint, 2, Colors.White);
+        var previousPoint = _cueBall.GlobalPosition - GlobalPosition;
+        for (var i = 0; i < shotPrediction.Collisions.Length; i++)
         {
-            var collisionPoint = _cueBall.ShapeCast.GetCollisionPoint(0);
-            collisionVector = collisionPoint - GlobalPosition;
-            stopPoint = GetBallCenterCollisionPoint(
-                _cueBall.ShotData.PullVector,
-                collisionVector.Value,
-                _cueBall.Radius
-            );
-            
+            var collision = shotPrediction.Collisions[i];
+            var currentPosition = collision.CueBallCollision.Position - GlobalPosition;
+            DrawLine(previousPoint, currentPosition, Colors.White, 1);
+            DrawArc(currentPosition, _cueBall.Radius, 0, Mathf.Tau, 16, Colors.White, 1.5f);
+            DrawCircle(collision.ContactPoint - GlobalPosition, 2, Colors.Red);
+            if (collision.OtherBallCollision.HasValue)
+            {
+                var pocketBallCollision = collision.OtherBallCollision.Value;
+                var pocketBallVelocity = pocketBallCollision.VelocityAfterContact;
+                var pocketBallPosition = pocketBallCollision.Position - GlobalPosition;
+                DrawLine(pocketBallPosition, pocketBallPosition + pocketBallVelocity.Normalized() * 256, Colors.Aqua, 1);
+                
+            }
+            previousPoint = shotPrediction.Collisions[i].CueBallCollision.Position - GlobalPosition;
         }
-        else
-        {
-            var travelDistance = ShotStrengthUtil.GetMaxTravelDistanceByStrength(_cueBall, _cueBall.ShotData.Strength);
-            stopPoint = _cueBall.ShotData.PullVector.Normalized() * travelDistance;
-        }
+        DrawLine(previousPoint, stopPoint, Colors.White, 1);
 
-        DrawLine(Vector2.Zero, stopPoint, Colors.White, 1);
-        DrawArc(stopPoint, _cueBall.Radius, 0, Mathf.Tau, 64, Colors.White, 1.5f);
-
-        var angle = Mathf.Pi / 4f * _cueBall.ShotData.Strength;
-        DrawArc(Vector2.Zero, _cueBall.Radius, 0, angle, 64, Colors.Orange, 1.5f);
-
-        if (collisionVector.HasValue)
-        {
-            DrawCircle(collisionVector.Value, 2, Colors.Red);
-        }
+        // Vector2 stopPoint;
+        // Vector2? collisionPoint = null;
+        // Vector2? bounceVector = null;
+        // Vector2? collisionNormal = null;
+        // if (_cueBall.ShapeCast.IsColliding())
+        // {
+        //     collisionPoint = _cueBall.ShapeCast.GetCollisionPoint(0) - GlobalPosition;
+        //     stopPoint = GetBallCenterCollisionPoint(
+        //         _cueBall.ShotData.PullVector,
+        //         collisionPoint.Value,
+        //         _cueBall.Radius
+        //     );
+        //     collisionNormal = _cueBall.ShapeCast.GetCollisionNormal(0);
+        //     bounceVector = stopPoint.Bounce(collisionNormal.Value);
+        // }
+        // else
+        // {
+        //     var travelDistance = ShotStrengthUtil.GetMaxTravelDistanceByStrength(_cueBall, _cueBall.ShotData.Strength);
+        //     stopPoint = _cueBall.ShotData.PullVector.Normalized() * travelDistance;
+        // }
+        //
+        // DrawLine(Vector2.Zero, stopPoint, Colors.White, 1);
+        // DrawArc(stopPoint, _cueBall.Radius, 0, Mathf.Tau, 64, Colors.White, 1.5f);
+        //
+        // var angle = Mathf.Pi / 4f * _cueBall.ShotData.Strength;
+        // DrawArc(Vector2.Zero, _cueBall.Radius, 0, angle, 64, Colors.Orange, 1.5f);
+        //
+        // if (collisionPoint.HasValue)
+        // {
+        //     DrawCircle(collisionPoint.Value, 2, Colors.Red);
+        //     DrawLine(stopPoint, stopPoint + bounceVector.Value, Colors.White, 1);
+        //     DrawLine(stopPoint, stopPoint + collisionNormal.Value * 100, Colors.Aqua, 1);
+        // }
     }
 
     private Vector2 GetBallCenterCollisionPoint(Vector2 shootVector, Vector2 collisionPoint, float radius)

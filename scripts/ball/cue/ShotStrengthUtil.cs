@@ -25,7 +25,7 @@ public static class ShotStrengthUtil
 
     private static readonly float CueOffsetPerStrength = 8;
 
-    public static float GetVelocityForStrength(int strength)
+    public static float GetImpulseForStrength(int strength)
     {
         return ImpulseForStrength[strength];
     }
@@ -48,10 +48,11 @@ public static class ShotStrengthUtil
             spaceRid,
             PhysicsServer2D.SpaceParameter.BodyLinearVelocitySleepThreshold
         );
-        var linearDamp = body.LinearDamp;
+        var defaultLinearDamp = ProjectSettings.GetSetting("physics/2d/default_linear_damp").As<float>();
+        var linearDamp = body.LinearDamp == 0 ? defaultLinearDamp : body.LinearDamp;
         var tps = Engine.PhysicsTicksPerSecond;
         var delta = 1d / tps;
-        
+
         var currentVelocity = (double)initialVelocity;
         var travelDistance = 0d;
         while (currentVelocity > sleepThreshold)
@@ -63,8 +64,31 @@ public static class ShotStrengthUtil
         return (float)(travelDistance / tps);
     }
 
+    // TODO combine this method with above to improve performance
+    public static float GetVelocityByTravelDistance(RigidBody2D body, float travelDistance, float impulse)
+    {
+        var initialVelocity = impulse / body.Mass;
+        var spaceRid = PhysicsServer2D.BodyGetSpace(body.GetRid());
+        var defaultLinearDamp = ProjectSettings.GetSetting("physics/2d/default_linear_damp").As<float>();
+        var linearDamp = body.LinearDamp == 0 ? defaultLinearDamp : body.LinearDamp;
+        var tps = Engine.PhysicsTicksPerSecond;
+        var delta = 1d / tps;
+
+        var currentVelocity = (double)initialVelocity;
+        var currentTravelDistance = 0d;
+        while (currentTravelDistance < travelDistance)
+        {
+            currentTravelDistance += currentVelocity;
+            currentVelocity *= 1 - delta * linearDamp;
+        }
+
+        return (float)currentVelocity;
+    }
+
     public static int GetStrengthForPullVectorLength(float length)
     {
         return Mathf.Clamp(Mathf.FloorToInt((length - MinPullVectorLength) / StrengthStep), 0, MaxStrength);
     }
+
+    
 }

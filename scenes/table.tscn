@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://cdokpkldvgmps"]
+[gd_scene load_steps=15 format=3 uid="uid://cdokpkldvgmps"]
 
 [ext_resource type="Script" path="res://scripts/Table.cs" id="1_6ns3v"]
 [ext_resource type="PackedScene" uid="uid://dnfowjpbcp587" path="res://scenes/ball/cue_ball.tscn" id="2_sbviq"]
@@ -10,10 +10,19 @@
 [ext_resource type="PackedScene" uid="uid://jprorwadsxa6" path="res://scenes/cue.tscn" id="6_bek7c"]
 [ext_resource type="PackedScene" uid="uid://dy8k6t6dye03o" path="res://scenes/pocket/pocket.tscn" id="8_4reo7"]
 [ext_resource type="PackedScene" uid="uid://cxxibhu6k60gt" path="res://scenes/pocket/sticker_position.tscn" id="10_j7oqd"]
+[ext_resource type="PackedScene" uid="uid://d2tf6ct6ufq7e" path="res://scenes/ball/pocket_ball.tscn" id="11_c4gcx"]
+[ext_resource type="Script" path="res://scripts/ball/BallInfo.cs" id="12_gxa7n"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_nget6"]
-friction = 0.4
-bounce = 0.5
+friction = 0.0
+bounce = 1.0
+
+[sub_resource type="Resource" id="Resource_vcgli"]
+script = ExtResource("12_gxa7n")
+IsCueBall = false
+Number = 1
+Color = 0
+Type = 0
 
 [node name="Table" type="Node2D"]
 script = ExtResource("1_6ns3v")
@@ -103,6 +112,7 @@ Pocket = NodePath("../..")
 
 [node name="TopRightPocket" parent="Pockets" instance=ExtResource("8_4reo7")]
 position = Vector2(224, -112)
+PocketPosition = 2
 
 [node name="CornerPocket" parent="Pockets/TopRightPocket" node_paths=PackedStringArray("Pocket") instance=ExtResource("3_cvwsn")]
 rotation = 1.5708
@@ -128,6 +138,7 @@ Pocket = NodePath("../..")
 
 [node name="BottomRightPocket" parent="Pockets" instance=ExtResource("8_4reo7")]
 position = Vector2(224, 112)
+PocketPosition = 3
 
 [node name="CornerPocket" parent="Pockets/BottomRightPocket" node_paths=PackedStringArray("Pocket") instance=ExtResource("3_cvwsn")]
 rotation = 3.14159
@@ -153,7 +164,7 @@ Pocket = NodePath("../..")
 
 [node name="BottomPocket" parent="Pockets" instance=ExtResource("8_4reo7")]
 position = Vector2(0, 128)
-PocketPosition = 1
+PocketPosition = 4
 
 [node name="SidePocket" parent="Pockets/BottomPocket" node_paths=PackedStringArray("Pocket") instance=ExtResource("4_0v0a5")]
 rotation = 3.14159
@@ -179,6 +190,7 @@ Pocket = NodePath("../..")
 
 [node name="BottomLeftPocket" parent="Pockets" instance=ExtResource("8_4reo7")]
 position = Vector2(-224, 112)
+PocketPosition = 5
 
 [node name="CornerPocket" parent="Pockets/BottomLeftPocket" node_paths=PackedStringArray("Pocket") instance=ExtResource("3_cvwsn")]
 rotation = 4.71239
@@ -206,10 +218,14 @@ Pocket = NodePath("../..")
 position = Vector2(-136, 0)
 
 [node name="BallRack" parent="." instance=ExtResource("3_nsswf")]
-position = Vector2(120, 0)
+position = Vector2(326, 0)
 
 [node name="TrajectoryDrawer" parent="." node_paths=PackedStringArray("_cueBall") instance=ExtResource("5_qus0d")]
 _cueBall = NodePath("../CueBall")
 
 [node name="Cue" parent="." node_paths=PackedStringArray("_cueBall") instance=ExtResource("6_bek7c")]
 _cueBall = NodePath("../CueBall")
+
+[node name="PocketBall" parent="." instance=ExtResource("11_c4gcx")]
+position = Vector2(19, 9)
+BallInfo = SubResource("Resource_vcgli")
