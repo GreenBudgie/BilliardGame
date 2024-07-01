@@ -4,6 +4,8 @@ using Godot;
 
 public static class ShotPredictor
 {
+    private const int MaxCollisions = 5;
+
     public static ShotPrediction GetShotPrediction(CueBall cueBall, CharacterBody2D collisionTester,
         Vector2 initialVelocity)
     {
@@ -21,67 +23,89 @@ public static class ShotPredictor
         var currentVelocity = initialVelocity;
         var currentPosition = cueBall.GlobalPosition;
         List<CollisionPrediction> collisions = new();
-        while (currentVelocity.LengthSquared() > sleepThresholdSq)
+        while (currentVelocity.LengthSquared() > sleepThresholdSq && collisions.Count < MaxCollisions)
         {
             var realVelocity = currentVelocity / tps;
             collisionTester.GlobalPosition = currentPosition;
-            var collision = collisionTester.MoveAndCollide(realVelocity, true);
-            if (collision != null)
+            var collision = collisionTester.MoveAndCollide(realVelocity, true, safeMargin: 0);
+            if (collision == null)
             {
-                currentPosition +=
-                    collision.GetTravel(); // TODO Maybe need to also move by remainder by updated velocity?
-                if (collision.GetCollider() is PocketBall pocketBall)
-                {
-                    var bodyVector = currentPosition - pocketBall.GlobalPosition;
-                    var cueBallVelocity = currentVelocity -
-                                          (currentVelocity.Dot(bodyVector) / bodyVector.LengthSquared()) * bodyVector;
-                    var pocketBallVelocity =
-                        -(-currentVelocity.Dot(-bodyVector) / -bodyVector.LengthSquared()) *
-                        bodyVector; //TODO remove - if possible
-                    var cueBallPrediction = new BallCollisionPrediction(
-                        currentPosition,
-                        currentVelocity,
-                        cueBallVelocity
-                    );
-                    var pocketBallPrediction = new BallCollisionPrediction(
-                        pocketBall.GlobalPosition,
-                        currentVelocity,
-                        pocketBallVelocity
-                    );
-                    collisions.Add(
-                        new CollisionPrediction(
-                            collision.GetPosition(),
-                            cueBallPrediction,
-                            pocketBallPrediction
-                        )
-                    );
-                    currentVelocity = cueBallVelocity;
-                    continue;
-                }
-
-                var normal = collision.GetNormal();
-                var newVelocity = currentVelocity.Bounce(normal);
-                var ballCollisionPrediction = new BallCollisionPrediction(
-                    currentPosition,
-                    currentVelocity,
-                    newVelocity
-                );
-                collisions.Add(
-                    new CollisionPrediction(
-                        collision.GetPosition(),
-                        ballCollisionPrediction,
-                        null
-                    )
-                );
-                currentVelocity = newVelocity;
+                currentPosition += realVelocity;
+                currentVelocity *= (float)(1 - delta * linearDamp);
                 continue;
             }
+            currentPosition += collision.GetTravel(); // TODO Maybe need to also move by remainder by updated velocity?
+            CollisionPrediction prediction;
+            if (collision.GetCollider() is PocketBall pocketBall)
+            {
+                prediction = PredictBallCollision(
+                    currentPosition,
+                    pocketBall.GlobalPosition,
+                    currentVelocity,
+                    collision
+                );
+            }
+            else
+            {
+                prediction = PredictBorderCollision(
+                    currentPosition,
+                    currentVelocity,
+                    collision
+                );
+            }
 
-            currentPosition += realVelocity;
-            currentVelocity *= (float)(1 - delta * linearDamp);
+            collisions.Add(prediction);
+            currentVelocity = prediction.CueBallCollision.VelocityAfterContact;
         }
 
         return new ShotPrediction(currentPosition, collisions.ToArray());
+    }
+
+    private static CollisionPrediction PredictBallCollision(
+        Vector2 cueBallPosition,
+        Vector2 pocketBallPosition,
+        Vector2 currentVelocity,
+        KinematicCollision2D collision
+    )
+    {
+        var bodyVector = cueBallPosition - pocketBallPosition;
+        var resultVelocity = currentVelocity.Dot(bodyVector) / bodyVector.LengthSquared() * bodyVector;
+        var cueBallVelocity = currentVelocity - resultVelocity;
+        var cueBallPrediction = new BallCollisionPrediction(
+            cueBallPosition,
+            currentVelocity,
+            cueBallVelocity
+        );
+        var pocketBallPrediction = new BallCollisionPrediction(
+            pocketBallPosition,
+            Vector2.Zero,
+            resultVelocity
+        );
+        return new CollisionPrediction(
+            collision.GetPosition(),
+            cueBallPrediction,
+            pocketBallPrediction
+        );
+    }
+
+    private static CollisionPrediction PredictBorderCollision(
+        Vector2 cueBallPosition,
+        Vector2 currentVelocity,
+        KinematicCollision2D collision
+    )
+    {
+        var normal = collision.GetNormal();
+        var newVelocity = currentVelocity.Bounce(normal);
+        var ballCollisionPrediction = new BallCollisionPrediction(
+            cueBallPosition,
+            currentVelocity,
+            newVelocity
+        );
+        return new CollisionPrediction(
+            collision.GetPosition(),
+            ballCollisionPrediction,
+            null
+        );
     }
 
     public record struct ShotPrediction(

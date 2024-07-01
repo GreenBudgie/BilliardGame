@@ -16,5 +16,14 @@ public partial class GameManager : Node
     {
         Instance = this;
     }
+    
+    public override void _Process(double delta)
+    {
+        if (Input.IsActionJustPressed("restart"))
+        {
+            _cachedGame = null;
+            GetTree().ReloadCurrentScene();
+        }
+    }
 
 }

@@ -215,7 +215,7 @@ position = Vector2(-16, -68)
 Pocket = NodePath("../..")
 
 [node name="CueBall" parent="." instance=ExtResource("2_sbviq")]
-position = Vector2(-136, 0)
+position = Vector2(149, -12)
 
 [node name="BallRack" parent="." instance=ExtResource("3_nsswf")]
 position = Vector2(326, 0)
@@ -227,5 +227,5 @@ _cueBall = NodePath("../CueBall")
 _cueBall = NodePath("../CueBall")
 
 [node name="PocketBall" parent="." instance=ExtResource("11_c4gcx")]
-position = Vector2(19, 9)
+position = Vector2(66, -12)
 BallInfo = SubResource("Resource_vcgli")
