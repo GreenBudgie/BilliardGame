@@ -39,7 +39,8 @@ public partial class TrajectoryDrawer : Node2D
 
         var impulse = ShotStrengthUtil.GetImpulseForStrength(_cueBall.ShotData.Strength);
         var initialVelocityMagnitude = impulse / _cueBall.Mass;
-        var initialVelocity = _cueBall.ShotData.PullVector.Normalized() * initialVelocityMagnitude;
+        var initialVelocity = _cueBall.ShotData.PullVector.Normalized() * initialVelocityMagnitude +
+                              _cueBall.LinearVelocity;
         var shotPrediction = ShotPredictor.GetShotPrediction(_cueBall, _collisionTester, initialVelocity);
         var stopPoint = shotPrediction.StopPoint - GlobalPosition;
         DrawCircle(stopPoint, 2, Colors.White);
@@ -48,19 +49,23 @@ public partial class TrajectoryDrawer : Node2D
         {
             var collision = shotPrediction.Collisions[i];
             var currentPosition = collision.CueBallCollision.Position - GlobalPosition;
+            var contactPoint = collision.ContactPoint - GlobalPosition;
             DrawLine(previousPoint, currentPosition, Colors.White, 1);
             DrawArc(currentPosition, _cueBall.Radius, 0, Mathf.Tau, 16, Colors.White, 1.5f);
             DrawCircle(collision.ContactPoint - GlobalPosition, 2, Colors.Red);
+            DrawLine(contactPoint, contactPoint + collision.Normal * 100, Colors.Orange, 1);
             if (collision.OtherBallCollision.HasValue)
             {
                 var pocketBallCollision = collision.OtherBallCollision.Value;
                 var pocketBallVelocity = pocketBallCollision.VelocityAfterContact;
                 var pocketBallPosition = pocketBallCollision.Position - GlobalPosition;
-                DrawLine(pocketBallPosition, pocketBallPosition + pocketBallVelocity.Normalized() * 256, Colors.Aqua, 1);
-                
+                DrawLine(pocketBallPosition, pocketBallPosition + pocketBallVelocity.Normalized() * 256, Colors.Aqua,
+                    1);
             }
+
             previousPoint = shotPrediction.Collisions[i].CueBallCollision.Position - GlobalPosition;
         }
+
         DrawLine(previousPoint, stopPoint, Colors.White, 1);
 
         // Vector2 stopPoint;

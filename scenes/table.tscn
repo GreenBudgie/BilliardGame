@@ -227,5 +227,5 @@ _cueBall = NodePath("../CueBall")
 _cueBall = NodePath("../CueBall")
 
 [node name="PocketBall" parent="." instance=ExtResource("11_c4gcx")]
-position = Vector2(66, -12)
+position = Vector2(296, 58)
 BallInfo = SubResource("Resource_vcgli")

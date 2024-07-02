@@ -9,6 +9,9 @@
 
 [node name="BallOutline" type="RigidBody2D" parent="."]
 position = Vector2(311, 213)
+lock_rotation = true
+custom_integrator = true
+linear_damp = 2.047
 script = ExtResource("2_t3guv")
 
 [node name="Sprite2D" type="Sprite2D" parent="BallOutline"]
