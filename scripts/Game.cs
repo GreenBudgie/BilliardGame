@@ -10,6 +10,7 @@ public partial class Game : Node2D
 
     public override void _Ready()
     {
+        Engine.TimeScale = 0.2;
         Table = GetNode<Table>("Table");
         ScoringManager = GetNode<ScoringManager>("ScoringManager");
         GameStateManager = GetNode<GameStateManager>("GameStateManager");

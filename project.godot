@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Billiard"
-run/main_scene="res://scenes/game.tscn"
+run/main_scene="res://scenes/test.tscn"
 config/features=PackedStringArray("4.2", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
@@ -69,7 +69,7 @@ restart={
 
 [physics]
 
-common/physics_ticks_per_second=3
+common/physics_ticks_per_second=6
 common/physics_jitter_fix=0.0
 2d/default_gravity=0.0
 2d/default_linear_damp=1.0
