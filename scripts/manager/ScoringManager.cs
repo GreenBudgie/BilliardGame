@@ -24,7 +24,7 @@ public partial class ScoringManager : Node
         {
             return;
         }
-        var allBallsStopped = GameManager.Game.Table.GetBalls().TrueForAll(b => b.Sleeping);
+        var allBallsStopped = GameManager.Game.Table.GetBalls().TrueForAll(b => b.IsSleeping);
         if (allBallsStopped)
         {
             EndShotExecution();

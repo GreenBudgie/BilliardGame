@@ -38,7 +38,7 @@ public partial class TrajectoryDrawer : Node2D
         }
 
         var impulse = ShotStrengthUtil.GetImpulseForStrength(_cueBall.ShotData.Strength);
-        var initialVelocityMagnitude = impulse / _cueBall.Mass;
+        var initialVelocityMagnitude = impulse;
         var initialVelocity = _cueBall.ShotData.PullVector.Normalized() * initialVelocityMagnitude +
                               _cueBall.LinearVelocity;
         var shotPrediction = ShotPredictor.GetShotPrediction(_cueBall, _collisionTester, initialVelocity);

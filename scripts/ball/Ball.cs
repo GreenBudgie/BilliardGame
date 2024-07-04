@@ -1,6 +1,8 @@
-﻿using Godot;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Godot;
 
-public abstract partial class Ball : RigidBody2D
+public abstract partial class Ball : CharacterBody2D
 {
     [Export] public AudioStream BallHitSound;
     [Export] public AudioStream TableHitSound;
@@ -26,43 +28,27 @@ public abstract partial class Ball : RigidBody2D
     private const float MaxSoundVelocityThreshold = 400;
     
     private Quaternion _rotation = Quaternion.Identity;
+    
+    public bool IsSleeping { get; private set; }
+    public Vector2 LinearVelocity { get; set; }
+
+    private ShapeCast2D _shapeCast;
 
     protected abstract void RotateSprites(Vector4 finalRotation);
 
     public override void _Ready()
     {
-        BodyEntered += OnBodyEntered;
-        SleepingStateChanged += HandleSleepStateChange;
+        _shapeCast = GetNode<ShapeCast2D>("ShapeCast2D");
     }
 
     public override void _PhysicsProcess(double delta)
     {
         HandleRotation(delta);
-        if (LinearVelocity.IsZeroApprox())
-        {
-            return;
-        }
-
-        return;
-
-        var velocitySq = LinearVelocity.LengthSquared();
-        if (ApplyDamp(velocitySq, ExtremeDampVelocityThresholdSq, ExtremeDamp))
-        {
-            return;
-        }
-
-        if (ApplyDamp(velocitySq, FastDampVelocityThresholdSq, FastDamp))
-        {
-            return;
-        }
-
-        LinearDamp = 0;
-        AngularDamp = 0;
     }
 
     private void HandleRotation(double delta)
     {
-        if (Sleeping || LinearVelocity.IsZeroApprox())
+        if (IsSleeping || LinearVelocity.IsZeroApprox())
         {
             return;
         }
@@ -76,18 +62,6 @@ public abstract partial class Ball : RigidBody2D
         var rotationAsVector = new Vector4(_rotation.X, _rotation.Y, _rotation.Z, _rotation.W);
         
         RotateSprites(rotationAsVector);
-    }
-
-    private bool ApplyDamp(float velocity, float threshold, float damp)
-    {
-        if (velocity >= threshold)
-        {
-            return false;
-        }
-
-        LinearDamp = damp;
-        AngularDamp = damp;
-        return true;
     }
 
     private void OnBodyEntered(Node node)
@@ -132,9 +106,76 @@ public abstract partial class Ball : RigidBody2D
 
     private void HandleSleepStateChange()
     {
-        if (Sleeping)
+        if (IsSleeping)
         {
             EventBus.Instance.EmitSignal(EventBus.SignalName.BallStopped, this);
         }
     }
+
+    public void ApplyImpulse(Vector2 impulse)
+    {
+        IsSleeping = false;
+        LinearVelocity = impulse * 5; // TODO remove * 5
+    }
+    
+    public void HandleMovement(double delta, BallPhysicsContext ctx)
+    {
+        if (IsSleeping)
+        {
+            return;
+        }
+
+        // Move the ball
+        Position += LinearVelocity * (float)delta;
+        LinearVelocity *= (float)(1 - delta * ctx.LinearDamp);
+
+        // Put to sleep if threshold is reached
+        if (LinearVelocity.LengthSquared() > ctx.SleepThresholdSq)
+        {
+            return;
+        }
+
+        LinearVelocity = Vector2.Zero;
+        IsSleeping = true;
+    }
+
+    public List<CollisionData> GetCollisions()
+    {
+        if (IsSleeping)
+        {
+            return new List<CollisionData>();
+        }
+
+        _shapeCast.ForceShapecastUpdate();
+
+        if (!_shapeCast.IsColliding())
+        {
+            return new List<CollisionData>();
+        }
+
+        var collisionCount = _shapeCast.GetCollisionCount();
+        var collisionIndices = Enumerable.Range(0, collisionCount);
+
+        return collisionIndices.Select(i =>
+            {
+                var collider = (CollisionObject2D)_shapeCast.GetCollider(i);
+                var normal = _shapeCast.GetCollisionNormal(i);
+                return new CollisionData(collider, normal);
+            }
+        ).ToList();
+    }
+
+    public void HandleNewCollision(double delta, CollisionData collision)
+    {
+        if (collision.Collider is not Ball)
+        {
+            HandleBorderCollision(collision.Normal);
+        }
+    }
+
+    private void HandleBorderCollision(Vector2 normal)
+    {
+        LinearVelocity = LinearVelocity.Bounce(normal);
+    }
+
 }

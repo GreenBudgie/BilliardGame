@@ -19,8 +19,6 @@ public partial class CueBall : Ball
 
     public ShotData ShotData { get; private set; } = new(Vector2.Zero, false, 0);
 
-    public ShapeCast2D ShapeCast { get; private set; }
-
     private CollisionShape2D _collisionShape;
     private Sprite2D _ballSprite;
 
@@ -29,8 +27,7 @@ public partial class CueBall : Ball
         base._Ready();
 
         _ballSprite = GetNode<Sprite2D>("BallSprite");
-        
-        ShapeCast = GetNode<ShapeCast2D>("ShapeCast2D");
+
         _collisionShape = GetNode<CollisionShape2D>("CollisionShape2D");
 
         var circleShape = (CircleShape2D)_collisionShape.Shape;
@@ -39,7 +36,7 @@ public partial class CueBall : Ball
         _initialGlobalPosition = Transform.Origin;
 
         PocketScored += HandlePocketCollision;
-        SleepingStateChanged += MakeIdleIfSleeping;
+        //SleepingStateChanged += MakeIdleIfSleeping;
     }
 
     public override void _Process(double delta)
@@ -91,8 +88,6 @@ public partial class CueBall : Ball
         if (strength > 0)
         {
             var travelDistance = ShotStrengthUtil.GetMaxTravelDistanceByStrength(this, strength);
-            ShapeCast.TargetPosition = GetLocalMousePosition().Normalized() * travelDistance * inverseShotSign;
-            ShapeCast.ForceShapecastUpdate();
         }
 
         if (ShouldPerformShot())
@@ -106,7 +101,7 @@ public partial class CueBall : Ball
     public void PerformShot()
     {
         var velocity = ShotStrengthUtil.GetImpulseForStrength(ShotData.Strength);
-        ApplyCentralImpulse(ShotData.PullVector.Normalized() * velocity);
+        ApplyImpulse(ShotData.PullVector.Normalized() * velocity);
         State = BallState.Rolling;
     }
 
@@ -143,7 +138,7 @@ public partial class CueBall : Ball
 
     private void MakeIdleIfSleeping()
     {
-        if (State == BallState.Rolling && Sleeping)
+        if (State == BallState.Rolling && IsSleeping)
         {
             State = BallState.Idle;
         }
@@ -152,7 +147,6 @@ public partial class CueBall : Ball
     private void HandlePocketCollision(Pocket pocket)
     {
         LinearVelocity = Vector2.Zero;
-        AngularVelocity = 0;
         Rotation = 0;
         // TODO fix, does not teleport
         var transform = Transform;

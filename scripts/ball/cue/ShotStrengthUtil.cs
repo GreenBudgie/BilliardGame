@@ -35,21 +35,21 @@ public static class ShotStrengthUtil
         return CueOffsetPerStrength * strength;
     }
 
-    public static float GetMaxTravelDistanceByStrength(RigidBody2D body, int strength)
+    public static float GetMaxTravelDistanceByStrength(Ball body, int strength)
     {
         return GetMaxTravelDistanceByImpulse(body, ImpulseForStrength[strength]);
     }
 
-    public static float GetMaxTravelDistanceByImpulse(RigidBody2D body, float impulse)
+    public static float GetMaxTravelDistanceByImpulse(Ball body, float impulse)
     {
-        var initialVelocity = impulse / body.Mass;
+        var initialVelocity = impulse;
         var spaceRid = PhysicsServer2D.BodyGetSpace(body.GetRid());
         var sleepThreshold = PhysicsServer2D.SpaceGetParam(
             spaceRid,
             PhysicsServer2D.SpaceParameter.BodyLinearVelocitySleepThreshold
         );
         var defaultLinearDamp = ProjectSettings.GetSetting("physics/2d/default_linear_damp").As<float>();
-        var linearDamp = body.LinearDamp == 0 ? defaultLinearDamp : body.LinearDamp;
+        var linearDamp = defaultLinearDamp; //body.LinearDamp == 0 ? defaultLinearDamp : body.LinearDamp;
         var tps = Engine.PhysicsTicksPerSecond;
         var delta = 1d / tps;
 

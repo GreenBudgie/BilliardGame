@@ -9,7 +9,7 @@ public partial class BallPhysicsServer : Node
     private float _linearDamp;
     private float _sleepThreshold;
     private float _sleepThresholdSq;
-    private readonly Dictionary<NewBall, List<CollisionObject2D>> _handledCollisions = new();
+    private readonly Dictionary<Ball, List<CollisionObject2D>> _handledCollisions = new();
 
     public override void _Ready()
     {
@@ -43,10 +43,10 @@ public partial class BallPhysicsServer : Node
         }
     }
 
-    private List<CollisionData> HandleCollisionsAndGetNewColliders(NewBall ball, List<CollisionData> collisions)
+    private List<CollisionData> HandleCollisionsAndGetNewColliders(Ball ball, List<CollisionData> collisions)
     {
         var collisionDataByCollider = collisions.ToDictionary(collision => collision.Collider, c => c);
-        var oldColliders = _handledCollisions[ball];
+        var oldColliders = _handledCollisions.GetValueOrDefault(ball);
         var currentColliders = collisions.Select(collision => collision.Collider).ToList();
 
         // If we had no old colliders, all new collisions should be handled
@@ -75,8 +75,8 @@ public partial class BallPhysicsServer : Node
         return newColliders.Select(collider => collisionDataByCollider[collider]).ToList();
     }
 
-    private List<NewBall> GetBalls()
+    private List<Ball> GetBalls()
     {
-        return GetTree().GetNodesInGroup(BallsGroupName).Cast<NewBall>().ToList();
+        return GetTree().GetNodesInGroup(BallsGroupName).Cast<Ball>().ToList();
     }
 }

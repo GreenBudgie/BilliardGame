@@ -19,7 +19,7 @@ public static class ShotPredictor
         );
         var sleepThresholdSq = sleepThreshold * sleepThreshold;
         var defaultLinearDamp = ProjectSettings.GetSetting("physics/2d/default_linear_damp").As<float>();
-        var linearDamp = cueBall.LinearDamp == 0 ? defaultLinearDamp : cueBall.LinearDamp;
+        var linearDamp = defaultLinearDamp; //cueBall.LinearDamp == 0 ? defaultLinearDamp : cueBall.LinearDamp;
         var tps = (float)Engine.PhysicsTicksPerSecond;
         var delta = 1d / tps;
 
