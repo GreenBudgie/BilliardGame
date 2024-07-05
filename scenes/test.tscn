@@ -9,7 +9,7 @@
 
 [node name="Node2D" type="Node2D"]
 
-[node name="BallOutline" type="CharacterBody2D" parent="."]
+[node name="BallOutline" type="Area2D" parent="."]
 position = Vector2(311, 213)
 script = ExtResource("2_t3guv")
 
@@ -24,8 +24,8 @@ enabled = false
 shape = SubResource("CircleShape2D_haa6y")
 target_position = Vector2(0, 0)
 
-[node name="BallOutline2" type="CharacterBody2D" parent="."]
-position = Vector2(328, 213)
+[node name="BallOutline2" type="Area2D" parent="."]
+position = Vector2(341, 213)
 metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="BallOutline2"]
@@ -35,7 +35,7 @@ texture = ExtResource("1_2o722")
 shape = SubResource("CircleShape2D_0at84")
 
 [node name="BallOutline3" type="CharacterBody2D" parent="."]
-position = Vector2(311, 196)
+position = Vector2(313, 189)
 metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="BallOutline3"]

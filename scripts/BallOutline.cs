@@ -1,24 +1,22 @@
 using Godot;
-using System;
-using System.Numerics;
-using Vector2 = Godot.Vector2;
 
-public partial class BallOutline : CharacterBody2D
+public partial class BallOutline : Area2D
 {
     public override void _Ready()
     {
-        
+        AreaEntered += (area) => GD.Print("entered");
     }
 
-    public override void _Process(double delta)
+    public override void _PhysicsProcess(double delta)
     {
         if (Input.IsActionJustPressed("shoot"))
         {
-            var shapeCast = GetNode<ShapeCast2D>("ShapeCast2D");
-            shapeCast.ForceShapecastUpdate();
-            var collision = MoveAndCollide(Vector2.Zero, true);
-            var collider = (Node2D)collision.GetCollider();
-            GD.Print(collider.Name, collision.GetNormal());
+            var ball = GetNode<Area2D>("../BallOutline2");
+            ball.Transform = ball.Transform.Translated(Vector2.Left * 15);
+            ball.ForceUpdateTransform();
+            ForceUpdateTransform();
+            GD.Print(OverlapsArea(ball));
+            
         }
     }
 }

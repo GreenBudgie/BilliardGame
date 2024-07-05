@@ -81,6 +81,7 @@ visible = false
 shape = SubResource("CircleShape2D_l1t4d")
 
 [node name="ShapeCast2D" type="ShapeCast2D" parent="."]
+visible = false
 enabled = false
 shape = SubResource("CircleShape2D_d6hsj")
 target_position = Vector2(0, 0)

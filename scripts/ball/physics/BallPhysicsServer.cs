@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Godot;
 
@@ -7,30 +8,40 @@ public partial class BallPhysicsServer : Node
     private const string BallsGroupName = "balls";
 
     private float _linearDamp;
-    private float _sleepThreshold;
     private float _sleepThresholdSq;
     private readonly Dictionary<Ball, List<CollisionObject2D>> _handledCollisions = new();
 
     public override void _Ready()
     {
         _linearDamp = ProjectSettings.GetSetting("physics/2d/default_linear_damp").As<float>();
-        _sleepThreshold = ProjectSettings.GetSetting("physics/2d/sleep_threshold_linear").As<float>();
-        _sleepThresholdSq = _sleepThreshold * _sleepThreshold;
+        var sleepThreshold = ProjectSettings.GetSetting("physics/2d/sleep_threshold_linear").As<float>();
+        _sleepThresholdSq = sleepThreshold * sleepThreshold;
     }
 
     public override void _PhysicsProcess(double delta)
     {
         var balls = GetBalls();
-        var ctx = new BallPhysicsContext(
-            _linearDamp,
-            _sleepThresholdSq
-        );
 
-        // Process movement
-        balls.ForEach(ball => ball.HandleMovement(delta, ctx));
-
-        // Get currently colliding bodies
-        var collisionsByBall = balls.ToDictionary(ball => ball, ball => ball.GetCollisions());
+        // Sleeping bodies are processed last, so the order is descending (IsSleeping = false comes first)
+        balls = balls.OrderBy(ball => ball.IsSleeping).ToList();
+        
+        var collisionsByBall = new Dictionary<Ball, List<CollisionData>>();
+        foreach (var ball in balls)
+        {
+            // Get currently colliding bodies
+            var collisions = ball.GetCollisions();
+            
+            // Awake every ball with which a collision have happened, so it can be processed later
+            foreach (var collision in collisions)
+            {
+                if (collision.Collider is Ball collidingBall)
+                {
+                    collidingBall.IsSleeping = false;
+                }
+            }
+            
+            collisionsByBall[ball] = collisions;
+        }
         
         foreach (var ball in balls)
         {
@@ -41,6 +52,9 @@ public partial class BallPhysicsServer : Node
                 ball.HandleNewCollision(delta, newCollision);
             }
         }
+
+        // Process movement at the end so positions can update before the next physics step
+        balls.ForEach(ball => ball.HandleMovement(delta, _linearDamp, _sleepThresholdSq));
     }
 
     private List<CollisionData> HandleCollisionsAndGetNewColliders(Ball ball, List<CollisionData> collisions)

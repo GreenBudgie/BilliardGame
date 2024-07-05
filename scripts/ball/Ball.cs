@@ -11,14 +11,6 @@ public abstract partial class Ball : CharacterBody2D
     [Signal]
     public delegate void PocketScoredEventHandler(Pocket pocket);
 
-    // Damping
-    private const float FastDampVelocityThreshold = 150;
-    private const float FastDamp = 0.4f;
-    private const float ExtremeDampVelocityThreshold = 40;
-    private const float ExtremeDamp = 2f;
-    private const float FastDampVelocityThresholdSq = FastDampVelocityThreshold * FastDampVelocityThreshold;
-    private const float ExtremeDampVelocityThresholdSq = ExtremeDampVelocityThreshold * ExtremeDampVelocityThreshold;
-    
     // Collision sounds
     private const float CollisionVolumeDbMin = -15f;
     private const float CollisionVolumeDbMax = 5f;
@@ -28,8 +20,8 @@ public abstract partial class Ball : CharacterBody2D
     private const float MaxSoundVelocityThreshold = 400;
     
     private Quaternion _rotation = Quaternion.Identity;
-    
-    public bool IsSleeping { get; private set; }
+
+    public bool IsSleeping { get; set; } = true;
     public Vector2 LinearVelocity { get; set; }
 
     private ShapeCast2D _shapeCast;
@@ -118,7 +110,7 @@ public abstract partial class Ball : CharacterBody2D
         LinearVelocity = impulse * 5; // TODO remove * 5
     }
     
-    public void HandleMovement(double delta, BallPhysicsContext ctx)
+    public void HandleMovement(double delta, float linearDamp, float sleepThresholdSq)
     {
         if (IsSleeping)
         {
@@ -127,10 +119,10 @@ public abstract partial class Ball : CharacterBody2D
 
         // Move the ball
         Position += LinearVelocity * (float)delta;
-        LinearVelocity *= (float)(1 - delta * ctx.LinearDamp);
+        LinearVelocity *= (float)(1 - delta * linearDamp);
 
         // Put to sleep if threshold is reached
-        if (LinearVelocity.LengthSquared() > ctx.SleepThresholdSq)
+        if (LinearVelocity.LengthSquared() > sleepThresholdSq)
         {
             return;
         }
@@ -160,22 +152,39 @@ public abstract partial class Ball : CharacterBody2D
             {
                 var collider = (CollisionObject2D)_shapeCast.GetCollider(i);
                 var normal = _shapeCast.GetCollisionNormal(i);
-                return new CollisionData(collider, normal);
+                var colliderVelocity = Vector2.Zero;
+                if (collider is Ball ball)
+                {
+                    colliderVelocity = ball.LinearVelocity;
+                }
+                return new CollisionData(collider, normal, colliderVelocity);
             }
         ).ToList();
     }
 
     public void HandleNewCollision(double delta, CollisionData collision)
     {
-        if (collision.Collider is not Ball)
+        if (collision.Collider is not Ball ball)
         {
             HandleBorderCollision(collision.Normal);
+            return;
         }
+        
+        HandleBallCollision(ball, collision);
     }
 
     private void HandleBorderCollision(Vector2 normal)
     {
         LinearVelocity = LinearVelocity.Bounce(normal);
+    }
+
+    private void HandleBallCollision(Ball ball, CollisionData collision)
+    {
+        var ballVector = GlobalPosition - ball.GlobalPosition;
+        var velocityVector = LinearVelocity - collision.ColliderVelocity;
+        var resultVelocity = LinearVelocity - 
+                             velocityVector.Dot(ballVector) / ballVector.LengthSquared() * ballVector;
+        LinearVelocity = resultVelocity;
     }
 
 }
