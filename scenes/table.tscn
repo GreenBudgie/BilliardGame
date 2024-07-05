@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://cdokpkldvgmps"]
+[gd_scene load_steps=15 format=3 uid="uid://cdokpkldvgmps"]
 
 [ext_resource type="Script" path="res://scripts/Table.cs" id="1_6ns3v"]
 [ext_resource type="PackedScene" uid="uid://dnfowjpbcp587" path="res://scenes/ball/cue_ball.tscn" id="2_sbviq"]
@@ -9,11 +9,20 @@
 [ext_resource type="PackedScene" uid="uid://jprorwadsxa6" path="res://scenes/cue.tscn" id="6_bek7c"]
 [ext_resource type="PackedScene" uid="uid://dkpq24jlytnuu" path="res://scenes/ball/ball_rack.tscn" id="8_3uwkd"]
 [ext_resource type="PackedScene" uid="uid://dy8k6t6dye03o" path="res://scenes/pocket/pocket.tscn" id="8_4reo7"]
+[ext_resource type="PackedScene" uid="uid://d2tf6ct6ufq7e" path="res://scenes/ball/pocket_ball.tscn" id="10_cvqny"]
 [ext_resource type="PackedScene" uid="uid://cxxibhu6k60gt" path="res://scenes/pocket/sticker_position.tscn" id="10_j7oqd"]
+[ext_resource type="Script" path="res://scripts/ball/BallInfo.cs" id="11_qbqex"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_nget6"]
 friction = 0.0
 bounce = 1.0
+
+[sub_resource type="Resource" id="Resource_7o3p6"]
+script = ExtResource("11_qbqex")
+IsCueBall = false
+Number = 1
+Color = 0
+Type = 0
 
 [node name="Table" type="Node2D"]
 script = ExtResource("1_6ns3v")
@@ -22,7 +31,6 @@ script = ExtResource("1_6ns3v")
 texture = ExtResource("3_cr0gw")
 
 [node name="Borders" type="StaticBody2D" parent="."]
-visible = false
 collision_layer = 4
 collision_mask = 0
 physics_material_override = SubResource("PhysicsMaterial_nget6")
@@ -209,10 +217,18 @@ Pocket = NodePath("../..")
 position = Vector2(-105, -1)
 
 [node name="BallRack" parent="." instance=ExtResource("8_3uwkd")]
-position = Vector2(162, 1)
+position = Vector2(123, 0)
 
 [node name="TrajectoryDrawer" parent="." node_paths=PackedStringArray("_cueBall") instance=ExtResource("5_qus0d")]
 _cueBall = NodePath("../CueBall")
 
 [node name="Cue" parent="." node_paths=PackedStringArray("_cueBall") instance=ExtResource("6_bek7c")]
 _cueBall = NodePath("../CueBall")
+
+[node name="PocketBall" parent="." instance=ExtResource("10_cvqny")]
+position = Vector2(-112, 93)
+BallInfo = SubResource("Resource_7o3p6")
+
+[node name="PocketBall2" parent="." instance=ExtResource("10_cvqny")]
+position = Vector2(-95, 93)
+BallInfo = SubResource("Resource_7o3p6")

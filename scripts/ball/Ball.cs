@@ -10,6 +10,12 @@ public abstract partial class Ball : CharacterBody2D
 
     [Signal]
     public delegate void PocketScoredEventHandler(Pocket pocket);
+    
+    [Signal]
+    public delegate void SleepingStateChangedEventHandler();
+    
+    [Signal]
+    public delegate void BodyEnteredEventHandler(CollisionObject2D body);
 
     // Collision sounds
     private const float CollisionVolumeDbMin = -15f;
@@ -21,7 +27,18 @@ public abstract partial class Ball : CharacterBody2D
     
     private Quaternion _rotation = Quaternion.Identity;
 
-    public bool IsSleeping { get; set; } = true;
+    private bool _isSleeping = true;
+
+    public bool IsSleeping
+    {
+        get => _isSleeping;
+        set
+        {
+            _isSleeping = value;
+            EmitSignal(SignalName.SleepingStateChanged);
+        }
+    }
+    
     public Vector2 LinearVelocity { get; set; }
 
     private ShapeCast2D _shapeCast;
@@ -31,6 +48,9 @@ public abstract partial class Ball : CharacterBody2D
     public override void _Ready()
     {
         _shapeCast = GetNode<ShapeCast2D>("ShapeCast2D");
+        
+        BodyEntered += OnBodyEntered;
+        SleepingStateChanged += HandleSleepStateChange;
     }
 
     public override void _PhysicsProcess(double delta)
@@ -56,14 +76,9 @@ public abstract partial class Ball : CharacterBody2D
         RotateSprites(rotationAsVector);
     }
 
-    private void OnBodyEntered(Node node)
+    private void OnBodyEntered(CollisionObject2D node)
     {
-        if (node is not PhysicsBody2D physicsBody)
-        {
-            return;
-        }
-
-        if (physicsBody.GetCollisionLayerValue(3))
+        if (node.GetCollisionLayerValue(3))
         {
             HandleCollision(TableHitSound);
             return;
@@ -164,6 +179,7 @@ public abstract partial class Ball : CharacterBody2D
 
     public void HandleNewCollision(double delta, CollisionData collision)
     {
+        EmitSignal(SignalName.BodyEntered, collision.Collider);
         if (collision.Collider is not Ball ball)
         {
             HandleBorderCollision(collision.Normal);

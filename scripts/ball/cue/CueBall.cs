@@ -36,7 +36,7 @@ public partial class CueBall : Ball
         _initialGlobalPosition = Transform.Origin;
 
         PocketScored += HandlePocketCollision;
-        //SleepingStateChanged += MakeIdleIfSleeping;
+        SleepingStateChanged += MakeIdleIfSleeping;
     }
 
     public override void _Process(double delta)
