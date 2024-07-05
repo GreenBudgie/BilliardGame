@@ -172,6 +172,8 @@ public abstract partial class Ball : CharacterBody2D
                 {
                     colliderVelocity = ball.LinearVelocity;
                 }
+
+                GlobalPosition = _shapeCast.GetCollisionPoint(i) + normal * 8;
                 return new CollisionData(collider, normal, colliderVelocity);
             }
         ).ToList();
