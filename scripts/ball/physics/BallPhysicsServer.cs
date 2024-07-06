@@ -9,7 +9,7 @@ public partial class BallPhysicsServer : Node
 
     private float _linearDamp;
     private float _sleepThresholdSq;
-    private readonly Dictionary<Ball, List<CollisionObject2D>> _handledCollisions = new();
+    private readonly Dictionary<BallRigidBody, CollisionObject2D> _handledCollisions = new();
 
     public override void _Ready()
     {
@@ -25,57 +25,32 @@ public partial class BallPhysicsServer : Node
         // Sleeping bodies are processed last, so the order is descending (IsSleeping = false comes first)
         balls = balls.OrderBy(ball => ball.IsSleeping).ToList();
         
-        var collisionsByBall = new Dictionary<Ball, List<CollisionData>>();
+        var collisionByBall = new Dictionary<BallRigidBody, CollisionData>();
         foreach (var ball in balls)
         {
-            // Get currently colliding bodies
-            var collisions = ball.GetCollisions();
+            var collision = ball.GetClosestCollision();
 
-            collisions = collisions
-                .OrderBy(collision => collision.InitialBallPosition.DistanceSquaredTo(collision.InitialColliderPosition))
-                .ToList();
-            
-            // Awake every ball with which a collision have happened, so it can be processed later
-            foreach (var collision in collisions)
+            if (!collision.HasValue)
             {
-                if (collision.Collider is Ball collidingBall)
-                {
-                    collidingBall.IsSleeping = false;
-                }
+                _handledCollisions.Remove(ball);
+                continue;
             }
-            
-            collisionsByBall[ball] = collisions;
-        }
 
-        var orderedCollisions = new Dictionary<int, List<KeyValuePair<Ball, CollisionData>>>();
-        foreach (var ball in balls)
-        {
-            // Retrieve collisions that were not present on previous update
-            var newCollisions = UpdateHandledCollisionsAndGetNewColliders(ball, collisionsByBall[ball]);
-            for (var i = 0; i < newCollisions.Count; i++)
+            // Awake ball with which a collision have happened, so it can be processed later
+            if (collision.Value.Collider is BallRigidBody collidingBall)
             {
-                var newCollision = newCollisions[i];
-
-                if (!orderedCollisions.ContainsKey(i))
-                {
-                    orderedCollisions[i] = new List<KeyValuePair<Ball, CollisionData>>();
-                }
-
-                orderedCollisions[i].Add(new KeyValuePair<Ball, CollisionData>(ball, newCollision));
+                collidingBall.IsSleeping = false;
             }
+
+            collisionByBall[ball] = collision.Value;
         }
         
-        foreach (var (_, collisions) in orderedCollisions)
+        foreach (var (ball, collision) in collisionByBall)
         {
-            var velocityModifications = new Dictionary<Ball, Vector2>();
-            foreach (var (ball, collision) in collisions)
+            ball.EscapeOverlaps(collision);
+            if (ShouldProcessCollision(ball, collision))
             {
-                velocityModifications.Add(ball, ball.HandleNewCollisionAndGetNewVelocity(collision));
-            }
-            
-            foreach (var (ball, newVelocity) in velocityModifications)
-            {
-                ball.LinearVelocity = newVelocity;
+                ball.HandleNewCollision(collision);
             }
         }
 
@@ -83,41 +58,19 @@ public partial class BallPhysicsServer : Node
         balls.ForEach(ball => ball.HandleMovement(delta, _linearDamp, _sleepThresholdSq));
     }
 
-    private List<CollisionData> UpdateHandledCollisionsAndGetNewColliders(Ball ball, List<CollisionData> collisions)
+    private bool ShouldProcessCollision(BallRigidBody ball, CollisionData collision)
     {
-        var collisionDataByCollider = collisions.ToDictionary(collision => collision.Collider, c => c);
-        var oldColliders = _handledCollisions.GetValueOrDefault(ball);
-        var currentColliders = collisions.Select(collision => collision.Collider).ToList();
+        var oldCollider = _handledCollisions.GetValueOrDefault(ball);
+        var currentCollider = collision.Collider;
 
-        // If we had no old colliders, all new collisions should be handled
-        if (oldColliders == null || oldColliders.Count == 0)
+        if (oldCollider == currentCollider)
         {
-            _handledCollisions[ball] = currentColliders;
-            return currentColliders.Select(collider => collisionDataByCollider[collider]).ToList();
-        }
-
-        var newColliders = new List<CollisionObject2D>();
-        foreach (var currentCollider in currentColliders)
-        {
-            if (oldColliders.Contains(currentCollider))
-            {
-                // Bodies are still touching since previous update, skip
-                continue;
-            }
-
-            // We have a new collider
-            newColliders.Add(currentCollider);
-            oldColliders.Add(currentCollider);
-        }
-
-        // Remove bodies that no longer collide
-        oldColliders.RemoveAll(oldCollider => !newColliders.Contains(oldCollider));
-        if (oldColliders.Count == 0)
-        {
-            _handledCollisions.Remove(ball);
+            // Bodies are still touching since previous update, skip
+            return false;
         }
         
-        return newColliders.Select(collider => collisionDataByCollider[collider]).ToList();
+        _handledCollisions[ball] = currentCollider;
+        return true;
     }
 
     private List<Ball> GetBalls()

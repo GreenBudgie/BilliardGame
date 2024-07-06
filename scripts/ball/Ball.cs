@@ -2,7 +2,7 @@
 using System.Linq;
 using Godot;
 
-public abstract partial class Ball : CharacterBody2D
+public abstract partial class Ball : BallRigidBody
 {
     [Export] public AudioStream BallHitSound;
     [Export] public AudioStream TableHitSound;
@@ -10,12 +10,6 @@ public abstract partial class Ball : CharacterBody2D
 
     [Signal]
     public delegate void PocketScoredEventHandler(Pocket pocket);
-    
-    [Signal]
-    public delegate void SleepingStateChangedEventHandler();
-    
-    [Signal]
-    public delegate void BodyEnteredEventHandler(CollisionObject2D body);
 
     // Collision sounds
     private const float CollisionVolumeDbMin = -15f;
@@ -27,34 +21,12 @@ public abstract partial class Ball : CharacterBody2D
     
     private Quaternion _rotation = Quaternion.Identity;
 
-    private bool _isSleeping = true;
-
-    public bool IsSleeping
-    {
-        get => _isSleeping;
-        set
-        {
-            _isSleeping = value;
-            EmitSignal(SignalName.SleepingStateChanged);
-        }
-    }
-    
-    public Vector2 LinearVelocity { get; set; }
-
-    private ShapeCast2D _shapeCast;
-    
-    public float Radius { get; private set; }
-
     protected abstract void RotateSprites(Vector4 finalRotation);
 
     public override void _Ready()
     {
-        _shapeCast = GetNode<ShapeCast2D>("ShapeCast2D");
-        
-        var collisionShape = GetNode<CollisionShape2D>("CollisionShape2D");
-        var circleShape = (CircleShape2D)collisionShape.Shape;
-        Radius = circleShape.Radius;
-        
+        base._Ready();
+
         BodyEntered += OnBodyEntered;
         SleepingStateChanged += HandleSleepStateChange;
     }
@@ -124,111 +96,5 @@ public abstract partial class Ball : CharacterBody2D
             EventBus.Instance.EmitSignal(EventBus.SignalName.BallStopped, this);
         }
     }
-
-    public void ApplyImpulse(Vector2 impulse)
-    {
-        IsSleeping = false;
-        LinearVelocity = impulse * 5; // TODO remove * 5
-    }
-
-    public void HandleMovement(double delta, float linearDamp, float sleepThresholdSq)
-    {
-        if (IsSleeping)
-        {
-            return;
-        }
-
-        if (LinearVelocity.LengthSquared() > 1200 * 1200)
-        {
-            GD.Print(LinearVelocity.Length());
-        }
-
-        // Move the ball
-        Position += LinearVelocity * (float)delta;
-        LinearVelocity *= (float)(1 - delta * linearDamp);
-
-        // Put to sleep if threshold is reached
-        if (LinearVelocity.LengthSquared() > sleepThresholdSq)
-        {
-            return;
-        }
-
-        LinearVelocity = Vector2.Zero;
-        IsSleeping = true;
-    }
-
-    public List<CollisionData> GetCollisions()
-    {
-        if (IsSleeping)
-        {
-            return new List<CollisionData>();
-        }
-
-        _shapeCast.ForceShapecastUpdate();
-
-        if (!_shapeCast.IsColliding())
-        {
-            return new List<CollisionData>();
-        }
-
-        var collisionCount = _shapeCast.GetCollisionCount();
-        var collisionIndices = Enumerable.Range(0, collisionCount);
-
-        return collisionIndices.Select(i =>
-            {
-                var collider = (CollisionObject2D)_shapeCast.GetCollider(i);
-                var normal = _shapeCast.GetCollisionNormal(i);
-                var colliderVelocity = Vector2.Zero;
-                if (collider is Ball ball)
-                {
-                    colliderVelocity = ball.LinearVelocity;
-                }
-
-                var collisionPoint = _shapeCast.GetCollisionPoint(i);
-
-                return new CollisionData(collider, GlobalPosition, collider.GlobalPosition, normal, colliderVelocity, collisionPoint);
-            }
-        ).ToList();
-    }
-
-
-    public void EscapeOverlaps(CollisionData collision)
-    {
-        var normalOffset = collision.Normal * Radius;
-        var centerVector = collision.CollisionPoint - GlobalPosition;
-        var offsetVector = normalOffset + centerVector;
-        if (collision.Collider is not Ball)
-        {
-            GlobalPosition += offsetVector;
-            return;
-        }
-
-        GlobalPosition += offsetVector * 0.5f;
-    }
-
-    public Vector2 HandleNewCollisionAndGetNewVelocity(CollisionData collision)
-    {
-        EscapeOverlaps(collision);
-        EmitSignal(SignalName.BodyEntered, collision.Collider);
-        if (collision.Collider is not Ball ball)
-        {
-            return HandleBorderCollision(collision.Normal);
-        }
-        
-        return HandleBallCollision(ball, collision);
-    }
-
-    private Vector2 HandleBorderCollision(Vector2 normal)
-    {
-        return LinearVelocity.Bounce(normal);
-    }
-
-    private Vector2 HandleBallCollision(Ball ball, CollisionData collision)
-    {
-        var colliderBall = (Ball)collision.Collider;
-        var ballVector = collision.InitialBallPosition - collision.InitialColliderPosition;
-        var velocityVector = LinearVelocity - colliderBall.LinearVelocity;
-        return LinearVelocity - velocityVector.Dot(ballVector) / ballVector.LengthSquared() * ballVector;
-    }
-
+    
 }

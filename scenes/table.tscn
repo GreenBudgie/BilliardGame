@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://cdokpkldvgmps"]
+[gd_scene load_steps=12 format=3 uid="uid://cdokpkldvgmps"]
 
 [ext_resource type="Script" path="res://scripts/Table.cs" id="1_6ns3v"]
 [ext_resource type="PackedScene" uid="uid://dnfowjpbcp587" path="res://scenes/ball/cue_ball.tscn" id="2_sbviq"]
@@ -10,19 +10,10 @@
 [ext_resource type="PackedScene" uid="uid://dkpq24jlytnuu" path="res://scenes/ball/ball_rack.tscn" id="8_3uwkd"]
 [ext_resource type="PackedScene" uid="uid://dy8k6t6dye03o" path="res://scenes/pocket/pocket.tscn" id="8_4reo7"]
 [ext_resource type="PackedScene" uid="uid://cxxibhu6k60gt" path="res://scenes/pocket/sticker_position.tscn" id="10_j7oqd"]
-[ext_resource type="PackedScene" uid="uid://d2tf6ct6ufq7e" path="res://scenes/ball/pocket_ball.tscn" id="11_i365a"]
-[ext_resource type="Script" path="res://scripts/ball/BallInfo.cs" id="12_h6yyx"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_nget6"]
 friction = 0.0
 bounce = 1.0
-
-[sub_resource type="Resource" id="Resource_ak6a1"]
-script = ExtResource("12_h6yyx")
-IsCueBall = false
-Number = 1
-Color = 0
-Type = 0
 
 [node name="Table" type="Node2D"]
 script = ExtResource("1_6ns3v")
@@ -214,37 +205,13 @@ position = Vector2(-16, -68)
 Pocket = NodePath("../..")
 
 [node name="CueBall" parent="." instance=ExtResource("2_sbviq")]
-position = Vector2(-107, 1)
+position = Vector2(-50, 51)
 
 [node name="BallRack" parent="." instance=ExtResource("8_3uwkd")]
-position = Vector2(125, 0)
+position = Vector2(118, 0)
 
 [node name="TrajectoryDrawer" parent="." node_paths=PackedStringArray("_cueBall") instance=ExtResource("5_qus0d")]
 _cueBall = NodePath("../CueBall")
 
 [node name="Cue" parent="." node_paths=PackedStringArray("_cueBall") instance=ExtResource("6_bek7c")]
 _cueBall = NodePath("../CueBall")
-
-[node name="PocketBall" parent="." instance=ExtResource("11_i365a")]
-position = Vector2(-20, 41)
-BallInfo = SubResource("Resource_ak6a1")
-
-[node name="PocketBall2" parent="." instance=ExtResource("11_i365a")]
-position = Vector2(-16, 40)
-BallInfo = SubResource("Resource_ak6a1")
-
-[node name="PocketBall3" parent="." instance=ExtResource("11_i365a")]
-position = Vector2(-28, 43)
-BallInfo = SubResource("Resource_ak6a1")
-
-[node name="PocketBall4" parent="." instance=ExtResource("11_i365a")]
-position = Vector2(-19, 48)
-BallInfo = SubResource("Resource_ak6a1")
-
-[node name="PocketBall5" parent="." instance=ExtResource("11_i365a")]
-position = Vector2(-15, 46)
-BallInfo = SubResource("Resource_ak6a1")
-
-[node name="PocketBall6" parent="." instance=ExtResource("11_i365a")]
-position = Vector2(-26, 45)
-BallInfo = SubResource("Resource_ak6a1")
