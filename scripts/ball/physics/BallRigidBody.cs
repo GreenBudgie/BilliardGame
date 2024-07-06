@@ -4,6 +4,9 @@ using Godot;
 
 public abstract partial class BallRigidBody : CharacterBody2D
 {
+    /*
+     * Emitted right after the ball changes it's sleep state
+     */
     [Signal]
     public delegate void SleepingStateChangedEventHandler();
 
@@ -23,28 +26,37 @@ public abstract partial class BallRigidBody : CharacterBody2D
     }
 
     public Vector2 LinearVelocity { get; set; }
-    
+
     public float Radius { get; private set; }
 
     private ShapeCast2D _shapeCast;
-    
+
     public override void _Ready()
     {
         base._Ready();
-        
+
         _shapeCast = GetNode<ShapeCast2D>("ShapeCast2D");
-        
+
         var collisionShape = GetNode<CollisionShape2D>("CollisionShape2D");
         var circleShape = (CircleShape2D)collisionShape.Shape;
         Radius = circleShape.Radius;
     }
 
-    public void ApplyImpulse(Vector2 impulse)
+    public abstract bool AwakesOtherBalls();
+
+    /// <summary>
+    /// Awakes the body and updates it's velocity
+    /// </summary>
+    /// <param name="velocity">New velocity to set</param>
+    public void SetLinearVelocity(Vector2 velocity)
     {
         IsSleeping = false;
-        LinearVelocity = impulse * 5; // TODO remove * 5
+        LinearVelocity = velocity;
     }
 
+    /// <summary>
+    /// Performs an actual movement step if the body is not sleeping. May put it to sleep if the threshold is reached.
+    /// </summary>
     public void HandleMovement(double delta, float linearDamp, float sleepThresholdSq)
     {
         if (IsSleeping)
@@ -65,7 +77,10 @@ public abstract partial class BallRigidBody : CharacterBody2D
         LinearVelocity = Vector2.Zero;
         IsSleeping = true;
     }
-
+    
+    /// <summary>
+    /// Returns the closest collision that this body is in contact with, or null if there are no collisions.
+    /// </summary>
     public CollisionData? GetClosestCollision()
     {
         if (IsSleeping)
@@ -81,7 +96,8 @@ public abstract partial class BallRigidBody : CharacterBody2D
         }
 
         var collisionCount = _shapeCast.GetCollisionCount();
-        List<CollisionData> collisions = new();
+        var closestCollisionDistanceSq = float.MaxValue;
+        CollisionData? closestCollision = null;
         for (var i = 0; i < collisionCount; i++)
         {
             var collider = (CollisionObject2D)_shapeCast.GetCollider(i);
@@ -89,36 +105,45 @@ public abstract partial class BallRigidBody : CharacterBody2D
             var contactPoint = _shapeCast.GetCollisionPoint(i);
             var colliderVelocity = Vector2.Zero;
             var colliderPosition = contactPoint;
-            if (collider is Ball ball)
+            if (collider is BallRigidBody ball)
             {
                 colliderVelocity = ball.LinearVelocity;
                 colliderPosition = ball.GlobalPosition;
             }
 
-            var collision = new CollisionData(
+            var distance = GlobalPosition.DistanceSquaredTo(colliderPosition);
+            if (closestCollisionDistanceSq <= distance)
+            {
+                continue;
+            }
+
+            closestCollisionDistanceSq = distance;
+            closestCollision = new CollisionData(
                 collider,
                 colliderPosition,
                 colliderVelocity,
                 GlobalPosition,
                 normal,
-                contactPoint
+                contactPoint,
+                collider is BallRigidBody
             );
-            collisions.Add(collision);
         }
 
-        return collisions.MinBy(collision => GlobalPosition.DistanceSquaredTo(collision.ColliderPosition));
+        return closestCollision;
     }
 
-    public void HandleNewCollision(CollisionData collision)
+    public virtual void HandleNewCollision(CollisionData collision)
     {
-        EmitSignal(SignalName.BodyEntered, collision.Collider);
         if (collision.Collider is not Ball)
         {
             HandleBorderCollision(collision.Normal);
-            return;
+        }
+        else
+        {
+            HandleBallCollision(collision);
         }
 
-        HandleBallCollision(collision);
+        EmitSignal(SignalName.BodyEntered, collision.Collider);
     }
 
     public void EscapeOverlaps(CollisionData collision)
@@ -142,7 +167,6 @@ public abstract partial class BallRigidBody : CharacterBody2D
 
     private void HandleBallCollision(CollisionData collision)
     {
-        // TODO check if just GlobalPosition is better
         var ballVector = collision.BallPosition - collision.ColliderPosition;
         var velocityVector = LinearVelocity - collision.ColliderVelocity;
         LinearVelocity -= velocityVector.Dot(ballVector) / ballVector.LengthSquared() * ballVector;

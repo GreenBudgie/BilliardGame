@@ -3,8 +3,6 @@ using Godot;
 
 public static class ShotStrengthUtil
 {
-    private const float MaxBallTravelDistance = 560;
-
     private const int MaxStrength = 8;
 
     private const float MinPullVectorLength = 20;
@@ -13,14 +11,14 @@ public static class ShotStrengthUtil
 
     private static readonly Dictionary<int, float> ImpulseForStrength = new()
     {
-        { 1, 5 },
-        { 2, 15 },
-        { 3, 30 },
-        { 4, 55 },
-        { 5, 90 },
-        { 6, 130 },
-        { 7, 180 },
-        { 8, 240 },
+        { 1, 25 },
+        { 2, 75 },
+        { 3, 150 },
+        { 4, 275 },
+        { 5, 450 },
+        { 6, 650 },
+        { 7, 900 },
+        { 8, 1200 },
     };
 
     private static readonly float CueOffsetPerStrength = 8;

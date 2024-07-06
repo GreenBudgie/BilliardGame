@@ -93,7 +93,7 @@ public partial class CueBall : Ball
     public void PerformShot()
     {
         var velocity = ShotStrengthUtil.GetImpulseForStrength(ShotData.Strength);
-        ApplyImpulse(ShotData.PullVector.Normalized() * velocity);
+        SetLinearVelocity(ShotData.PullVector.Normalized() * velocity);
         State = BallState.Rolling;
     }
 

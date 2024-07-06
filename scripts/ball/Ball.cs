@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Godot;
+﻿using Godot;
 
 public abstract partial class Ball : BallRigidBody
 {
@@ -34,6 +32,11 @@ public abstract partial class Ball : BallRigidBody
     public override void _PhysicsProcess(double delta)
     {
         HandleRotation(delta);
+    }
+
+    public override bool AwakesOtherBalls()
+    {
+        return true;
     }
 
     private void HandleRotation(double delta)

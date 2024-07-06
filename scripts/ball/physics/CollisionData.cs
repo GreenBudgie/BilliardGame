@@ -8,5 +8,7 @@ public record struct CollisionData(
     Vector2 BallPosition,
     
     Vector2 Normal,
-    Vector2 CollisionPoint
+    Vector2 CollisionPoint,
+    
+    bool IsBallCollision
 );
