@@ -42,12 +42,18 @@ public abstract partial class Ball : CharacterBody2D
     public Vector2 LinearVelocity { get; set; }
 
     private ShapeCast2D _shapeCast;
+    
+    public float Radius { get; private set; }
 
     protected abstract void RotateSprites(Vector4 finalRotation);
 
     public override void _Ready()
     {
         _shapeCast = GetNode<ShapeCast2D>("ShapeCast2D");
+        
+        var collisionShape = GetNode<CollisionShape2D>("CollisionShape2D");
+        var circleShape = (CircleShape2D)collisionShape.Shape;
+        Radius = circleShape.Radius;
         
         BodyEntered += OnBodyEntered;
         SleepingStateChanged += HandleSleepStateChange;
@@ -124,7 +130,7 @@ public abstract partial class Ball : CharacterBody2D
         IsSleeping = false;
         LinearVelocity = impulse * 5; // TODO remove * 5
     }
-    
+
     public void HandleMovement(double delta, float linearDamp, float sleepThresholdSq)
     {
         if (IsSleeping)
@@ -173,22 +179,38 @@ public abstract partial class Ball : CharacterBody2D
                     colliderVelocity = ball.LinearVelocity;
                 }
 
-                GlobalPosition = _shapeCast.GetCollisionPoint(i) + normal * 8;
-                return new CollisionData(collider, normal, colliderVelocity);
+                var collisionPoint = _shapeCast.GetCollisionPoint(i);
+
+                return new CollisionData(collider, GlobalPosition, collider.GlobalPosition, normal, colliderVelocity, collisionPoint);
             }
         ).ToList();
     }
 
-    public void HandleNewCollision(double delta, CollisionData collision)
+
+    public void EscapeOverlaps(CollisionData collision)
+    {
+        var normalOffset = collision.Normal * Radius;
+        var centerVector = collision.CollisionPoint - GlobalPosition;
+        var offsetVector = normalOffset + centerVector;
+        if (collision.Collider is not Ball)
+        {
+            GlobalPosition += offsetVector;
+            return;
+        }
+
+        GlobalPosition += offsetVector * 0.5f;
+    }
+
+    public void HandleNewCollision(CollisionData collision)
     {
         EmitSignal(SignalName.BodyEntered, collision.Collider);
-        if (collision.Collider is not Ball ball)
+        if (collision.Collider is not Ball)
         {
             HandleBorderCollision(collision.Normal);
             return;
         }
         
-        HandleBallCollision(ball, collision);
+        HandleBallCollision(collision);
     }
 
     private void HandleBorderCollision(Vector2 normal)
@@ -196,9 +218,9 @@ public abstract partial class Ball : CharacterBody2D
         LinearVelocity = LinearVelocity.Bounce(normal);
     }
 
-    private void HandleBallCollision(Ball ball, CollisionData collision)
+    private void HandleBallCollision(CollisionData collision)
     {
-        var ballVector = GlobalPosition - ball.GlobalPosition;
+        var ballVector = collision.Position - collision.ColliderPosition;
         var velocityVector = LinearVelocity - collision.ColliderVelocity;
         var resultVelocity = LinearVelocity - 
                              velocityVector.Dot(ballVector) / ballVector.LengthSquared() * ballVector;

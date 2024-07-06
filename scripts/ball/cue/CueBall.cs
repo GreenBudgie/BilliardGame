@@ -11,15 +11,12 @@ public partial class CueBall : Ball
 
     private Vector2 _initialGlobalPosition;
 
-    public float Radius { get; private set; }
-
     public BallState State { get; private set; }
 
     public bool IsBallHovered { get; private set; }
 
     public ShotData ShotData { get; private set; } = new(Vector2.Zero, false, 0);
 
-    private CollisionShape2D _collisionShape;
     private Sprite2D _ballSprite;
 
     public override void _Ready()
@@ -27,11 +24,6 @@ public partial class CueBall : Ball
         base._Ready();
 
         _ballSprite = GetNode<Sprite2D>("BallSprite");
-
-        _collisionShape = GetNode<CollisionShape2D>("CollisionShape2D");
-
-        var circleShape = (CircleShape2D)_collisionShape.Shape;
-        Radius = circleShape.Radius;
 
         _initialGlobalPosition = Transform.Origin;
 

@@ -43,13 +43,19 @@ public partial class BallPhysicsServer : Node
             collisionsByBall[ball] = collisions;
         }
         
+        // Escape overlaps
+        foreach (var (ball, collisions) in collisionsByBall)
+        {
+            collisions.ForEach(collision => ball.EscapeOverlaps(collision));
+        }
+        
         foreach (var ball in balls)
         {
             // Retrieve collisions that were not present on previous update
             var newCollisions = HandleCollisionsAndGetNewColliders(ball, collisionsByBall[ball]);
             foreach (var newCollision in newCollisions)
             {
-                ball.HandleNewCollision(delta, newCollision);
+                ball.HandleNewCollision(newCollision);
             }
         }
 
