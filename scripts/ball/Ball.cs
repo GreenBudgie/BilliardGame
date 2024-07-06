@@ -138,6 +138,11 @@ public abstract partial class Ball : CharacterBody2D
             return;
         }
 
+        if (LinearVelocity.LengthSquared() > 1200 * 1200)
+        {
+            GD.Print(LinearVelocity.Length());
+        }
+
         // Move the ball
         Position += LinearVelocity * (float)delta;
         LinearVelocity *= (float)(1 - delta * linearDamp);
@@ -201,30 +206,29 @@ public abstract partial class Ball : CharacterBody2D
         GlobalPosition += offsetVector * 0.5f;
     }
 
-    public void HandleNewCollision(CollisionData collision)
+    public Vector2 HandleNewCollisionAndGetNewVelocity(CollisionData collision)
     {
+        EscapeOverlaps(collision);
         EmitSignal(SignalName.BodyEntered, collision.Collider);
-        if (collision.Collider is not Ball)
+        if (collision.Collider is not Ball ball)
         {
-            HandleBorderCollision(collision.Normal);
-            return;
+            return HandleBorderCollision(collision.Normal);
         }
         
-        HandleBallCollision(collision);
+        return HandleBallCollision(ball, collision);
     }
 
-    private void HandleBorderCollision(Vector2 normal)
+    private Vector2 HandleBorderCollision(Vector2 normal)
     {
-        LinearVelocity = LinearVelocity.Bounce(normal);
+        return LinearVelocity.Bounce(normal);
     }
 
-    private void HandleBallCollision(CollisionData collision)
+    private Vector2 HandleBallCollision(Ball ball, CollisionData collision)
     {
-        var ballVector = collision.Position - collision.ColliderPosition;
-        var velocityVector = LinearVelocity - collision.ColliderVelocity;
-        var resultVelocity = LinearVelocity - 
-                             velocityVector.Dot(ballVector) / ballVector.LengthSquared() * ballVector;
-        LinearVelocity = resultVelocity;
+        var colliderBall = (Ball)collision.Collider;
+        var ballVector = collision.InitialBallPosition - collision.InitialColliderPosition;
+        var velocityVector = LinearVelocity - colliderBall.LinearVelocity;
+        return LinearVelocity - velocityVector.Dot(ballVector) / ballVector.LengthSquared() * ballVector;
     }
 
 }

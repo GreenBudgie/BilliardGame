@@ -214,10 +214,10 @@ position = Vector2(-16, -68)
 Pocket = NodePath("../..")
 
 [node name="CueBall" parent="." instance=ExtResource("2_sbviq")]
-position = Vector2(-105, -1)
+position = Vector2(-107, 1)
 
 [node name="BallRack" parent="." instance=ExtResource("8_3uwkd")]
-position = Vector2(125, 1)
+position = Vector2(125, 0)
 
 [node name="TrajectoryDrawer" parent="." node_paths=PackedStringArray("_cueBall") instance=ExtResource("5_qus0d")]
 _cueBall = NodePath("../CueBall")
@@ -226,5 +226,25 @@ _cueBall = NodePath("../CueBall")
 _cueBall = NodePath("../CueBall")
 
 [node name="PocketBall" parent="." instance=ExtResource("11_i365a")]
-position = Vector2(-79, 74)
+position = Vector2(-20, 41)
+BallInfo = SubResource("Resource_ak6a1")
+
+[node name="PocketBall2" parent="." instance=ExtResource("11_i365a")]
+position = Vector2(-16, 40)
+BallInfo = SubResource("Resource_ak6a1")
+
+[node name="PocketBall3" parent="." instance=ExtResource("11_i365a")]
+position = Vector2(-28, 43)
+BallInfo = SubResource("Resource_ak6a1")
+
+[node name="PocketBall4" parent="." instance=ExtResource("11_i365a")]
+position = Vector2(-19, 48)
+BallInfo = SubResource("Resource_ak6a1")
+
+[node name="PocketBall5" parent="." instance=ExtResource("11_i365a")]
+position = Vector2(-15, 46)
+BallInfo = SubResource("Resource_ak6a1")
+
+[node name="PocketBall6" parent="." instance=ExtResource("11_i365a")]
+position = Vector2(-26, 45)
 BallInfo = SubResource("Resource_ak6a1")

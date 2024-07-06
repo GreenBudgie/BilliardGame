@@ -1,10 +1,10 @@
 ﻿using Godot;
 
-public readonly record struct CollisionData(
+public record struct CollisionData(
     CollisionObject2D Collider,
-    Vector2 Position,
-    Vector2 ColliderPosition,
+    Vector2 InitialBallPosition,
+    Vector2 InitialColliderPosition,
     Vector2 Normal,
-    Vector2 ColliderVelocity,
+    Vector2 InitialColliderVelocity,
     Vector2 CollisionPoint
 );

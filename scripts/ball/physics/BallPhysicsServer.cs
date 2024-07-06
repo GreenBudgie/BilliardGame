@@ -30,6 +30,10 @@ public partial class BallPhysicsServer : Node
         {
             // Get currently colliding bodies
             var collisions = ball.GetCollisions();
+
+            collisions = collisions
+                .OrderBy(collision => collision.InitialBallPosition.DistanceSquaredTo(collision.InitialColliderPosition))
+                .ToList();
             
             // Awake every ball with which a collision have happened, so it can be processed later
             foreach (var collision in collisions)
@@ -42,20 +46,36 @@ public partial class BallPhysicsServer : Node
             
             collisionsByBall[ball] = collisions;
         }
-        
-        // Escape overlaps
-        foreach (var (ball, collisions) in collisionsByBall)
-        {
-            collisions.ForEach(collision => ball.EscapeOverlaps(collision));
-        }
-        
+
+        var orderedCollisions = new Dictionary<int, List<KeyValuePair<Ball, CollisionData>>>();
         foreach (var ball in balls)
         {
             // Retrieve collisions that were not present on previous update
-            var newCollisions = HandleCollisionsAndGetNewColliders(ball, collisionsByBall[ball]);
-            foreach (var newCollision in newCollisions)
+            var newCollisions = UpdateHandledCollisionsAndGetNewColliders(ball, collisionsByBall[ball]);
+            for (var i = 0; i < newCollisions.Count; i++)
             {
-                ball.HandleNewCollision(newCollision);
+                var newCollision = newCollisions[i];
+
+                if (!orderedCollisions.ContainsKey(i))
+                {
+                    orderedCollisions[i] = new List<KeyValuePair<Ball, CollisionData>>();
+                }
+
+                orderedCollisions[i].Add(new KeyValuePair<Ball, CollisionData>(ball, newCollision));
+            }
+        }
+        
+        foreach (var (_, collisions) in orderedCollisions)
+        {
+            var velocityModifications = new Dictionary<Ball, Vector2>();
+            foreach (var (ball, collision) in collisions)
+            {
+                velocityModifications.Add(ball, ball.HandleNewCollisionAndGetNewVelocity(collision));
+            }
+            
+            foreach (var (ball, newVelocity) in velocityModifications)
+            {
+                ball.LinearVelocity = newVelocity;
             }
         }
 
@@ -63,14 +83,14 @@ public partial class BallPhysicsServer : Node
         balls.ForEach(ball => ball.HandleMovement(delta, _linearDamp, _sleepThresholdSq));
     }
 
-    private List<CollisionData> HandleCollisionsAndGetNewColliders(Ball ball, List<CollisionData> collisions)
+    private List<CollisionData> UpdateHandledCollisionsAndGetNewColliders(Ball ball, List<CollisionData> collisions)
     {
         var collisionDataByCollider = collisions.ToDictionary(collision => collision.Collider, c => c);
         var oldColliders = _handledCollisions.GetValueOrDefault(ball);
         var currentColliders = collisions.Select(collision => collision.Collider).ToList();
 
         // If we had no old colliders, all new collisions should be handled
-        if (oldColliders == null)
+        if (oldColliders == null || oldColliders.Count == 0)
         {
             _handledCollisions[ball] = currentColliders;
             return currentColliders.Select(collider => collisionDataByCollider[collider]).ToList();
@@ -92,6 +112,11 @@ public partial class BallPhysicsServer : Node
 
         // Remove bodies that no longer collide
         oldColliders.RemoveAll(oldCollider => !newColliders.Contains(oldCollider));
+        if (oldColliders.Count == 0)
+        {
+            _handledCollisions.Remove(ball);
+        }
+        
         return newColliders.Select(collider => collisionDataByCollider[collider]).ToList();
     }
 
