@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using Godot;
+using Vector2 = Godot.Vector2;
 
 public abstract partial class BallRigidBody : CharacterBody2D
 {
@@ -137,7 +139,14 @@ public abstract partial class BallRigidBody : CharacterBody2D
         FullCollisionData fullCollisionData;
         if (collision.Collider is not Ball)
         {
-            fullCollisionData = HandleBorderCollision(collision);
+            if (collision.Collider.GetCollisionLayerValue(4))
+            {
+                fullCollisionData = HandlePocketCollision(collision);
+            }
+            else
+            {
+                fullCollisionData = HandleBorderCollision(collision);
+            }
         }
         else
         {
@@ -160,6 +169,22 @@ public abstract partial class BallRigidBody : CharacterBody2D
         }
 
         GlobalPosition += offsetVector * 0.5f;
+    }
+    
+    private FullCollisionData HandlePocketCollision(CollisionData collision)
+    {
+        var previousVelocity = LinearVelocity;
+        LinearVelocity = Vector2.Zero;
+        return new FullCollisionData(
+            collision.CollisionPoint,
+            collision.Normal,
+            new BallCollisionData(
+                collision.BallPosition,
+                previousVelocity,
+                Vector2.Zero
+            ),
+            null
+        );
     }
 
     private FullCollisionData HandleBorderCollision(CollisionData collision)

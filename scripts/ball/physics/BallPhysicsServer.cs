@@ -44,6 +44,7 @@ public partial class BallPhysicsServer : Node
         // Sleeping bodies are processed last (IsSleeping = false comes first)
         _orderedBalls.Clear();
         _results.Clear();
+        var allBallsSleep = true;
         foreach (var ball in balls)
         {
             if (ball.IsSleeping)
@@ -52,8 +53,14 @@ public partial class BallPhysicsServer : Node
             }
             else
             {
+                allBallsSleep = false;
                 _orderedBalls.Insert(0, ball);
             }
+        }
+
+        if (allBallsSleep)
+        {
+            return _results;
         }
 
         _collisionByBall.Clear();
@@ -96,7 +103,10 @@ public partial class BallPhysicsServer : Node
 
     private void RemoveBallOnScore(Ball ball, Pocket pocket)
     {
-        _balls.Remove(ball);
+        if (ball is PocketBall)
+        {
+            _balls.Remove(ball);
+        }
     }
 
     private bool ShouldProcessCollision(BallRigidBody ball, CollisionData collision)
