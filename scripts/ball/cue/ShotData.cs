@@ -5,6 +5,6 @@ public record ShotData(
     Vector2 PullVector,
     // Whether the user is using a RMB inverse shot
     bool Inverse,
-    // A value (1-8) that indicates the shot strength
-    int Strength
+    // Initial velocity of the cue ball when the shot is performed
+    float Velocity
 );

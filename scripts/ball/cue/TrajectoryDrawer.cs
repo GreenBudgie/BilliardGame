@@ -12,7 +12,7 @@ public partial class TrajectoryDrawer : Node2D
 
     private ShotPredictorBall.ShotPrediction? _lastShotPrediction;
     
-    private const float StepsToPredictIncrease = 450;
+    private const float StepsToPredictIncrease = 420;
     private const float MaxStepsToPredict = 10000;
     private float _stepsToPredict;
 
@@ -52,7 +52,7 @@ public partial class TrajectoryDrawer : Node2D
             return;
         }
 
-        if (_cueBall.ShotData.Strength == 0)
+        if (_cueBall.ShotData.Velocity == 0)
         {
             ResetPrediction();
             return;
@@ -60,8 +60,7 @@ public partial class TrajectoryDrawer : Node2D
         
         _stepsToPredict += Mathf.Min(StepsToPredictIncrease * (float)delta, MaxStepsToPredict);
         
-        var impulse = ShotStrengthUtil.GetImpulseForStrength(_cueBall.ShotData.Strength);
-        var initialVelocity = _cueBall.ShotData.PullVector.Normalized() * impulse;
+        var initialVelocity = _cueBall.ShotData.PullVector.Normalized() * _cueBall.ShotData.Velocity;
         _shotPredictorBall.GlobalPosition = GlobalPosition;
         _lastShotPrediction = _shotPredictorBall.GetShotPrediction(
             initialVelocity,
@@ -98,10 +97,8 @@ public partial class TrajectoryDrawer : Node2D
         foreach (var collision in shotPrediction.Collisions)
         {
             var currentPosition = collision.BallData.Position - GlobalPosition;
-            var contactPoint = collision.ContactPoint - GlobalPosition;
             DrawArc(currentPosition, _cueBall.Radius, 0, Mathf.Tau, 16, Colors.White, 1.5f);
             DrawCircle(collision.ContactPoint - GlobalPosition, 2, Colors.Red);
-            DrawLine(contactPoint, contactPoint + collision.Normal * 32, Colors.Orange, 1);
             if (!collision.OtherBallData.HasValue)
             {
                 continue;
@@ -109,13 +106,16 @@ public partial class TrajectoryDrawer : Node2D
             
             var pocketBallVelocity = collision.OtherBallData.Value.VelocityAfterContact;
             var pocketBallPosition = collision.OtherBallData.Value.Position - GlobalPosition;
+            var velocityVector = pocketBallVelocity.Normalized() * 8 + pocketBallVelocity * 0.05f;
             DrawLine(
                 pocketBallPosition,
-                pocketBallPosition + pocketBallVelocity.Normalized() * 64,
-                Colors.Aqua,
-                1
+                pocketBallPosition + velocityVector,
+                Colors.Orange,
+                1.5f
             );
         }
+
+        DrawCircle(shotPrediction.StopPoint - GlobalPosition, 2, Colors.Orange);
     }
 
     private void ResetPrediction()

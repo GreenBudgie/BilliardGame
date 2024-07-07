@@ -69,18 +69,13 @@ public partial class CueBall : Ball
         var inverseShotSign = shotData.Inverse ? -1 : 1;
         var pullVector = (mousePosition - GlobalPosition) * inverseShotSign;
 
-        var strength = ShotStrengthUtil.GetStrengthForPullVectorLength(pullVector.Length());
+        var velocity = ShotStrengthUtil.GetVelocityForPullVectorLength(pullVector.Length());
 
         ShotData = ShotData with
         {
             PullVector = pullVector,
-            Strength = strength
+            Velocity = velocity
         };
-
-        if (strength > 0)
-        {
-            var travelDistance = ShotStrengthUtil.GetMaxTravelDistanceByStrength(this, strength);
-        }
 
         if (ShouldPerformShot())
         {
@@ -92,8 +87,7 @@ public partial class CueBall : Ball
 
     public void PerformShot()
     {
-        var velocity = ShotStrengthUtil.GetImpulseForStrength(ShotData.Strength);
-        SetLinearVelocity(ShotData.PullVector.Normalized() * velocity);
+        SetLinearVelocity(ShotData.PullVector.Normalized() * ShotData.Velocity);
         State = BallState.Rolling;
     }
 
@@ -102,7 +96,7 @@ public partial class CueBall : Ball
         var ballSpriteMaterial = (ShaderMaterial)_ballSprite.Material;
         ballSpriteMaterial.SetShaderParameter("rotation", finalRotation);
     }
-    
+
     private bool ShotPressed()
     {
         return Input.IsActionJustPressed(ShootAction) || Input.IsActionJustPressed(InverseShootAction);
@@ -115,7 +109,7 @@ public partial class CueBall : Ball
 
     private bool ShouldPerformShot()
     {
-        return ShotData.Strength > 0 && Input.IsActionJustReleased(ShotData.Inverse ? InverseShootAction : ShootAction);
+        return ShotData.Velocity > 0 && Input.IsActionJustReleased(ShotData.Inverse ? InverseShootAction : ShootAction);
     }
 
     private bool ShouldCancelShot()
@@ -124,7 +118,7 @@ public partial class CueBall : Ball
         {
             true when Input.IsActionJustPressed(ShootAction) => true,
             false when Input.IsActionJustPressed(InverseShootAction) => true,
-            _ => ShotData.Strength == 0 && ShotReleased()
+            _ => ShotData.Velocity == 0 && ShotReleased()
         };
     }
 

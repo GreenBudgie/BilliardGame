@@ -62,7 +62,7 @@ public partial class Cue : Node2D
 
         ShowCue();
 
-        var offset = ShotStrengthUtil.GetCueOffsetForStrength(_cueBall.ShotData.Strength) + _cueBall.Radius;
+        var offset = ShotStrengthUtil.GetCueOffsetForVelocity(_cueBall.ShotData.Velocity) + _cueBall.Radius;
         _sprite.Offset = new Vector2(-offset, _sprite.Offset.Y);
     }
 
