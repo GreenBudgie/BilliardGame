@@ -3,6 +3,9 @@ using Godot;
 
 public partial class ShotPredictorBall : BallRigidBody
 {
+    
+    public const int MaxCollisions = 10;
+    
     private readonly List<BallRigidBody> _predictorBallList = new();
 
     public override void _Ready()
@@ -19,18 +22,26 @@ public partial class ShotPredictorBall : BallRigidBody
 
     private readonly List<FullCollisionData> _predictedCollisions = new();
 
-    public ShotPrediction GetShotPrediction(Vector2 initialVelocity)
+    public ShotPrediction GetShotPrediction(Vector2 initialVelocity, int maxSteps)
     {
+        var step = 0;
         var delta = BallPhysicsServer.Instance.DefaultDelta;
         _predictedCollisions.Clear();
         SetLinearVelocity(initialVelocity);
-        while (!IsSleeping)
+        while (!IsSleeping && _predictedCollisions.Count < MaxCollisions)
         {
             var result = BallPhysicsServer.Instance.PerformPhysicsStepForBalls(delta, _predictorBallList);
             if (result.ContainsKey(this))
             {
                 _predictedCollisions.Add(result[this]);
             }
+
+            if (maxSteps > 0 && step >= maxSteps)
+            {
+                break;
+            }
+
+            step++;
         }
 
         return new ShotPrediction(GlobalPosition, _predictedCollisions);
