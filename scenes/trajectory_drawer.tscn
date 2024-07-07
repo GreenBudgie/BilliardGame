@@ -20,9 +20,11 @@ motion_mode = 1
 script = ExtResource("2_4d3it")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ShotPredictorBall"]
+visible = false
 shape = SubResource("CircleShape2D_wlety")
 
 [node name="ShapeCast2D" type="ShapeCast2D" parent="ShotPredictorBall"]
+visible = false
 enabled = false
 shape = SubResource("CircleShape2D_4pvdf")
 target_position = Vector2(0, 0)

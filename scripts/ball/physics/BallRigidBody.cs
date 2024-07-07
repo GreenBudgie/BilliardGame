@@ -77,7 +77,7 @@ public abstract partial class BallRigidBody : CharacterBody2D
         LinearVelocity = Vector2.Zero;
         IsSleeping = true;
     }
-    
+
     /// <summary>
     /// Returns the closest collision that this body is in contact with, or null if there are no collisions.
     /// </summary>
@@ -132,18 +132,20 @@ public abstract partial class BallRigidBody : CharacterBody2D
         return closestCollision;
     }
 
-    public virtual void HandleNewCollision(CollisionData collision)
+    public FullCollisionData HandleNewCollision(CollisionData collision)
     {
+        FullCollisionData fullCollisionData;
         if (collision.Collider is not Ball)
         {
-            HandleBorderCollision(collision.Normal);
+            fullCollisionData = HandleBorderCollision(collision);
         }
         else
         {
-            HandleBallCollision(collision);
+            fullCollisionData = HandleBallCollision(collision);
         }
 
         EmitSignal(SignalName.BodyEntered, collision.Collider);
+        return fullCollisionData;
     }
 
     public void EscapeOverlaps(CollisionData collision)
@@ -160,15 +162,42 @@ public abstract partial class BallRigidBody : CharacterBody2D
         GlobalPosition += offsetVector * 0.5f;
     }
 
-    private void HandleBorderCollision(Vector2 normal)
+    private FullCollisionData HandleBorderCollision(CollisionData collision)
     {
-        LinearVelocity = LinearVelocity.Bounce(normal);
+        var previousVelocity = LinearVelocity;
+        LinearVelocity = LinearVelocity.Bounce(collision.Normal);
+        return new FullCollisionData(
+            collision.CollisionPoint,
+            collision.Normal,
+            new BallCollisionData(
+                collision.BallPosition,
+                previousVelocity,
+                LinearVelocity
+            ),
+            null
+        );
     }
 
-    private void HandleBallCollision(CollisionData collision)
+    private FullCollisionData HandleBallCollision(CollisionData collision)
     {
+        var previousVelocity = LinearVelocity;
         var ballVector = collision.BallPosition - collision.ColliderPosition;
         var velocityVector = LinearVelocity - collision.ColliderVelocity;
+        var resultVelocityModification = velocityVector.Dot(ballVector) / ballVector.LengthSquared() * ballVector;
         LinearVelocity -= velocityVector.Dot(ballVector) / ballVector.LengthSquared() * ballVector;
+        return new FullCollisionData(
+            collision.CollisionPoint,
+            collision.Normal,
+            new BallCollisionData(
+                GlobalPosition,
+                previousVelocity,
+                LinearVelocity
+            ),
+            new BallCollisionData(
+                collision.ColliderPosition,
+                collision.ColliderVelocity,
+                collision.ColliderVelocity + resultVelocityModification
+            )
+        );
     }
 }

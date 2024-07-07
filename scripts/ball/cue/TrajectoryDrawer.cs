@@ -47,21 +47,25 @@ public partial class TrajectoryDrawer : Node2D
         for (var i = 0; i < shotPrediction.Collisions.Count; i++)
         {
             var collision = shotPrediction.Collisions[i];
-            var currentPosition = collision.BallPosition - GlobalPosition;
-            var contactPoint = collision.CollisionPoint - GlobalPosition;
+            var currentPosition = collision.BallData.Position - GlobalPosition;
+            var contactPoint = collision.ContactPoint - GlobalPosition;
             DrawLine(previousPoint, currentPosition, Colors.White, 1);
             DrawArc(currentPosition, _cueBall.Radius, 0, Mathf.Tau, 16, Colors.White, 1.5f);
-            DrawCircle(collision.CollisionPoint - GlobalPosition, 2, Colors.Red);
+            DrawCircle(collision.ContactPoint - GlobalPosition, 2, Colors.Red);
             DrawLine(contactPoint, contactPoint + collision.Normal * 100, Colors.Orange, 1);
-            if (collision.IsBallCollision)
+            if (collision.OtherBallData.HasValue)
             {
-                var pocketBallVelocity = collision.ColliderVelocity;
-                var pocketBallPosition = collision.ColliderPosition - GlobalPosition;
-                DrawLine(pocketBallPosition, pocketBallPosition + pocketBallVelocity.Normalized() * 256, Colors.Aqua,
-                    1);
+                var pocketBallVelocity = collision.OtherBallData.Value.VelocityAfterContact;
+                var pocketBallPosition = collision.OtherBallData.Value.Position - GlobalPosition;
+                DrawLine(
+                    pocketBallPosition,
+                    pocketBallPosition + pocketBallVelocity.Normalized() * 256,
+                    Colors.Aqua,
+                    1
+                );
             }
 
-            previousPoint = shotPrediction.Collisions[i].BallPosition - GlobalPosition;
+            previousPoint = shotPrediction.Collisions[i].BallData.Position - GlobalPosition;
         }
 
         DrawLine(previousPoint, stopPoint, Colors.White, 1);

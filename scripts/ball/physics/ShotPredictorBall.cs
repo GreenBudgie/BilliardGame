@@ -3,13 +3,12 @@ using Godot;
 
 public partial class ShotPredictorBall : BallRigidBody
 {
-
     private readonly List<BallRigidBody> _predictorBallList = new();
-    
+
     public override void _Ready()
     {
         base._Ready();
-        
+
         _predictorBallList.Add(this);
     }
 
@@ -18,7 +17,7 @@ public partial class ShotPredictorBall : BallRigidBody
         return false;
     }
 
-    private List<CollisionData> _predictedCollisions = new();
+    private readonly List<FullCollisionData> _predictedCollisions = new();
 
     public ShotPrediction GetShotPrediction(Vector2 initialVelocity)
     {
@@ -27,22 +26,18 @@ public partial class ShotPredictorBall : BallRigidBody
         SetLinearVelocity(initialVelocity);
         while (!IsSleeping)
         {
-            BallPhysicsServer.Instance.PerformPhysicsStepForBalls(delta, _predictorBallList);
+            var result = BallPhysicsServer.Instance.PerformPhysicsStepForBalls(delta, _predictorBallList);
+            if (result.ContainsKey(this))
+            {
+                _predictedCollisions.Add(result[this]);
+            }
         }
 
         return new ShotPrediction(GlobalPosition, _predictedCollisions);
     }
-    
-    public override void HandleNewCollision(CollisionData collision)
-    {
-        base.HandleNewCollision(collision);
-        
-        _predictedCollisions.Add(collision);
-    }
-    
+
     public record struct ShotPrediction(
         Vector2 StopPoint,
-        List<CollisionData> Collisions
+        List<FullCollisionData> Collisions
     );
-
 }

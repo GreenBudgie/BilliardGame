@@ -26,20 +26,24 @@ public partial class BallPhysicsServer : Node
         _sleepThresholdSq = sleepThreshold * sleepThreshold;
         
         _balls.AddRange(GetBalls());
+
+        EventBus.Instance.BallScored += RemoveBallOnScore;
     }
 
     public override void _PhysicsProcess(double delta)
     {
         PerformPhysicsStepForBalls(delta, _balls);
     }
-    
+
     private readonly Dictionary<BallRigidBody, CollisionData> _collisionByBall = new();
     private readonly List<BallRigidBody> _orderedBalls = new();
+    private readonly Dictionary<BallRigidBody, FullCollisionData> _results = new();
 
-    public void PerformPhysicsStepForBalls(double delta, List<BallRigidBody> balls)
+    public Dictionary<BallRigidBody, FullCollisionData> PerformPhysicsStepForBalls(double delta, List<BallRigidBody> balls)
     {
         // Sleeping bodies are processed last (IsSleeping = false comes first)
         _orderedBalls.Clear();
+        _results.Clear();
         foreach (var ball in balls)
         {
             if (ball.IsSleeping)
@@ -77,7 +81,7 @@ public partial class BallPhysicsServer : Node
             ball.EscapeOverlaps(collision);
             if (ShouldProcessCollision(ball, collision))
             {
-                ball.HandleNewCollision(collision);
+                _results.Add(ball, ball.HandleNewCollision(collision));
             }
         }
         
@@ -86,6 +90,13 @@ public partial class BallPhysicsServer : Node
         {
             ball.HandleMovement(delta, _linearDamp, _sleepThresholdSq);
         }
+
+        return _results;
+    }
+
+    private void RemoveBallOnScore(Ball ball, Pocket pocket)
+    {
+        _balls.Remove(ball);
     }
 
     private bool ShouldProcessCollision(BallRigidBody ball, CollisionData collision)
