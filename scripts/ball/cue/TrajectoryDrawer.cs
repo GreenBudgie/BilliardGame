@@ -11,7 +11,7 @@ public partial class TrajectoryDrawer : Node2D
     private readonly List<Line2D> _trajectories = new();
 
     private ShotPredictorBall.ShotPrediction? _lastShotPrediction;
-    
+
     private const float StepsToPredictIncrease = 420;
     private const float MaxStepsToPredict = 10000;
     private float _stepsToPredict;
@@ -40,12 +40,12 @@ public partial class TrajectoryDrawer : Node2D
     public override void _Process(double delta)
     {
         Position = _cueBall.Position;
-        
+
         foreach (var trajectory in _trajectories)
         {
             trajectory.ClearPoints();
         }
-        
+
         if (_cueBall.State != CueBall.BallState.ShotPrepare)
         {
             ResetPrediction();
@@ -57,14 +57,16 @@ public partial class TrajectoryDrawer : Node2D
             ResetPrediction();
             return;
         }
-        
+
         _stepsToPredict += Mathf.Min(StepsToPredictIncrease * (float)delta, MaxStepsToPredict);
-        
+
         var initialVelocity = _cueBall.ShotData.PullVector.Normalized() * _cueBall.ShotData.Velocity;
         _shotPredictorBall.GlobalPosition = GlobalPosition;
-        _lastShotPrediction = _shotPredictorBall.GetShotPrediction(
+        _lastShotPrediction = _shotPredictorBall.GetShotPredictionWithMaxTrajectoryLength(
             initialVelocity,
-            Mathf.RoundToInt(_stepsToPredict)
+            Mathf.RoundToInt(_stepsToPredict),
+            _cueBall.GlobalPosition,
+            300
         );
         var shotPrediction = _lastShotPrediction.Value;
         var stopPoint = shotPrediction.StopPoint - GlobalPosition;
@@ -82,7 +84,7 @@ public partial class TrajectoryDrawer : Node2D
         var finalTrajectory = _trajectories[shotPrediction.Collisions.Count];
         finalTrajectory.AddPoint(previousPoint);
         finalTrajectory.AddPoint(stopPoint);
-        
+
         QueueRedraw();
     }
 
@@ -103,7 +105,7 @@ public partial class TrajectoryDrawer : Node2D
             {
                 continue;
             }
-            
+
             var pocketBallVelocity = collision.OtherBallData.Value.VelocityAfterContact;
             var pocketBallPosition = collision.OtherBallData.Value.Position - GlobalPosition;
             var velocityVector = pocketBallVelocity.Normalized() * 8 + pocketBallVelocity * 0.05f;
