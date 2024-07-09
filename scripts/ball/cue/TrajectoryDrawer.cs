@@ -65,7 +65,6 @@ public partial class TrajectoryDrawer : Node2D
         _lastShotPrediction = _shotPredictorBall.GetShotPredictionWithMaxTrajectoryLength(
             initialVelocity,
             Mathf.RoundToInt(_stepsToPredict),
-            _cueBall.GlobalPosition,
             300
         );
         var shotPrediction = _lastShotPrediction.Value;

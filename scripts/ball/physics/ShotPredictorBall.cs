@@ -47,19 +47,30 @@ public partial class ShotPredictorBall : BallRigidBody
         return new ShotPrediction(GlobalPosition, _predictedCollisions);
     }
 
-    public ShotPrediction GetShotPredictionWithMaxTrajectoryLength(Vector2 initialVelocity, int maxSteps,
-        Vector2 initialPosition, float maxLength)
+    public ShotPrediction GetShotPredictionWithMaxTrajectoryLength(Vector2 initialVelocity, int maxSteps, float maxLength)
     {
         var step = 0;
         var delta = BallPhysicsServer.Instance.DefaultDelta;
         _predictedCollisions.Clear();
         SetLinearVelocity(initialVelocity);
+        var currentLength = 0f;
+        var lastPoint = GlobalPosition;
+        var newGlobalPosition = new Vector2();
         while (!IsSleeping && _predictedCollisions.Count < MaxCollisions)
         {
             var result = BallPhysicsServer.Instance.PerformPhysicsStepForBalls(delta, _predictorBallList);
             if (result.ContainsKey(this))
             {
+                var newPoint = result[this].ContactPoint;
+                var pointsDistance = (newPoint - lastPoint).Length();
+                if (currentLength + pointsDistance > maxLength)
+                {
+                    newGlobalPosition = lastPoint + ((newPoint - lastPoint).Normalized() * (maxLength - currentLength));
+                    return new ShotPrediction(newGlobalPosition, _predictedCollisions);
+                }
                 _predictedCollisions.Add(result[this]);
+                currentLength += pointsDistance;
+                lastPoint = newPoint;
             }
 
             if (maxSteps > 0 && step >= maxSteps)
@@ -69,8 +80,21 @@ public partial class ShotPredictorBall : BallRigidBody
 
             step++;
         }
+        if (_predictedCollisions.Count == 0)
+        {
+            if ((GlobalPosition - lastPoint).Length() <= maxLength)
+                return new ShotPrediction(GlobalPosition, _predictedCollisions);
+            return new ShotPrediction(lastPoint + ((GlobalPosition - lastPoint).Normalized() * maxLength),
+                _predictedCollisions);
+        }
+        if ((GlobalPosition - _predictedCollisions[^1].ContactPoint).Length() +
+            currentLength <= maxLength)
+            return new ShotPrediction(GlobalPosition, _predictedCollisions);
 
-        return RestrictShotPrediction(initialPosition, maxLength);
+        newGlobalPosition = lastPoint + ((GlobalPosition - lastPoint).Normalized() * (maxLength - currentLength));
+        return new ShotPrediction(newGlobalPosition, _predictedCollisions);
+
+        // return RestrictShotPrediction(initialPosition, maxLength);
     }
 
 
