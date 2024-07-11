@@ -53,18 +53,27 @@ public partial class ShotPredictorBall : BallRigidBody
         var step = 0;
         var delta = BallPhysicsServer.Instance.DefaultDelta;
         _predictedCollisions.Clear();
-        var initialVelocityLength = initialVelocity.Length();
-        // Limit initial velocity by maxLength 
-        if (initialVelocityLength > maxLength)
-            initialVelocity = initialVelocity / initialVelocityLength * maxLength;
         SetLinearVelocity(initialVelocity);
+        var currentLength = 0f;
+        var lastPoint = GlobalPosition;
+        ShotPrediction? shotPrediction;
         while (!IsSleeping && _predictedCollisions.Count < MaxCollisions)
         {
             var result = BallPhysicsServer.Instance.PerformPhysicsStepForBalls(delta, _predictorBallList);
-            if (result.ContainsKey(this))
-            {
-                _predictedCollisions.Add(result[this]);
-            }
+           
+            shotPrediction = ProcessCurrentGlobalPosition(lastPoint, maxLength, currentLength);
+            // if we're already beyond the limit it will not be necessary to process next collisions 
+            if (shotPrediction != null)
+                return shotPrediction.Value;
+            
+            shotPrediction = ProcessCollision(
+                result,
+                ref lastPoint,
+                maxLength,
+                ref currentLength
+            );
+            if (shotPrediction != null)
+                return shotPrediction.Value;
 
             if (maxSteps > 0 && step >= maxSteps)
             {
@@ -73,9 +82,54 @@ public partial class ShotPredictorBall : BallRigidBody
 
             step++;
         }
-
-        return new ShotPrediction(GlobalPosition, _predictedCollisions);
+        shotPrediction = ProcessCurrentGlobalPosition(lastPoint, maxLength, currentLength);
+        return shotPrediction ?? new ShotPrediction(GlobalPosition, _predictedCollisions);
     }
+
+
+    private ShotPrediction? ProcessCollision(
+        Dictionary<BallRigidBody, FullCollisionData> physicsResult,
+        ref Vector2 lastPoint,
+        float maxLength,
+        ref float currentLength
+    )
+    {
+        if (!physicsResult.ContainsKey(this)) return null;
+        var newPoint = physicsResult[this].ContactPoint;
+        var pointsVector = newPoint - lastPoint;
+        var pointsVectorLength = pointsVector.Length();
+        if (currentLength + pointsVectorLength > maxLength)
+        {
+            var newGlobalPosition = lastPoint + pointsVector/pointsVectorLength * (maxLength - currentLength);
+            return new ShotPrediction(newGlobalPosition, _predictedCollisions);
+        }
+
+        _predictedCollisions.Add(physicsResult[this]);
+        currentLength += pointsVectorLength;
+        lastPoint = newPoint;
+        return null;
+    }
+    
+    private ShotPrediction? ProcessCurrentGlobalPosition(
+        Vector2 lastPoint,
+        float maxLength,
+        float currentLength
+    )
+    {
+        var lastTrajectory = GlobalPosition - lastPoint;
+        var lastTrajectoryLength = lastTrajectory.Length();
+        var currentPredictionLength = currentLength + lastTrajectoryLength;
+        if (Math.Abs(currentPredictionLength - maxLength) < 0.0001)
+        {
+            return new ShotPrediction(GlobalPosition, _predictedCollisions);
+        }
+        if (!(currentPredictionLength > maxLength)) return null;
+
+        var stopPointWithReducedLength = lastPoint + lastTrajectory/lastTrajectoryLength * (maxLength - currentLength);
+        return new ShotPrediction(stopPointWithReducedLength, _predictedCollisions);
+    }
+    
+    
 
 
     public record struct ShotPrediction(
