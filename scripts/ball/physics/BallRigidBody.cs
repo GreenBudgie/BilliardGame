@@ -47,7 +47,7 @@ public abstract partial class BallRigidBody : CharacterBody2D
     public abstract bool AwakesOtherBalls();
 
     /// <summary>
-    /// Awakes the body and updates it's velocity
+    /// Awakes the body and updates its velocity
     /// </summary>
     /// <param name="velocity">New velocity to set</param>
     public void SetLinearVelocity(Vector2 velocity)

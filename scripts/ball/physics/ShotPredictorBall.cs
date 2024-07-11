@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Godot;
 
 public partial class ShotPredictorBall : BallRigidBody
 {
-    
     public const int MaxCollisions = 10;
-    
     private readonly List<BallRigidBody> _predictorBallList = new();
 
     public override void _Ready()
@@ -46,6 +45,62 @@ public partial class ShotPredictorBall : BallRigidBody
 
         return new ShotPrediction(GlobalPosition, _predictedCollisions);
     }
+
+    public ShotPrediction GetShotPredictionWithLimitedTrajectoryLength(Vector2 initialVelocity, int maxSteps,
+        float maxLength)
+    {
+        var step = 0;
+        var delta = BallPhysicsServer.Instance.DefaultDelta;
+        _predictedCollisions.Clear();
+        SetLinearVelocity(initialVelocity);
+        var currentLength = 0f;
+        var lastPoint = GlobalPosition;
+        while (!IsSleeping && _predictedCollisions.Count < MaxCollisions)
+        {
+            var result = BallPhysicsServer.Instance.PerformPhysicsStepForBalls(delta, _predictorBallList);
+
+            var shotPrediction = ReduceTrajectoryLengthIfNeeded(ref lastPoint, maxLength, ref currentLength);
+
+            if (result.ContainsKey(this))
+            {
+                _predictedCollisions.Add(result[this]);
+            }
+
+            if (shotPrediction != null)
+                return shotPrediction.Value;
+
+            if (maxSteps > 0 && step >= maxSteps)
+            {
+                break;
+            }
+
+            step++;
+        }
+
+        return new ShotPrediction(GlobalPosition, _predictedCollisions);
+    }
+
+    private ShotPrediction? ReduceTrajectoryLengthIfNeeded(
+        ref Vector2 lastPoint,
+        float maxLength,
+        ref float currentLength
+    )
+    {
+        var lastTrajectory = GlobalPosition - lastPoint;
+        var lastTrajectoryLength = lastTrajectory.Length();
+        var currentPredictionLength = currentLength + lastTrajectoryLength;
+        if (currentPredictionLength < maxLength)
+        {
+            currentLength = currentPredictionLength;
+            lastPoint = GlobalPosition;
+            return null;
+        }
+        
+        var stopPointWithReducedLength =
+            lastPoint + lastTrajectory / lastTrajectoryLength * (maxLength - currentLength);
+        return new ShotPrediction(stopPointWithReducedLength, _predictedCollisions);
+    }
+
 
     public record struct ShotPrediction(
         Vector2 StopPoint,
