@@ -55,28 +55,14 @@ public partial class ShotPredictorBall : BallRigidBody
         SetLinearVelocity(initialVelocity);
         var currentLength = 0f;
         var lastPoint = GlobalPosition;
-        ShotPrediction? shotPrediction;
-        float lastTrajectoryLength;
         while (!IsSleeping && _predictedCollisions.Count < MaxCollisions)
         {
             var result = BallPhysicsServer.Instance.PerformPhysicsStepForBalls(delta, _predictorBallList);
 
-            shotPrediction = ProcessPhysic(lastPoint, maxLength, currentLength, out lastTrajectoryLength);
-            // if we're already beyond the limit it will not be necessary to process next collisions 
-            if (shotPrediction != null)
-                return shotPrediction.Value;
+            var shotPrediction = ReduceTrajectoryLengthIfNeeded(ref lastPoint, maxLength, ref currentLength);
 
             if (result.ContainsKey(this))
             {
-                // Process a collision
-                shotPrediction = ProcessPhysic(
-                    lastPoint,
-                    maxLength,
-                    currentLength,
-                    out lastTrajectoryLength
-                );
-                lastPoint = GlobalPosition;
-                currentLength += lastTrajectoryLength;
                 _predictedCollisions.Add(result[this]);
             }
 
@@ -91,21 +77,24 @@ public partial class ShotPredictorBall : BallRigidBody
             step++;
         }
 
-        shotPrediction = ProcessPhysic(lastPoint, maxLength, currentLength, out lastTrajectoryLength);
-        return shotPrediction ?? new ShotPrediction(GlobalPosition, _predictedCollisions);
+        return new ShotPrediction(GlobalPosition, _predictedCollisions);
     }
 
-    private ShotPrediction? ProcessPhysic(
-        Vector2 lastPoint,
+    private ShotPrediction? ReduceTrajectoryLengthIfNeeded(
+        ref Vector2 lastPoint,
         float maxLength,
-        float currentLength,
-        out float lastTrajectoryLength
+        ref float currentLength
     )
     {
         var lastTrajectory = GlobalPosition - lastPoint;
-        lastTrajectoryLength = lastTrajectory.Length();
+        var lastTrajectoryLength = lastTrajectory.Length();
         var currentPredictionLength = currentLength + lastTrajectoryLength;
-        if (currentPredictionLength < maxLength) return null;
+        if (currentPredictionLength < maxLength)
+        {
+            currentLength = currentPredictionLength;
+            lastPoint = GlobalPosition;
+            return null;
+        }
         
         var stopPointWithReducedLength =
             lastPoint + lastTrajectory / lastTrajectoryLength * (maxLength - currentLength);
