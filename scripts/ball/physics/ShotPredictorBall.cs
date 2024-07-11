@@ -5,7 +5,6 @@ using Godot;
 public partial class ShotPredictorBall : BallRigidBody
 {
     public const int MaxCollisions = 10;
-
     private readonly List<BallRigidBody> _predictorBallList = new();
 
     public override void _Ready()
@@ -57,21 +56,30 @@ public partial class ShotPredictorBall : BallRigidBody
         var currentLength = 0f;
         var lastPoint = GlobalPosition;
         ShotPrediction? shotPrediction;
+        float lastTrajectoryLength;
         while (!IsSleeping && _predictedCollisions.Count < MaxCollisions)
         {
             var result = BallPhysicsServer.Instance.PerformPhysicsStepForBalls(delta, _predictorBallList);
-           
-            shotPrediction = ProcessCurrentGlobalPosition(lastPoint, maxLength, currentLength);
+
+            shotPrediction = ProcessPhysic(lastPoint, maxLength, currentLength, out lastTrajectoryLength);
             // if we're already beyond the limit it will not be necessary to process next collisions 
             if (shotPrediction != null)
                 return shotPrediction.Value;
-            
-            shotPrediction = ProcessCollision(
-                result,
-                ref lastPoint,
-                maxLength,
-                ref currentLength
-            );
+
+            if (result.ContainsKey(this))
+            {
+                // Process a collision
+                shotPrediction = ProcessPhysic(
+                    lastPoint,
+                    maxLength,
+                    currentLength,
+                    out lastTrajectoryLength
+                );
+                lastPoint = GlobalPosition;
+                currentLength += lastTrajectoryLength;
+                _predictedCollisions.Add(result[this]);
+            }
+
             if (shotPrediction != null)
                 return shotPrediction.Value;
 
@@ -82,54 +90,27 @@ public partial class ShotPredictorBall : BallRigidBody
 
             step++;
         }
-        shotPrediction = ProcessCurrentGlobalPosition(lastPoint, maxLength, currentLength);
+
+        shotPrediction = ProcessPhysic(lastPoint, maxLength, currentLength, out lastTrajectoryLength);
         return shotPrediction ?? new ShotPrediction(GlobalPosition, _predictedCollisions);
     }
 
-
-    private ShotPrediction? ProcessCollision(
-        Dictionary<BallRigidBody, FullCollisionData> physicsResult,
-        ref Vector2 lastPoint,
-        float maxLength,
-        ref float currentLength
-    )
-    {
-        if (!physicsResult.ContainsKey(this)) return null;
-        var newPoint = physicsResult[this].ContactPoint;
-        var pointsVector = newPoint - lastPoint;
-        var pointsVectorLength = pointsVector.Length();
-        if (currentLength + pointsVectorLength > maxLength)
-        {
-            var newGlobalPosition = lastPoint + pointsVector/pointsVectorLength * (maxLength - currentLength);
-            return new ShotPrediction(newGlobalPosition, _predictedCollisions);
-        }
-
-        _predictedCollisions.Add(physicsResult[this]);
-        currentLength += pointsVectorLength;
-        lastPoint = newPoint;
-        return null;
-    }
-    
-    private ShotPrediction? ProcessCurrentGlobalPosition(
+    private ShotPrediction? ProcessPhysic(
         Vector2 lastPoint,
         float maxLength,
-        float currentLength
+        float currentLength,
+        out float lastTrajectoryLength
     )
     {
         var lastTrajectory = GlobalPosition - lastPoint;
-        var lastTrajectoryLength = lastTrajectory.Length();
+        lastTrajectoryLength = lastTrajectory.Length();
         var currentPredictionLength = currentLength + lastTrajectoryLength;
-        if (Math.Abs(currentPredictionLength - maxLength) < 0.0001)
-        {
-            return new ShotPrediction(GlobalPosition, _predictedCollisions);
-        }
-        if (!(currentPredictionLength > maxLength)) return null;
-
-        var stopPointWithReducedLength = lastPoint + lastTrajectory/lastTrajectoryLength * (maxLength - currentLength);
+        if (currentPredictionLength < maxLength) return null;
+        
+        var stopPointWithReducedLength =
+            lastPoint + lastTrajectory / lastTrajectoryLength * (maxLength - currentLength);
         return new ShotPrediction(stopPointWithReducedLength, _predictedCollisions);
     }
-    
-    
 
 
     public record struct ShotPrediction(
