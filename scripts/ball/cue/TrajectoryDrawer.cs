@@ -98,8 +98,13 @@ public partial class TrajectoryDrawer : Node2D
         foreach (var collision in shotPrediction.Collisions)
         {
             var currentPosition = collision.BallData.Position - GlobalPosition;
-            DrawArc(currentPosition, _cueBall.Radius, 0, Mathf.Tau, 16, Colors.White, 1.5f);
-            DrawCircle(collision.ContactPoint - GlobalPosition, 2, Colors.Red);
+            var collisionCoordinates = collision.ContactPoint - GlobalPosition;
+            var newBallPositionGap = (currentPosition - collisionCoordinates).Normalized() * _cueBall.Radius;
+            var newBallPosition = collisionCoordinates + newBallPositionGap;
+            // Draw a ball on collision spot
+            DrawArc(newBallPosition, _cueBall.Radius, 0, Mathf.Tau, 16, Colors.White, 1.5f);
+            // Draw a dot where collision will happen 
+            DrawCircle(collisionCoordinates, 2, Colors.Red);
             if (!collision.OtherBallData.HasValue)
             {
                 continue;
@@ -116,6 +121,7 @@ public partial class TrajectoryDrawer : Node2D
             );
         }
 
+        // Draw a dot on ball stop point
         DrawCircle(shotPrediction.StopPoint - GlobalPosition, 2, Colors.Orange);
     }
 
