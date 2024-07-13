@@ -2,15 +2,15 @@
 
 [ext_resource type="Script" path="res://scripts/ball/pocket/PocketBall.cs" id="2_4xbno"]
 [ext_resource type="AudioStream" uid="uid://b81p8kqbwwyvi" path="res://sound/ball_hit_ball_soft.wav" id="3_kr4yi"]
+[ext_resource type="Shader" path="res://resources/shaders/ball.gdshader" id="4_1su75"]
 [ext_resource type="AudioStream" uid="uid://dtsd0w6ghqbyn" path="res://sound/hit_table.wav" id="4_wjfex"]
-[ext_resource type="Shader" path="res://scenes/ball/ball.gdshader" id="5_1t0me"]
 [ext_resource type="Texture2D" uid="uid://besn84t323epf" path="res://sprites/ball/solid_ball_mask.png" id="6_cs5w2"]
-[ext_resource type="Shader" path="res://scenes/ball/ball_overlay.gdshader" id="7_l56w6"]
+[ext_resource type="Shader" path="res://resources/shaders/ball_overlay.gdshader" id="7_l56w6"]
 [ext_resource type="FontFile" uid="uid://bl6c36f5c4wae" path="res://resources/fonts/tpf-ploxx.regular.ttf" id="8_buq3u"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_5n7ow"]
 resource_local_to_scene = true
-shader = ExtResource("5_1t0me")
+shader = ExtResource("4_1su75")
 shader_parameter/base_color = Color(0.956863, 0.956863, 0.956863, 1)
 shader_parameter/paint_color = Color(0.911222, 0.641606, 1.15514e-06, 1)
 shader_parameter/rotation = Vector4(0, 0, 0, 1)

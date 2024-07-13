@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" path="res://scripts/ball/cue/TrajectoryDrawer.cs" id="1_vjd8x"]
 [ext_resource type="Script" path="res://scripts/ball/physics/ShotPredictorBall.cs" id="2_4d3it"]
-[ext_resource type="Shader" path="res://scenes/test.gdshader" id="3_287c4"]
 [ext_resource type="Texture2D" uid="uid://dej366ql8no0j" path="res://sprites/ball/trajectory.png" id="3_c4nta"]
+[ext_resource type="Shader" path="res://resources/shaders/moving_texture.gdshader" id="3_eit0s"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_wlety"]
 radius = 8.0
@@ -12,7 +12,7 @@ radius = 8.0
 radius = 8.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_i7hd0"]
-shader = ExtResource("3_287c4")
+shader = ExtResource("3_eit0s")
 
 [node name="TrajectoryDrawer" type="Node2D"]
 process_priority = 1
