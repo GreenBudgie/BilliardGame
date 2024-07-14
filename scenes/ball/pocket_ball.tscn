@@ -1,11 +1,11 @@
-[gd_scene load_steps=14 format=3 uid="uid://d2tf6ct6ufq7e"]
+[gd_scene load_steps=16 format=3 uid="uid://d2tf6ct6ufq7e"]
 
 [ext_resource type="Script" path="res://scripts/ball/pocket/PocketBall.cs" id="2_4xbno"]
 [ext_resource type="AudioStream" uid="uid://b81p8kqbwwyvi" path="res://sound/ball_hit_ball_soft.wav" id="3_kr4yi"]
 [ext_resource type="Shader" path="res://resources/shaders/ball.gdshader" id="4_1su75"]
 [ext_resource type="AudioStream" uid="uid://dtsd0w6ghqbyn" path="res://sound/hit_table.wav" id="4_wjfex"]
 [ext_resource type="Texture2D" uid="uid://besn84t323epf" path="res://sprites/ball/solid_ball_mask.png" id="6_cs5w2"]
-[ext_resource type="Shader" path="res://resources/shaders/ball_overlay.gdshader" id="7_l56w6"]
+[ext_resource type="Shader" path="res://resources/shaders/ball_overlay.gdshader" id="6_kusbp"]
 [ext_resource type="FontFile" uid="uid://bl6c36f5c4wae" path="res://resources/fonts/tpf-ploxx.regular.ttf" id="8_buq3u"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_5n7ow"]
@@ -17,11 +17,16 @@ shader_parameter/rotation = Vector4(0, 0, 0, 1)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_rq1tg"]
 resource_local_to_scene = true
-shader = ExtResource("7_l56w6")
+shader = ExtResource("6_kusbp")
 shader_parameter/rotation = Vector4(0, 0, 0, 1)
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_y66wa"]
 viewport_path = NodePath("SubViewport")
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_p44r0"]
+
+[sub_resource type="Theme" id="Theme_xnaq8"]
+Label/styles/normal = SubResource("StyleBoxEmpty_p44r0")
 
 [sub_resource type="LabelSettings" id="LabelSettings_vwkwu"]
 font = ExtResource("8_buq3u")
@@ -68,6 +73,7 @@ offset_right = 3.0
 offset_bottom = 6.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = SubResource("Theme_xnaq8")
 
 [node name="BallNumber" type="Label" parent="SubViewport/CenterContainer"]
 layout_mode = 2

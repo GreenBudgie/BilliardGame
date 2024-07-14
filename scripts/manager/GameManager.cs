@@ -24,6 +24,18 @@ public partial class GameManager : Node
             _cachedGame = null;
             GetTree().ReloadCurrentScene();
         }
+        if (Input.IsActionJustPressed("fullscreen"))
+        {
+            var mode = DisplayServer.WindowGetMode();
+            if (mode == DisplayServer.WindowMode.Windowed)
+            {
+                DisplayServer.WindowSetMode(DisplayServer.WindowMode.ExclusiveFullscreen);
+            }
+            else
+            {
+                DisplayServer.WindowSetMode(DisplayServer.WindowMode.Windowed);
+            }
+        }
     }
 
 }
