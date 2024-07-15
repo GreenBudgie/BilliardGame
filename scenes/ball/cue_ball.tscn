@@ -4,7 +4,7 @@
 [ext_resource type="AudioStream" uid="uid://b81p8kqbwwyvi" path="res://sound/ball_hit_ball_soft.wav" id="3_c0guk"]
 [ext_resource type="AudioStream" uid="uid://dtsd0w6ghqbyn" path="res://sound/hit_table.wav" id="4_2eddj"]
 [ext_resource type="Script" path="res://scripts/ball/BallInfo.cs" id="5_r210g"]
-[ext_resource type="Shader" path="res://scenes/ball/ball.gdshader" id="6_oyglm"]
+[ext_resource type="Shader" path="res://resources/shaders/ball.gdshader" id="6_oyglm"]
 [ext_resource type="Texture2D" uid="uid://hkyn6egu4bmi" path="res://sprites/ball/cue_ball_mask.png" id="7_cboy1"]
 
 [sub_resource type="Resource" id="Resource_5uneu"]
