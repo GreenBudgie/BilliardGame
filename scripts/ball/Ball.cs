@@ -48,10 +48,10 @@ public abstract partial class Ball : BallRigidBody
 
         var rotationAngle = LinearVelocity.Length() * 0.1f * (float)delta;
         var rotationAxis = LinearVelocity.Orthogonal().Normalized();
-        var rotation3DAxis = new Vector3(0, rotationAxis.X, rotationAxis.Y);
+        var rotation3DAxis = new Vector3(rotationAxis.X, 0, rotationAxis.Y);
 
         var newRotation = new Quaternion(rotation3DAxis, rotationAngle);
-        _rotation *= newRotation;
+        _rotation = newRotation * _rotation;
         var rotationAsVector = new Vector4(_rotation.X, _rotation.Y, _rotation.Z, _rotation.W);
         
         RotateSprites(rotationAsVector);

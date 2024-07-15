@@ -20,25 +20,68 @@ bool should_discard(vec2 pixelated_uv, vec2 texture_size) {
 	return length(center_vector) > texture_size.y * 0.5;
 }
 
-// uv should be converted to 
-vec2 get_spherical_uv(vec2 uv) {
-	float x = sqrt(1.0 - (4.0 * uv.x * uv.x) - (uv.y * uv.y));
-	float y = 2.0 * uv.x;
-	float z = uv.y;
-	vec3 vector = vec3(x, y, z);
+vec4 inverse_rotation() {
+	return vec4(-rotation.x, -rotation.y, -rotation.z, rotation.w);
+}
+
+// Get a point on the surface of a sphere with its center at (0, 0, 0) and a radius of 1 after applying an inverse rotation
+// XYZ axis looks like: 
+/* 
+	 ^ Z  
+	 |  
+	 | 
+	 |
+	 +-----------> X
+	/
+   /
+  /	
+ V Y
+*/
+vec3 get_spherical_coords_after_rotation(vec2 uv, vec2 texture_size) {
+	float sphere_radius = 1.0;
+	// map v from [0; 1] to [-1; 1]
+	float z_cylinder = (uv.y * 2.0 - 1.0);
+	float ball_radius_in_pixels = texture_size.y * 0.5;
+	// ball radius in u coords (proportion)
+	float ball_radius_u =  ball_radius_in_pixels / texture_size.x;
+
+	// Map current u to interval [-1; 1]
+	float x_cylinder = (uv.x - 0.5)/(ball_radius_u);
+	// Find y on cylinder with radius = sphere_radius
+	float y_cylinder = sqrt(sphere_radius*sphere_radius - x_cylinder*x_cylinder);
+
+	float y_sphere = sqrt(sphere_radius*sphere_radius - z_cylinder*z_cylinder - x_cylinder*x_cylinder);
+
+	vec3 vector = vec3(x_cylinder, y_sphere, z_cylinder);
+
+	// Find inversed rotation to get coordinate which will be in current place after rotation
+	vec4 inversed_rotation = inverse_rotation();
 	
-	vec3 r_vector = rotate(vector, rotation);
-	x = r_vector.x;
-	y = r_vector.y;
-	z = r_vector.z;
+	return rotate(vector, inversed_rotation);
+}
+
+
+vec2 get_spherical_uv(vec2 uv, vec2 texture_size) {
+	vec3 r_vector = get_spherical_coords_after_rotation(uv, texture_size);
+	float x = r_vector.x;
+	float y = r_vector.y;
+	float z = r_vector.z;
 	
-	float new_u = y / 4.0 + 0.5;
-	if (x < 0.0 && z < 0.0) {
-		new_u = -y / 4.0;
-	} else if (x < 0.0 && z >= 0.0) {
-		new_u = 1.0 - y / 4.0;
+	// Get u from 0.25 to 0.75 depending on x ([-1; +1])
+	float new_u = (x + 1.0)/4.0 + 0.25;
+	
+	// If we can't see current point
+	if (y < 0.0) {
+		float distance_to_center = abs(new_u - 0.5);
+		// map new_u from [0.5, 0.75] to [1, 0.75] (right end of texture)
+		if (new_u > 0.5)
+			new_u = 1.0 - distance_to_center;
+		else // map new_u from [0.25, 0.5] to [0.25, 0] (left end of texture)
+			new_u = distance_to_center;
 	}
-	float new_v = 0.5 * z + 0.5;
+
+	// Map v from [-1; 1] to [0, 1]
+	float new_v = (z + 1.0)/2.0;
 	return vec2(new_u, new_v);
 }
 

@@ -4,7 +4,7 @@
 [ext_resource type="AudioStream" uid="uid://b81p8kqbwwyvi" path="res://sound/ball_hit_ball_soft.wav" id="3_kr4yi"]
 [ext_resource type="AudioStream" uid="uid://dtsd0w6ghqbyn" path="res://sound/hit_table.wav" id="4_wjfex"]
 [ext_resource type="Shader" path="res://scenes/ball/ball.gdshader" id="5_1t0me"]
-[ext_resource type="Texture2D" uid="uid://besn84t323epf" path="res://sprites/ball/solid_ball_mask.png" id="6_cs5w2"]
+[ext_resource type="Texture2D" uid="uid://chkoee6wpucd5" path="res://sprites/ball/stripe_ball_mask.png" id="5_y6n2u"]
 [ext_resource type="Shader" path="res://scenes/ball/ball_overlay.gdshader" id="7_l56w6"]
 [ext_resource type="FontFile" uid="uid://bl6c36f5c4wae" path="res://resources/fonts/tpf-ploxx.regular.ttf" id="8_buq3u"]
 
@@ -44,7 +44,7 @@ TableHitSound = ExtResource("4_wjfex")
 
 [node name="BallSprite" type="Sprite2D" parent="."]
 material = SubResource("ShaderMaterial_5n7ow")
-texture = ExtResource("6_cs5w2")
+texture = ExtResource("5_y6n2u")
 
 [node name="OverlaySprite" type="Sprite2D" parent="."]
 texture_filter = 2
