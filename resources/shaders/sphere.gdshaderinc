@@ -20,10 +20,6 @@ bool should_discard(vec2 pixelated_uv, vec2 texture_size) {
 	return length(center_vector) > texture_size.y * 0.5;
 }
 
-vec4 inverse_rotation() {
-	return vec4(-rotation.x, -rotation.y, -rotation.z, rotation.w);
-}
-
 // Get a point on the surface of a sphere with its center at (0, 0, 0) and a radius of 1 after applying an inverse rotation
 // XYZ axis looks like: 
 /* 
@@ -45,17 +41,23 @@ vec3 get_spherical_coords_after_rotation(vec2 uv, vec2 texture_size) {
 	// ball radius in u coords (proportion)
 	float ball_radius_u =  ball_radius_in_pixels / texture_size.x;
 
-	// Map current u to interval [-1; 1]
+	// Map current u (in [0.5-ball_radius_u; 0.5+ball_radius_u]) to interval [-1; 1]
 	float x_cylinder = (uv.x - 0.5)/(ball_radius_u);
 	// Find y on cylinder with radius = sphere_radius
-	float y_cylinder = sqrt(sphere_radius*sphere_radius - x_cylinder*x_cylinder);
+	float y_cylinder = sqrt(
+						sphere_radius*sphere_radius - 
+						x_cylinder*x_cylinder);
 
-	float y_sphere = sqrt(sphere_radius*sphere_radius - z_cylinder*z_cylinder - x_cylinder*x_cylinder);
+	float y_sphere = sqrt(
+					sphere_radius*sphere_radius - 
+					z_cylinder*z_cylinder - 
+					x_cylinder*x_cylinder
+					);
 
 	vec3 vector = vec3(x_cylinder, y_sphere, z_cylinder);
 
 	// Find inversed rotation to get coordinate which will be in current place after rotation
-	vec4 inversed_rotation = inverse_rotation();
+	vec4 inversed_rotation = quat_conj(rotation);
 	
 	return rotate(vector, inversed_rotation);
 }
