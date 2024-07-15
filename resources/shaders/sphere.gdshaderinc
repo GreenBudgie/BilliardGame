@@ -45,14 +45,15 @@ vec3 get_spherical_coords_after_rotation(vec2 uv, vec2 texture_size) {
 	float x_cylinder = (uv.x - 0.5)/(ball_radius_u);
 	// Find y on cylinder with radius = sphere_radius
 	float y_cylinder = sqrt(
-						sphere_radius*sphere_radius - 
-						x_cylinder*x_cylinder);
+		sphere_radius*sphere_radius - 
+		x_cylinder*x_cylinder
+		);
 
 	float y_sphere = sqrt(
-					sphere_radius*sphere_radius - 
-					z_cylinder*z_cylinder - 
-					x_cylinder*x_cylinder
-					);
+		sphere_radius*sphere_radius - 
+		z_cylinder*z_cylinder - 
+		x_cylinder*x_cylinder
+		);
 
 	vec3 vector = vec3(x_cylinder, y_sphere, z_cylinder);
 
