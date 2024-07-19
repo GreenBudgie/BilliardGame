@@ -14,9 +14,8 @@ void fragment() {
 		discard;
 	}
 	
-	// Mapping to spherical coordinates
-	vec2 uv = pixelated_uv * 2.0 - 1.0;
-	vec2 spherical_uv = get_spherical_uv(uv);
+	vec2 spherical_uv = get_spherical_uv(pixelated_uv, texture_size);
+
 	COLOR = texture(TEXTURE, spherical_uv);
 
 	COLOR.rgb = mix(paint_color, base_color, COLOR.r);
