@@ -16,15 +16,10 @@ public partial class TrajectoryDrawer : Node2D
     private const float MaxStepsToPredict = 10000;
     private float _stepsToPredict;
 
+    private ShotData _shotData;
+
     public override void _Ready()
     {
-        if (_cueBall == null)
-        {
-            GD.PrintErr("Cue ball is not assigned for the trajectory drawer");
-            QueueFree();
-            return;
-        }
-
         _shotPredictorBall = GetNode<ShotPredictorBall>("ShotPredictorBall");
         _trajectory = GetNode<Line2D>("Trajectory");
 
@@ -35,32 +30,32 @@ public partial class TrajectoryDrawer : Node2D
             _trajectories.Add(newTrajectory);
             AddChild(newTrajectory);
         }
+        
+        EventBus.Instance.ShotDataChanged += _HandleShotDataChange;
+        EventBus.Instance.ShotInitialized += _HandleShotInitialization;
     }
 
     public override void _Process(double delta)
     {
-        Position = _cueBall.Position;
+        if (_cueBall != null)
+        {
+            Position = _cueBall.Position;
+        }
+        
+        if (_shotData == null)
+        {
+            ResetPrediction();
+            return;
+        }
 
         foreach (var trajectory in _trajectories)
         {
             trajectory.ClearPoints();
         }
 
-        if (_cueBall.State != CueBall.BallState.ShotPrepare)
-        {
-            ResetPrediction();
-            return;
-        }
-
-        if (_cueBall.ShotData.Velocity == 0)
-        {
-            ResetPrediction();
-            return;
-        }
-
         _stepsToPredict += Mathf.Min(StepsToPredictIncrease * (float)delta, MaxStepsToPredict);
 
-        var initialVelocity = _cueBall.ShotData.PullVector.Normalized() * _cueBall.ShotData.Velocity;
+        var initialVelocity = ShotStrengthUtil.GetVelocity(GlobalPosition, _shotData);
         _shotPredictorBall.GlobalPosition = GlobalPosition;
         _lastShotPrediction = _shotPredictorBall.GetShotPrediction(
             initialVelocity,
@@ -68,7 +63,7 @@ public partial class TrajectoryDrawer : Node2D
         );
         var shotPrediction = _lastShotPrediction.Value;
         var stopPoint = shotPrediction.StopPoint - GlobalPosition;
-        var previousPoint = _cueBall.GlobalPosition - GlobalPosition;
+        var previousPoint = Vector2.Zero;
         for (var i = 0; i < shotPrediction.Collisions.Count; i++)
         {
             var trajectory = _trajectories[i];
@@ -130,4 +125,15 @@ public partial class TrajectoryDrawer : Node2D
         _lastShotPrediction = null;
         QueueRedraw();
     }
+
+    private void _HandleShotDataChange(ShotData newShotData)
+    {
+        _shotData = newShotData;
+    }
+    
+    private void _HandleShotInitialization(ShotData newShotData)
+    {
+        _shotData = null;
+    }
+    
 }

@@ -10,4 +10,7 @@ public partial class PocketScoreContext : RefCounted
         Score = initialScore;
     }
 
+    public PocketScoreContext()
+    {
+    }
 }

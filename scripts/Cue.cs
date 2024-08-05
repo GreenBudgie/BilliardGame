@@ -22,48 +22,34 @@ public partial class Cue : Node2D
 
         _sprite.Modulate = new Color(1, 1, 1, 0);
 
-        _cueBall.ShotInitialized += HandleShotAnimation;
+        EventBus.Instance.ShotInitialized += _HandleShotAnimation;
+        EventBus.Instance.ShotDataChanged += _HandleAiming;
+        EventBus.Instance.ShotPerformed += _HandleShotPerformed;
     }
 
-    public override void _Process(double delta)
-    {
-        if (_cueBall.State == CueBall.BallState.ShotAnimation)
-        {
-            return;
-        }
-        
-        if (_cueBall.State == CueBall.BallState.ShotPrepare)
-        {
-            HandleShotPreparation();
-        }
-        else
-        {
-            HideCue();
-        }
-    }
-
-    private void HandleShotAnimation()
+    private void _HandleShotAnimation(ShotData shotData)
     {
         var shotTween = CreateTween();
         shotTween.TweenProperty(_sprite, "offset", new Vector2(0, _sprite.Offset.Y), 0.4)
             .SetTrans(Tween.TransitionType.Back)
             .SetEase(Tween.EaseType.In);
-        shotTween.Finished += () => _cueBall.PerformShot();
+        shotTween.Finished += () => EventBus.Instance.EmitSignal(EventBus.SignalName.ShotPerformed, shotData);
     }
 
-    private void HandleShotPreparation()
+    private void _HandleAiming(ShotData shotData)
     {
         Position = _cueBall.Position;
-        LookAt(GetGlobalMousePosition());
-        if (_cueBall.ShotData.Inverse)
-        {
-            Rotation += Mathf.Pi;
-        }
+        LookAt(shotData.AimPosition);
 
         ShowCue();
 
-        var offset = ShotStrengthUtil.GetCueOffsetForVelocity(_cueBall.ShotData.Velocity) + _cueBall.Radius;
+        var offset = ShotStrengthUtil.GetCueOffsetForStrength(shotData.Strength) + _cueBall.Radius;
         _sprite.Offset = new Vector2(-offset, _sprite.Offset.Y);
+    }
+
+    private void _HandleShotPerformed(ShotData shotData)
+    {
+        HideCue();
     }
 
     private void HideCue()

@@ -3,19 +3,10 @@ using Godot;
 
 public partial class CueBall : Ball
 {
-    private const string ShootAction = "shoot";
-    private const string InverseShootAction = "inverse_shoot";
-
-    [Signal]
-    public delegate void ShotInitializedEventHandler();
 
     private Vector2 _initialGlobalPosition;
 
     public BallState State { get; private set; }
-
-    public bool IsBallHovered { get; private set; }
-
-    public ShotData ShotData { get; private set; } = new(Vector2.Zero, false, 0);
 
     private Sprite2D _ballSprite;
 
@@ -25,70 +16,12 @@ public partial class CueBall : Ball
 
         _ballSprite = GetNode<Sprite2D>("BallSprite");
 
-        _initialGlobalPosition = Transform.Origin;
+        _initialGlobalPosition = GlobalPosition;
 
-        PocketScored += HandlePocketCollision;
-        SleepingStateChanged += MakeIdleIfSleeping;
-    }
-
-    public override void _Process(double delta)
-    {
-        var mousePosition = GetGlobalMousePosition();
-        IsBallHovered = mousePosition.DistanceSquaredTo(GlobalPosition) <= Radius * Radius;
-
-        if (ShouldCancelShot())
-        {
-            State = BallState.Idle;
-        }
-
-        var allowedToShootByGameState =
-            GameManager.Game.GameStateManager.State == GameState.ShotPreparation;
-        var ableToShoot = State == BallState.ShotPrepare || IsBallHovered;
-
-        if (!allowedToShootByGameState || !ableToShoot)
-        {
-            Input.SetDefaultCursorShape();
-            return;
-        }
-
-        Input.SetDefaultCursorShape(Input.CursorShape.PointingHand);
-        var shotData = ShotData;
-
-        if (State == BallState.Idle && IsBallHovered && ShotPressed())
-        {
-            State = BallState.ShotPrepare;
-            var isInverse = Input.IsActionJustPressed(InverseShootAction);
-            ShotData = ShotData with { Inverse = isInverse };
-        }
-
-        if (State != BallState.ShotPrepare)
-        {
-            return;
-        }
-
-        var inverseShotSign = shotData.Inverse ? -1 : 1;
-        var pullVector = (mousePosition - GlobalPosition) * inverseShotSign;
-
-        var velocity = ShotStrengthUtil.GetVelocityForPullVectorLength(pullVector.Length());
-
-        ShotData = ShotData with
-        {
-            PullVector = pullVector,
-            Velocity = velocity
-        };
-
-        if (ShouldPerformShot())
-        {
-            State = BallState.ShotAnimation;
-            GameManager.Game.GameStateManager.ChangeState(GameState.ShotExecution);
-            EmitSignal(SignalName.ShotInitialized);
-        }
-    }
-
-    public void PerformShot()
-    {
-        SetLinearVelocity(ShotData.PullVector.Normalized() * ShotData.Velocity);
-        State = BallState.Rolling;
+        PocketScored += _HandlePocketCollision;
+        SleepingStateChanged += _MakeIdleIfSleeping;
+        
+        EventBus.Instance.ShotPerformed += _PerformShot;
     }
 
     protected override void RotateSprites(Vector4 finalRotation)
@@ -97,32 +30,14 @@ public partial class CueBall : Ball
         ballSpriteMaterial.SetShaderParameter("rotation", finalRotation);
     }
 
-    private bool ShotPressed()
+    private void _PerformShot(ShotData shotData)
     {
-        return Input.IsActionJustPressed(ShootAction) || Input.IsActionJustPressed(InverseShootAction);
+        var velocity = ShotStrengthUtil.GetVelocity(GlobalPosition, shotData);
+        SetLinearVelocity(velocity);
+        State = BallState.Rolling;
     }
 
-    private bool ShotReleased()
-    {
-        return Input.IsActionJustReleased(ShootAction) || Input.IsActionJustReleased(InverseShootAction);
-    }
-
-    private bool ShouldPerformShot()
-    {
-        return ShotData.Velocity > 0 && Input.IsActionJustReleased(ShotData.Inverse ? InverseShootAction : ShootAction);
-    }
-
-    private bool ShouldCancelShot()
-    {
-        return ShotData.Inverse switch
-        {
-            true when Input.IsActionJustPressed(ShootAction) => true,
-            false when Input.IsActionJustPressed(InverseShootAction) => true,
-            _ => ShotData.Velocity == 0 && ShotReleased()
-        };
-    }
-
-    private void MakeIdleIfSleeping()
+    private void _MakeIdleIfSleeping()
     {
         if (State == BallState.Rolling && IsSleeping)
         {
@@ -130,14 +45,11 @@ public partial class CueBall : Ball
         }
     }
 
-    private void HandlePocketCollision(Pocket pocket)
+    private void _HandlePocketCollision(Pocket pocket)
     {
         LinearVelocity = Vector2.Zero;
         Rotation = 0;
-        // TODO fix, does not teleport
-        var transform = Transform;
-        transform.Origin = _initialGlobalPosition;
-        Transform = transform;
+        GlobalPosition = _initialGlobalPosition;
         EventBus.Instance.EmitSignal(EventBus.SignalName.BallScored, this, pocket);
     }
 

@@ -1,9 +1,10 @@
-[gd_scene load_steps=11 format=3 uid="uid://b6rmsb7c3jf2a"]
+[gd_scene load_steps=12 format=3 uid="uid://b6rmsb7c3jf2a"]
 
 [ext_resource type="PackedScene" uid="uid://cdokpkldvgmps" path="res://scenes/table.tscn" id="1_3cvqc"]
 [ext_resource type="Script" path="res://scripts/Game.cs" id="1_qveh4"]
 [ext_resource type="Texture2D" uid="uid://diuc7etoxldwa" path="res://sprites/cue/strength_slider.png" id="3_38d0l"]
 [ext_resource type="Texture2D" uid="uid://dwa50835mg2xr" path="res://sprites/cue/strength_box.png" id="3_cpe4o"]
+[ext_resource type="Script" path="res://scripts/ui/StrengthSlider.cs" id="3_fxokx"]
 [ext_resource type="Script" path="res://scripts/manager/ScoringManager.cs" id="4_0vuc6"]
 [ext_resource type="Texture2D" uid="uid://bvojivl63o4tp" path="res://sprites/cue/strength_highlight.png" id="4_cl3b8"]
 [ext_resource type="Script" path="res://scripts/manager/GameStateManager.cs" id="5_a5gdf"]
@@ -39,11 +40,13 @@ position = Vector2(320, 213)
 
 [node name="UI" type="CanvasLayer" parent="."]
 
-[node name="StrengthSlider" type="Control" parent="UI"]
+[node name="StrengthSlider" type="Control" parent="UI" node_paths=PackedStringArray("_slider")]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
+script = ExtResource("3_fxokx")
+_slider = NodePath("CenterContainer/VSlider")
 
 [node name="CenterContainer" type="CenterContainer" parent="UI/StrengthSlider"]
 layout_mode = 1
@@ -58,10 +61,14 @@ grow_vertical = 2
 custom_minimum_size = Vector2(48, 280)
 layout_mode = 2
 theme = SubResource("Theme_pqwr7")
-value = 50.0
+max_value = 1.0
+step = 0.01
 
 [node name="ScoringManager" type="Node" parent="."]
 script = ExtResource("4_0vuc6")
 
 [node name="GameStateManager" type="Node" parent="."]
 script = ExtResource("5_a5gdf")
+
+[connection signal="drag_ended" from="UI/StrengthSlider/CenterContainer/VSlider" to="UI/StrengthSlider" method="_ShotStrengthSelected"]
+[connection signal="value_changed" from="UI/StrengthSlider/CenterContainer/VSlider" to="UI/StrengthSlider" method="_ShotStrengthChanged"]

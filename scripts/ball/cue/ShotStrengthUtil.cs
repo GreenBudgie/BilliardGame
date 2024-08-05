@@ -5,29 +5,28 @@ public static class ShotStrengthUtil
 
     private const float MinVelocity = 25;
     private const float MaxVelocity = 1400;
-    private const float MinPullVectorLength = 20;
-    private const float MaxPullVectorLength = 170;
     private const float MinCueOffset = 0;
     private const float MaxCueOffset = 64;
 
-    public static float GetVelocityForPullVectorLength(float length)
+    public static float GetVelocityForStrength(float strength)
     {
-        if (length < MinPullVectorLength)
+        if (strength == 0)
         {
-            return 0;
+            return MaxVelocity;
         }
-
-        var clampedLength = Mathf.Clamp(length, MinPullVectorLength, MaxPullVectorLength);
-        var weight = (clampedLength - MinPullVectorLength) / (MaxPullVectorLength - MinPullVectorLength);
         
-        return Mathf.Lerp(MinVelocity, MaxVelocity, weight);
+        return Mathf.Lerp(MinVelocity, MaxVelocity, strength);
     }
 
-    public static float GetCueOffsetForVelocity(float velocity)
+    public static float GetCueOffsetForStrength(float strength)
     {
-        var weight = (velocity - MinVelocity) / (MaxVelocity - MinVelocity);
-        return Mathf.Lerp(MinCueOffset, MaxCueOffset, weight);
+        return Mathf.Lerp(MinCueOffset, MaxCueOffset, strength);
     }
 
+    public static Vector2 GetVelocity(Vector2 origin, ShotData shotData)
+    {
+        var shotVector = (shotData.AimPosition - origin).Normalized();
+        return shotVector * GetVelocityForStrength(shotData.Strength);
+    }
     
 }

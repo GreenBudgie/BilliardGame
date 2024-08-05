@@ -10,7 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://dkpq24jlytnuu" path="res://scenes/ball/ball_rack.tscn" id="8_3uwkd"]
 [ext_resource type="PackedScene" uid="uid://dy8k6t6dye03o" path="res://scenes/pocket/pocket.tscn" id="8_4reo7"]
 [ext_resource type="PackedScene" uid="uid://cxxibhu6k60gt" path="res://scenes/pocket/sticker_position.tscn" id="10_j7oqd"]
-[ext_resource type="Script" path="res://scripts/AimManager.cs" id="11_cx1id"]
+[ext_resource type="Script" path="res://scripts/ShootingManager.cs" id="11_qhnku"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_uikbx"]
 
@@ -249,11 +249,12 @@ _cueBall = NodePath("../CueBall")
 [node name="Cue" parent="." node_paths=PackedStringArray("_cueBall") instance=ExtResource("6_bek7c")]
 _cueBall = NodePath("../CueBall")
 
-[node name="AimManager" type="Node2D" parent="."]
-script = ExtResource("11_cx1id")
+[node name="ShootingManager" type="Node2D" parent="." node_paths=PackedStringArray("_aimPosition")]
+script = ExtResource("11_qhnku")
+_aimPosition = NodePath("AimPosition")
 metadata/_edit_lock_ = true
 
-[node name="AimPosition" type="Marker2D" parent="AimManager"]
+[node name="AimPosition" type="Marker2D" parent="ShootingManager"]
 
-[connection signal="button_down" from="TableAreaButton" to="AimManager" method="_StartAiming"]
-[connection signal="button_up" from="TableAreaButton" to="AimManager" method="_StopAiming"]
+[connection signal="button_down" from="TableAreaButton" to="ShootingManager" method="_StartAiming"]
+[connection signal="button_up" from="TableAreaButton" to="ShootingManager" method="_StopAiming"]
