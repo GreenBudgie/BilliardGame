@@ -6,8 +6,8 @@
     <EnableDynamicLoading>true</EnableDynamicLoading>
     <Nullable>disable</Nullable>
   </PropertyGroup>
+  
   <ItemGroup>
-    <Folder Include="scripts\manager\" />
-    <Folder Include="scripts\util\" />
+    <None Include="**/*.tscn"/>
   </ItemGroup>
 </Project>

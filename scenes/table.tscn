@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://cdokpkldvgmps"]
+[gd_scene load_steps=19 format=3 uid="uid://cdokpkldvgmps"]
 
 [ext_resource type="Script" path="res://scripts/Table.cs" id="1_6ns3v"]
 [ext_resource type="PackedScene" uid="uid://dnfowjpbcp587" path="res://scenes/ball/cue_ball.tscn" id="2_sbviq"]
@@ -10,6 +10,24 @@
 [ext_resource type="PackedScene" uid="uid://dkpq24jlytnuu" path="res://scenes/ball/ball_rack.tscn" id="8_3uwkd"]
 [ext_resource type="PackedScene" uid="uid://dy8k6t6dye03o" path="res://scenes/pocket/pocket.tscn" id="8_4reo7"]
 [ext_resource type="PackedScene" uid="uid://cxxibhu6k60gt" path="res://scenes/pocket/sticker_position.tscn" id="10_j7oqd"]
+[ext_resource type="Script" path="res://scripts/AimManager.cs" id="11_cx1id"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_uikbx"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_a63dc"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_uku57"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_p53dy"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ijisy"]
+
+[sub_resource type="Theme" id="Theme_gxq5n"]
+Button/styles/disabled = SubResource("StyleBoxEmpty_uikbx")
+Button/styles/focus = SubResource("StyleBoxEmpty_a63dc")
+Button/styles/hover = SubResource("StyleBoxEmpty_uku57")
+Button/styles/normal = SubResource("StyleBoxEmpty_p53dy")
+Button/styles/pressed = SubResource("StyleBoxEmpty_ijisy")
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_nget6"]
 friction = 0.0
@@ -18,14 +36,26 @@ bounce = 1.0
 [node name="Table" type="Node2D"]
 script = ExtResource("1_6ns3v")
 
+[node name="TableAreaButton" type="Button" parent="."]
+offset_left = -256.0
+offset_top = -144.0
+offset_right = 256.0
+offset_bottom = 144.0
+theme = SubResource("Theme_gxq5n")
+flat = true
+metadata/_edit_lock_ = true
+
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("3_cr0gw")
 metadata/_edit_lock_ = true
 
 [node name="Borders" type="StaticBody2D" parent="."]
+visible = false
 collision_layer = 4
 collision_mask = 0
 physics_material_override = SubResource("PhysicsMaterial_nget6")
+metadata/_edit_lock_ = true
+metadata/_edit_group_ = true
 
 [node name="TopLeftPolygon" type="CollisionPolygon2D" parent="Borders"]
 polygon = PackedVector2Array(-197, -102, -207, -112, -207, -144, -15, -144, -15, -117, -13, -112, -18, -102)
@@ -51,6 +81,8 @@ polygon = PackedVector2Array(-197, -102, -207, -112, -207, -144, -15, -144, -15,
 polygon = PackedVector2Array(214, -85, 224, -95, 256, -95, 256, 95, 224, 95, 214, 85)
 
 [node name="Pockets" type="Node2D" parent="."]
+metadata/_edit_group_ = true
+metadata/_edit_lock_ = true
 
 [node name="TopLeftPocket" parent="Pockets" instance=ExtResource("8_4reo7")]
 position = Vector2(-224, -112)
@@ -216,3 +248,12 @@ _cueBall = NodePath("../CueBall")
 
 [node name="Cue" parent="." node_paths=PackedStringArray("_cueBall") instance=ExtResource("6_bek7c")]
 _cueBall = NodePath("../CueBall")
+
+[node name="AimManager" type="Node2D" parent="."]
+script = ExtResource("11_cx1id")
+metadata/_edit_lock_ = true
+
+[node name="AimPosition" type="Marker2D" parent="AimManager"]
+
+[connection signal="button_down" from="TableAreaButton" to="AimManager" method="_StartAiming"]
+[connection signal="button_up" from="TableAreaButton" to="AimManager" method="_StopAiming"]

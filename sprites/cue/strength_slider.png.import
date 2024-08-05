@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c6ude8b5drosh"
-path="res://.godot/imported/cue.png-6e6bf3db13e186998b0403fab6384715.ctex"
+uid="uid://diuc7etoxldwa"
+path="res://.godot/imported/strength_slider.png-1801e2183864f721013119f1e638fbcd.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/cue.png"
-dest_files=["res://.godot/imported/cue.png-6e6bf3db13e186998b0403fab6384715.ctex"]
+source_file="res://sprites/cue/strength_slider.png"
+dest_files=["res://.godot/imported/strength_slider.png-1801e2183864f721013119f1e638fbcd.ctex"]
 
 [params]
 

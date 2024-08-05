@@ -7,7 +7,7 @@ using Vector2 = Godot.Vector2;
 public abstract partial class BallRigidBody : CharacterBody2D
 {
     /*
-     * Emitted right after the ball changes it's sleep state
+     * Emitted right after the ball changes its sleep state
      */
     [Signal]
     public delegate void SleepingStateChangedEventHandler();
