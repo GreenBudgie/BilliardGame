@@ -96,7 +96,7 @@ public partial class TrajectoryDrawer : Node2D
             var newBallPositionGap = (currentPosition - collisionCoordinates).Normalized() * _cueBall.Radius;
             var newBallPosition = collisionCoordinates + newBallPositionGap;
             // Draw a ball on collision spot
-            DrawArc(newBallPosition, _cueBall.Radius, 0, Mathf.Tau, 16, Colors.White, 1.5f);
+            DrawArc(currentPosition, _cueBall.Radius, 0, Mathf.Tau, 16, Colors.White, 1.5f);
             // Draw a dot where collision will happen 
             DrawCircle(collisionCoordinates, 2, Colors.Red);
             if (!collision.OtherBallData.HasValue)

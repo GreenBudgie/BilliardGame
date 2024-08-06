@@ -56,6 +56,8 @@ public abstract partial class BallRigidBody : CharacterBody2D
         LinearVelocity = velocity;
     }
 
+    private Vector2 _previousRealLinearVelocity;
+
     /// <summary>
     /// Performs an actual movement step if the body is not sleeping. May put it to sleep if the threshold is reached.
     /// </summary>
@@ -67,7 +69,13 @@ public abstract partial class BallRigidBody : CharacterBody2D
         }
 
         // Move the ball
-        Position += LinearVelocity * (float)delta;
+        var realLinearVelocity = LinearVelocity * (float)delta;
+        
+        _shapeCast.TargetPosition = realLinearVelocity;
+        _shapeCast.ForceShapecastUpdate();
+
+        var fraction = Mathf.Clamp(_shapeCast.GetClosestCollisionUnsafeFraction() + 0.05f, 0, 1);
+        Position += realLinearVelocity * fraction;
         LinearVelocity *= (float)(1 - delta * linearDamp);
 
         // Put to sleep if threshold is reached
@@ -90,6 +98,8 @@ public abstract partial class BallRigidBody : CharacterBody2D
             return null;
         }
 
+        // _shapeCast.Position = -_previousRealLinearVelocity;
+        _shapeCast.TargetPosition = Vector2.Zero;
         _shapeCast.ForceShapecastUpdate();
 
         if (!_shapeCast.IsColliding())
