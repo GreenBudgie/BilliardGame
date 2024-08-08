@@ -35,11 +35,11 @@ public partial class BallPhysicsServer : Node
         PerformPhysicsStepForBalls(delta, _balls);
     }
 
-    private readonly Dictionary<BallRigidBody, CollisionData> _collisionByBall = new();
+    private readonly Dictionary<BallRigidBody, KinematicCollision2D> _collisionByBall = new();
     private readonly List<BallRigidBody> _orderedBalls = new();
-    private readonly Dictionary<BallRigidBody, FullCollisionData> _results = new();
+    private readonly Dictionary<BallRigidBody, KinematicCollision2D> _results = new();
 
-    public Dictionary<BallRigidBody, FullCollisionData> PerformPhysicsStepForBalls(double delta, List<BallRigidBody> balls)
+    public Dictionary<BallRigidBody, KinematicCollision2D> PerformPhysicsStepForBalls(double delta, List<BallRigidBody> balls)
     {
         // Sleeping bodies are processed last (IsSleeping = false comes first)
         _orderedBalls.Clear();
@@ -66,36 +66,37 @@ public partial class BallPhysicsServer : Node
         _collisionByBall.Clear();
         foreach (var ball in _orderedBalls)
         {
-            var collision = ball.GetClosestCollision();
+            var collision = ball.GetClosestCollision(delta);
 
-            if (!collision.HasValue)
+            if (collision == null)
             {
                 _handledCollisions.Remove(ball);
                 continue;
             }
 
             // Awake ball with which a collision have happened, so it can be processed later
-            if (ball.AwakesOtherBalls() && collision.Value.Collider is BallRigidBody collidingBall)
+            if (ball.AwakesOtherBalls() && collision.GetCollider() is BallRigidBody collidingBall)
             {
                 collidingBall.IsSleeping = false;
             }
 
-            _collisionByBall[ball] = collision.Value;
+            _collisionByBall[ball] = collision;
+            _results[ball] = collision;
         }
         
-        foreach (var (ball, collision) in _collisionByBall)
-        {
-            ball.EscapeOverlaps(collision);
-            if (ShouldProcessCollision(ball, collision))
-            {
-                _results.Add(ball, ball.HandleNewCollision(collision));
-            }
-        }
+        // foreach (var (ball, collision) in _collisionByBall)
+        // {
+        //     //ball.EscapeOverlaps(collision);
+        //     if (ShouldProcessCollision(ball, collision))
+        //     {
+        //         _results.Add(ball, ball.HandleNewCollision(collision));
+        //     }
+        // }
         
         // Process movement at the end so positions can update before the next physics step
         foreach (var ball in _orderedBalls)
         {
-            ball.HandleMovement(delta, _linearDamp, _sleepThresholdSq);
+            ball.HandleMovement(delta, _linearDamp, _sleepThresholdSq, _collisionByBall.GetValueOrDefault(ball));
         }
 
         return _results;
@@ -109,10 +110,10 @@ public partial class BallPhysicsServer : Node
         }
     }
 
-    private bool ShouldProcessCollision(BallRigidBody ball, CollisionData collision)
+    private bool ShouldProcessCollision(BallRigidBody ball, KinematicCollision2D collision)
     {
         var oldCollider = _handledCollisions.GetValueOrDefault(ball);
-        var currentCollider = collision.Collider;
+        var currentCollider = (CollisionObject2D)collision.GetCollider();
 
         if (oldCollider == currentCollider)
         {

@@ -59,7 +59,7 @@ public partial class TrajectoryDrawer : Node2D
         _shotPredictorBall.GlobalPosition = GlobalPosition;
         _lastShotPrediction = _shotPredictorBall.GetShotPrediction(
             initialVelocity,
-            Mathf.RoundToInt(_stepsToPredict)
+            (int)MaxStepsToPredict
         );
         var shotPrediction = _lastShotPrediction.Value;
         var stopPoint = shotPrediction.StopPoint - GlobalPosition;
@@ -68,10 +68,10 @@ public partial class TrajectoryDrawer : Node2D
         {
             var trajectory = _trajectories[i];
             var collision = shotPrediction.Collisions[i];
-            var currentPosition = collision.BallData.Position - GlobalPosition;
+            var currentPosition = collision.GetPosition() - GlobalPosition;
             trajectory.AddPoint(previousPoint);
             trajectory.AddPoint(currentPosition);
-            previousPoint = collision.BallData.Position - GlobalPosition;
+            previousPoint = collision.GetPosition() - GlobalPosition;
         }
 
         var finalTrajectory = _trajectories[shotPrediction.Collisions.Count];
@@ -91,21 +91,22 @@ public partial class TrajectoryDrawer : Node2D
         var shotPrediction = _lastShotPrediction.Value;
         foreach (var collision in shotPrediction.Collisions)
         {
-            var currentPosition = collision.BallData.Position - GlobalPosition;
-            var collisionCoordinates = collision.ContactPoint - GlobalPosition;
+            var currentPosition = collision.GetPosition() - GlobalPosition;
+            var collisionCoordinates = collision.GetPosition() - GlobalPosition;
             var newBallPositionGap = (currentPosition - collisionCoordinates).Normalized() * _cueBall.Radius;
             var newBallPosition = collisionCoordinates + newBallPositionGap;
             // Draw a ball on collision spot
             DrawArc(currentPosition, _cueBall.Radius, 0, Mathf.Tau, 16, Colors.White, 1.5f);
             // Draw a dot where collision will happen 
             DrawCircle(collisionCoordinates, 2, Colors.Red);
-            if (!collision.OtherBallData.HasValue)
+            DrawLine(currentPosition, currentPosition + collision.GetNormal() * 30, Colors.Blue);
+            if (collision.GetCollider() is not BallRigidBody otherBall)
             {
                 continue;
             }
 
-            var pocketBallVelocity = collision.OtherBallData.Value.VelocityAfterContact;
-            var pocketBallPosition = collision.OtherBallData.Value.Position - GlobalPosition;
+            var pocketBallVelocity = otherBall.LinearVelocity; //TODO Fix after
+            var pocketBallPosition = otherBall.GlobalPosition - GlobalPosition;
             var velocityVector = pocketBallVelocity.Normalized() * 8 + pocketBallVelocity * 0.05f;
             DrawLine(
                 pocketBallPosition,

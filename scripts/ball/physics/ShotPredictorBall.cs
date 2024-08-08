@@ -19,7 +19,7 @@ public partial class ShotPredictorBall : BallRigidBody
         return false;
     }
 
-    private readonly List<FullCollisionData> _predictedCollisions = new();
+    private readonly List<KinematicCollision2D> _predictedCollisions = new();
 
     public ShotPrediction GetShotPrediction(Vector2 initialVelocity, int maxSteps)
     {
@@ -104,6 +104,6 @@ public partial class ShotPredictorBall : BallRigidBody
 
     public record struct ShotPrediction(
         Vector2 StopPoint,
-        List<FullCollisionData> Collisions
+        List<KinematicCollision2D> Collisions
     );
 }
