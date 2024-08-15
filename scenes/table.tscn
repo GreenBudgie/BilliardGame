@@ -1,7 +1,7 @@
 [gd_scene load_steps=19 format=3 uid="uid://cdokpkldvgmps"]
 
 [ext_resource type="Script" path="res://scripts/Table.cs" id="1_6ns3v"]
-[ext_resource type="PackedScene" uid="uid://dnfowjpbcp587" path="res://scenes/ball/cue_ball.tscn" id="2_sbviq"]
+[ext_resource type="PackedScene" uid="uid://bl3ncvl0gwpwd" path="res://scenes/ball/cue_ball.tscn" id="2_sbviq"]
 [ext_resource type="Texture2D" uid="uid://brktowfyqa3tc" path="res://sprites/table.png" id="3_cr0gw"]
 [ext_resource type="PackedScene" uid="uid://cfuk62rk78gl3" path="res://scenes/pocket/corner_pocket.tscn" id="3_cvwsn"]
 [ext_resource type="PackedScene" uid="uid://58klbpi2i1kg" path="res://scenes/pocket/side_pocket.tscn" id="4_0v0a5"]
@@ -31,7 +31,7 @@ Button/styles/pressed = SubResource("StyleBoxEmpty_ijisy")
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_nget6"]
 friction = 0.0
-bounce = 1.0
+bounce = 0.8
 
 [node name="Table" type="Node2D"]
 script = ExtResource("1_6ns3v")

@@ -33,13 +33,13 @@ public partial class CueBall : Ball
     private void _PerformShot(ShotData shotData)
     {
         var velocity = ShotStrengthUtil.GetVelocity(GlobalPosition, shotData);
-        SetLinearVelocity(velocity);
+        ApplyImpulse(velocity);
         State = BallState.Rolling;
     }
 
     private void _MakeIdleIfSleeping()
     {
-        if (State == BallState.Rolling && IsSleeping)
+        if (State == BallState.Rolling && Sleeping)
         {
             State = BallState.Idle;
         }

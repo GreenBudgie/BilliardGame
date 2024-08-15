@@ -1,6 +1,6 @@
 ﻿using Godot;
 
-public abstract partial class Ball : BallRigidBody
+public abstract partial class Ball : RigidBody2D
 {
     [Export] public AudioStream BallHitSound;
     [Export] public AudioStream TableHitSound;
@@ -18,6 +18,8 @@ public abstract partial class Ball : BallRigidBody
     private const float MaxSoundVelocityThreshold = 400;
     
     private Quaternion _rotation = Quaternion.Identity;
+    
+    public float Radius { get; private set; }
 
     protected abstract void RotateSprites(Vector4 finalRotation);
 
@@ -25,6 +27,10 @@ public abstract partial class Ball : BallRigidBody
     {
         base._Ready();
 
+        var collisionShape = GetNode<CollisionShape2D>("CollisionShape2D");
+        var circleShape = (CircleShape2D)collisionShape.Shape;
+        Radius = circleShape.Radius;
+        
         BodyEntered += OnBodyEntered;
         SleepingStateChanged += HandleSleepStateChange;
     }
@@ -34,14 +40,9 @@ public abstract partial class Ball : BallRigidBody
         HandleRotation(delta);
     }
 
-    public override bool AwakesOtherBalls()
-    {
-        return true;
-    }
-
     private void HandleRotation(double delta)
     {
-        if (IsSleeping || LinearVelocity.IsZeroApprox())
+        if (Sleeping || LinearVelocity.IsZeroApprox())
         {
             return;
         }
@@ -57,20 +58,21 @@ public abstract partial class Ball : BallRigidBody
         RotateSprites(rotationAsVector);
     }
 
-    private void OnBodyEntered(CollisionObject2D node)
+    private void OnBodyEntered(Node node)
     {
-        if (node.GetCollisionLayerValue(3))
+        var collisionObject = (CollisionObject2D)node;
+        if (collisionObject.GetCollisionLayerValue(3))
         {
             HandleCollision(TableHitSound);
             return;
         }
         
-        if (node is Ball)
+        if (collisionObject is Ball)
         {
             HandleCollision(BallHitSound);
         }
 
-        if (node is PocketBody pocketBody)
+        if (collisionObject is PocketBody pocketBody)
         {
             EmitSignal(SignalName.PocketScored, pocketBody.Pocket);
         }
@@ -94,7 +96,7 @@ public abstract partial class Ball : BallRigidBody
 
     private void HandleSleepStateChange()
     {
-        if (IsSleeping)
+        if (Sleeping)
         {
             EventBus.Instance.EmitSignal(EventBus.SignalName.BallStopped, this);
         }

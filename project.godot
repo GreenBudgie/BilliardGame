@@ -24,7 +24,6 @@ buses/default_bus_layout=""
 EventBus="res://scripts/manager/EventBus.cs"
 SoundManager="res://scripts/manager/SoundManager.cs"
 GameManager="res://scripts/manager/GameManager.cs"
-BallPhysicsServer="res://scripts/ball/physics/BallPhysicsServer.cs"
 
 [display]
 

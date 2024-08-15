@@ -1,5 +1,6 @@
 [gd_scene load_steps=16 format=3 uid="uid://d2tf6ct6ufq7e"]
 
+[ext_resource type="PhysicsMaterial" uid="uid://c2rdm6hi6yt7i" path="res://scenes/ball/ball_material.tres" id="1_0orq8"]
 [ext_resource type="Script" path="res://scripts/ball/pocket/PocketBall.cs" id="2_4xbno"]
 [ext_resource type="AudioStream" uid="uid://b81p8kqbwwyvi" path="res://sound/ball_hit_ball_soft.wav" id="3_kr4yi"]
 [ext_resource type="Shader" path="res://resources/shaders/ball.gdshader" id="4_1su75"]
@@ -36,13 +37,15 @@ font_color = Color(0, 0, 0, 1)
 [sub_resource type="CircleShape2D" id="CircleShape2D_l1t4d"]
 radius = 8.0
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_d6hsj"]
-radius = 8.0
-
-[node name="PocketBall" type="CharacterBody2D" groups=["balls"]]
+[node name="PocketBall" type="RigidBody2D" groups=["balls"]]
 collision_layer = 2
 collision_mask = 15
-motion_mode = 1
+physics_material_override = ExtResource("1_0orq8")
+gravity_scale = 0.0
+lock_rotation = true
+continuous_cd = 2
+max_contacts_reported = 4
+contact_monitor = true
 script = ExtResource("2_4xbno")
 BallHitSound = ExtResource("3_kr4yi")
 TableHitSound = ExtResource("4_wjfex")
@@ -85,11 +88,3 @@ vertical_alignment = 1
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 visible = false
 shape = SubResource("CircleShape2D_l1t4d")
-
-[node name="ShapeCast2D" type="ShapeCast2D" parent="."]
-visible = false
-enabled = false
-shape = SubResource("CircleShape2D_d6hsj")
-target_position = Vector2(0, 0)
-max_results = 5
-collision_mask = 15

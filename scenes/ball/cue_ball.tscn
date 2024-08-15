@@ -1,5 +1,6 @@
-[gd_scene load_steps=11 format=3 uid="uid://dnfowjpbcp587"]
+[gd_scene load_steps=11 format=3 uid="uid://bl3ncvl0gwpwd"]
 
+[ext_resource type="PhysicsMaterial" uid="uid://c2rdm6hi6yt7i" path="res://scenes/ball/ball_material.tres" id="1_sga7i"]
 [ext_resource type="Script" path="res://scripts/ball/cue/CueBall.cs" id="2_sxovh"]
 [ext_resource type="AudioStream" uid="uid://b81p8kqbwwyvi" path="res://sound/ball_hit_ball_soft.wav" id="3_c0guk"]
 [ext_resource type="AudioStream" uid="uid://dtsd0w6ghqbyn" path="res://sound/hit_table.wav" id="4_2eddj"]
@@ -24,12 +25,9 @@ shader_parameter/rotation = Vector4(0, 0, 0, 1)
 [sub_resource type="CircleShape2D" id="CircleShape2D_81mj7"]
 radius = 8.0
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_5kyv3"]
-radius = 8.0
-
-[node name="CueBall" type="CharacterBody2D" groups=["balls"]]
+[node name="CueBall" type="RigidBody2D" groups=["balls"]]
 collision_mask = 14
-motion_mode = 1
+physics_material_override = ExtResource("1_sga7i")
 script = ExtResource("2_sxovh")
 BallHitSound = ExtResource("3_c0guk")
 TableHitSound = ExtResource("4_2eddj")
@@ -43,11 +41,3 @@ region_rect = Rect2(-10, 0, 68, 60)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 visible = false
 shape = SubResource("CircleShape2D_81mj7")
-
-[node name="ShapeCast2D" type="ShapeCast2D" parent="."]
-visible = false
-enabled = false
-shape = SubResource("CircleShape2D_5kyv3")
-target_position = Vector2(0, 0)
-max_results = 5
-collision_mask = 14

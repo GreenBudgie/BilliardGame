@@ -1,15 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://bpnpvb46w7fu5"]
+[gd_scene load_steps=5 format=3 uid="uid://bpnpvb46w7fu5"]
 
 [ext_resource type="Script" path="res://scripts/ball/cue/TrajectoryDrawer.cs" id="1_vjd8x"]
-[ext_resource type="Script" path="res://scripts/ball/physics/ShotPredictorBall.cs" id="2_4d3it"]
 [ext_resource type="Texture2D" uid="uid://dej366ql8no0j" path="res://sprites/ball/trajectory.png" id="3_c4nta"]
 [ext_resource type="Shader" path="res://resources/shaders/moving_texture.gdshader" id="3_f1kj6"]
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_wlety"]
-radius = 8.0
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_4pvdf"]
-radius = 8.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_i7hd0"]
 shader = ExtResource("3_f1kj6")
@@ -18,24 +11,6 @@ shader = ExtResource("3_f1kj6")
 process_priority = 1
 script = ExtResource("1_vjd8x")
 
-[node name="ShotPredictorBall" type="CharacterBody2D" parent="."]
-collision_layer = 16
-collision_mask = 14
-motion_mode = 1
-script = ExtResource("2_4d3it")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ShotPredictorBall"]
-visible = false
-shape = SubResource("CircleShape2D_wlety")
-
-[node name="ShapeCast2D" type="ShapeCast2D" parent="ShotPredictorBall"]
-visible = false
-enabled = false
-shape = SubResource("CircleShape2D_4pvdf")
-target_position = Vector2(0, 0)
-max_results = 5
-collision_mask = 14
-
 [node name="Trajectory" type="Line2D" parent="."]
 texture_repeat = 2
 material = SubResource("ShaderMaterial_i7hd0")
@@ -43,3 +18,7 @@ width = 1.5
 texture = ExtResource("3_c4nta")
 texture_mode = 1
 joint_mode = 2
+
+[node name="RayCast" type="RayCast2D" parent="."]
+enabled = false
+collision_mask = 14
