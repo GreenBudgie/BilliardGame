@@ -3,50 +3,56 @@
 public partial class ShootingManager : Node2D
 {
     
+    private const float MinDragDistance = 8;
+    private const float MaxDragDistance = 128;
+    
     [Export]
-    private Marker2D _aimPosition;
+    private Sprite2D _aimPosition;
 
+    private AimState _aimState = AimState.None;
+    
     private bool _isAiming;
-    private bool _hasAimPosition;
+    
+    // Strength is a value between 0 and 1 that represents the strength of a shot
     private float _shotStrength;
-
-    public override void _Ready()
-    {
-        EventBus.Instance.ShotStrengthChanged += _HandleShotStrengthChange;
-        EventBus.Instance.ShotStrengthSelected += _InitializeShot;
-    }
-
+    
     public override void _Process(double delta)
     {
-        HandleAiming();
+        if (_aimState == AimState.Aiming)
+        {
+            HandleAiming();
+        } else if (_aimState == AimState.Dragging)
+        {
+            HandleDragging();
+        }
     }
 
-    public void _StartAiming()
+    public void _TablePressed()
     {
-        _isAiming = true;
-        _hasAimPosition = true;
+        if (_aimState == AimState.None)
+        {
+            _aimPosition.Visible = true;
+            _aimState = AimState.Aiming;
+        } else if (_aimState == AimState.Aiming)
+        {
+            _aimState = AimState.Dragging;
+        } else if (_aimState == AimState.Dragging)
+        {
+            InitializeShot();
+            _aimState = AimState.None;
+        }
     }
     
-    public void _StopAiming()
+    public void _TableReleased()
     {
-        _isAiming = false;
+       
     }
 
-    public void _RemoveAimPosition()
+    private void InitializeShot()
     {
-        _isAiming = false;
-        _hasAimPosition = false;
-    }
-
-    private void _HandleShotStrengthChange(float newShotStrength)
-    {
-        _shotStrength = newShotStrength;
-        UpdateShotData();
-    }
-
-    private void _InitializeShot(float shotStrength)
-    {
-        if (shotStrength == 0)
+        _aimPosition.Visible = false;
+        
+        if (Mathf.IsZeroApprox(_shotStrength))
         {
             return;
         }
@@ -56,11 +62,6 @@ public partial class ShootingManager : Node2D
 
     private void HandleAiming()
     {
-        if (!_isAiming)
-        {
-            return;
-        }
-
         var prevPosition = _aimPosition.GlobalPosition;
         var newPosition = GetGlobalMousePosition();
 
@@ -73,6 +74,32 @@ public partial class ShootingManager : Node2D
         UpdateShotData();
     }
 
+    private void HandleDragging()
+    {
+        var dragVector = GetGlobalMousePosition() - _aimPosition.GlobalPosition;
+        var dragDistance = dragVector.Length();
+
+        if (dragDistance < MinDragDistance)
+        {
+            if (_shotStrength != 0)
+            {
+                _shotStrength = 0;
+                UpdateShotData();   
+            }
+            return;
+        }
+        
+        var newStrength = Mathf.Clamp(dragDistance / MaxDragDistance, 0, 1);
+
+        if (Mathf.IsEqualApprox(_shotStrength, newStrength))
+        {
+            return;
+        }
+
+        _shotStrength = newStrength;
+        UpdateShotData();
+    }
+
     private void UpdateShotData()
     {
         EventBus.Instance.EmitSignal(EventBus.SignalName.ShotDataChanged, GetShotData());
@@ -81,6 +108,13 @@ public partial class ShootingManager : Node2D
     private ShotData GetShotData()
     {
         return new ShotData(_aimPosition.GlobalPosition, _shotStrength);
+    }
+
+    private enum AimState
+    {
+        None,
+        Aiming,
+        Dragging
     }
     
 }

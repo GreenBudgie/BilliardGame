@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://cdokpkldvgmps"]
+[gd_scene load_steps=20 format=3 uid="uid://cdokpkldvgmps"]
 
 [ext_resource type="Script" path="res://scripts/Table.cs" id="1_6ns3v"]
 [ext_resource type="PackedScene" uid="uid://bl3ncvl0gwpwd" path="res://scenes/ball/cue_ball.tscn" id="2_sbviq"]
@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://dy8k6t6dye03o" path="res://scenes/pocket/pocket.tscn" id="8_4reo7"]
 [ext_resource type="PackedScene" uid="uid://cxxibhu6k60gt" path="res://scenes/pocket/sticker_position.tscn" id="10_j7oqd"]
 [ext_resource type="Script" path="res://scripts/ShootingManager.cs" id="11_qhnku"]
+[ext_resource type="Texture2D" uid="uid://4kv6rkamvlq" path="res://sprites/ui/aim_spot.png" id="12_8e0q3"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_uikbx"]
 
@@ -254,7 +255,9 @@ script = ExtResource("11_qhnku")
 _aimPosition = NodePath("AimPosition")
 metadata/_edit_lock_ = true
 
-[node name="AimPosition" type="Marker2D" parent="ShootingManager"]
+[node name="AimPosition" type="Sprite2D" parent="ShootingManager"]
+visible = false
+texture = ExtResource("12_8e0q3")
 
-[connection signal="button_down" from="TableAreaButton" to="ShootingManager" method="_StartAiming"]
-[connection signal="button_up" from="TableAreaButton" to="ShootingManager" method="_StopAiming"]
+[connection signal="button_down" from="TableAreaButton" to="ShootingManager" method="_TablePressed"]
+[connection signal="button_up" from="TableAreaButton" to="ShootingManager" method="_TableReleased"]
