@@ -23,8 +23,10 @@ public partial class Cue : Node2D
         _sprite.Modulate = new Color(1, 1, 1, 0);
 
         EventBus.Instance.ShotInitialized += _HandleShotAnimation;
-        EventBus.Instance.ShotDataChanged += _HandleAiming;
+        EventBus.Instance.ShotDataChanged += _HandleShotDataChange;
         EventBus.Instance.ShotPerformed += _HandleShotPerformed;
+        EventBus.Instance.AimingStarted += _HandleAimingStarted;
+        EventBus.Instance.AimingCancelled += _HandleAimingCancelled;
     }
 
     private void _HandleShotAnimation(ShotData shotData)
@@ -36,12 +38,16 @@ public partial class Cue : Node2D
         shotTween.Finished += () => EventBus.Instance.EmitSignal(EventBus.SignalName.ShotPerformed, shotData);
     }
 
-    private void _HandleAiming(ShotData shotData)
+    private void _HandleAimingStarted(ShotData initialShotData)
+    {
+        ShowCue();
+        _HandleShotDataChange(initialShotData);
+    }
+
+    private void _HandleShotDataChange(ShotData shotData)
     {
         Position = _cueBall.Position;
         LookAt(shotData.AimPosition);
-
-        ShowCue();
 
         var offset = ShotStrengthUtil.GetCueOffsetForStrength(shotData.Strength) + _cueBall.Radius;
         _sprite.Offset = new Vector2(-offset, _sprite.Offset.Y);
@@ -52,13 +58,18 @@ public partial class Cue : Node2D
         HideCue();
     }
 
+    private void _HandleAimingCancelled()
+    {
+        HideCue();
+    }
+
     private void HideCue()
     {
         if (!_isVisible)
         {
             return;
         }
-
+        
         _isVisible = false;
 
         _alphaTween?.Kill();
@@ -74,7 +85,7 @@ public partial class Cue : Node2D
         {
             return;
         }
-
+        
         _isVisible = true;
 
         _alphaTween?.Kill();

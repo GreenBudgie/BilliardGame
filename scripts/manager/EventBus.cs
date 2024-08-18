@@ -7,38 +7,38 @@ public partial class EventBus : Node
      */
     [Signal]
     public delegate void BallScoredEventHandler(Ball ball, Pocket pocket);
-    
+
     /*
      * Called whenever every sticker was applied and the score is ready to be processed by any other game mechanic.
      */
     [Signal]
     public delegate void ScoringEndedEventHandler(PocketScoreContext context);
-    
+
     /*
-    * Called when any ball has stopped rolling completely.
-    */
+     * Called when any ball has stopped rolling completely.
+     */
     [Signal]
     public delegate void BallStoppedEventHandler(Ball ball);
-    
+
     [Signal]
     public delegate void ScoreChangedEventHandler(int score);
-    
+
     // Aiming and shooting
-    
+
     [Signal]
     public delegate void ShotPerformedEventHandler(ShotData shotData);
-    
+
     [Signal]
     public delegate void ShotInitializedEventHandler(ShotData shotData);
-    
+
     [Signal]
     public delegate void ShotDataChangedEventHandler(ShotData shotData);
+
+    [Signal]
+    public delegate void AimingStartedEventHandler(ShotData initialShotData);
     
     [Signal]
-    public delegate void ShotStrengthChangedEventHandler(float strength);
-    
-    [Signal]
-    public delegate void ShotStrengthSelectedEventHandler(float strength);
+    public delegate void AimingCancelledEventHandler();
 
     public static EventBus Instance { get; private set; }
 
@@ -46,5 +46,4 @@ public partial class EventBus : Node
     {
         Instance = this;
     }
-
 }

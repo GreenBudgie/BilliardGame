@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://cdokpkldvgmps"]
+[gd_scene load_steps=14 format=3 uid="uid://cdokpkldvgmps"]
 
 [ext_resource type="Script" path="res://scripts/Table.cs" id="1_6ns3v"]
 [ext_resource type="PackedScene" uid="uid://bl3ncvl0gwpwd" path="res://scenes/ball/cue_ball.tscn" id="2_sbviq"]
@@ -10,25 +10,8 @@
 [ext_resource type="PackedScene" uid="uid://dkpq24jlytnuu" path="res://scenes/ball/ball_rack.tscn" id="8_3uwkd"]
 [ext_resource type="PackedScene" uid="uid://dy8k6t6dye03o" path="res://scenes/pocket/pocket.tscn" id="8_4reo7"]
 [ext_resource type="PackedScene" uid="uid://cxxibhu6k60gt" path="res://scenes/pocket/sticker_position.tscn" id="10_j7oqd"]
-[ext_resource type="Script" path="res://scripts/ShootingManager.cs" id="11_qhnku"]
+[ext_resource type="Script" path="res://scripts/manager/ShootingManager.cs" id="11_qhnku"]
 [ext_resource type="Texture2D" uid="uid://4kv6rkamvlq" path="res://sprites/ui/aim_spot.png" id="12_8e0q3"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_uikbx"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_a63dc"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_uku57"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_p53dy"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ijisy"]
-
-[sub_resource type="Theme" id="Theme_gxq5n"]
-Button/styles/disabled = SubResource("StyleBoxEmpty_uikbx")
-Button/styles/focus = SubResource("StyleBoxEmpty_a63dc")
-Button/styles/hover = SubResource("StyleBoxEmpty_uku57")
-Button/styles/normal = SubResource("StyleBoxEmpty_p53dy")
-Button/styles/pressed = SubResource("StyleBoxEmpty_ijisy")
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_nget6"]
 friction = 0.0
@@ -36,15 +19,6 @@ bounce = 0.8
 
 [node name="Table" type="Node2D"]
 script = ExtResource("1_6ns3v")
-
-[node name="TableAreaButton" type="Button" parent="."]
-offset_left = -256.0
-offset_top = -144.0
-offset_right = 256.0
-offset_bottom = 144.0
-theme = SubResource("Theme_gxq5n")
-flat = true
-metadata/_edit_lock_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("3_cr0gw")
@@ -250,14 +224,19 @@ _cueBall = NodePath("../CueBall")
 [node name="Cue" parent="." node_paths=PackedStringArray("_cueBall") instance=ExtResource("6_bek7c")]
 _cueBall = NodePath("../CueBall")
 
-[node name="ShootingManager" type="Node2D" parent="." node_paths=PackedStringArray("_aimPosition")]
+[node name="ShootingManager" type="Node2D" parent="." node_paths=PackedStringArray("_aimPosition", "_tableAreaRect")]
 script = ExtResource("11_qhnku")
 _aimPosition = NodePath("AimPosition")
+_tableAreaRect = NodePath("ReferenceRect")
 metadata/_edit_lock_ = true
 
 [node name="AimPosition" type="Sprite2D" parent="ShootingManager"]
 visible = false
 texture = ExtResource("12_8e0q3")
 
-[connection signal="button_down" from="TableAreaButton" to="ShootingManager" method="_TablePressed"]
-[connection signal="button_up" from="TableAreaButton" to="ShootingManager" method="_TableReleased"]
+[node name="ReferenceRect" type="ReferenceRect" parent="ShootingManager"]
+offset_left = -224.0
+offset_top = -112.0
+offset_right = 224.0
+offset_bottom = 112.0
+mouse_filter = 2
