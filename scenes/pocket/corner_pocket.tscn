@@ -1,10 +1,16 @@
-[gd_scene load_steps=4 format=3 uid="uid://cfuk62rk78gl3"]
+[gd_scene load_steps=6 format=3 uid="uid://cfuk62rk78gl3"]
 
 [ext_resource type="Script" path="res://scripts/pocket/PocketBody.cs" id="1_1uy5a"]
 [ext_resource type="Texture2D" uid="uid://bsd4b48l71mvb" path="res://sprites/pocket/corner_pocket.png" id="2_i4ent"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_5i2nl"]
 radius = 7.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_t3lyd"]
+size = Vector2(9, 21)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4g8gc"]
+size = Vector2(21, 9)
 
 [node name="CornerPocket" type="StaticBody2D"]
 collision_layer = 8
@@ -15,6 +21,14 @@ script = ExtResource("1_1uy5a")
 position = Vector2(-5.5, -5.5)
 texture = ExtResource("2_i4ent")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="PocketCollisionShape" type="CollisionShape2D" parent="."]
 position = Vector2(2, 2)
 shape = SubResource("CircleShape2D_5i2nl")
+
+[node name="LeftCollisionShape" type="CollisionShape2D" parent="."]
+position = Vector2(-8.5, 10.5)
+shape = SubResource("RectangleShape2D_t3lyd")
+
+[node name="TopCollisionShape" type="CollisionShape2D" parent="."]
+position = Vector2(10.5, -8.5)
+shape = SubResource("RectangleShape2D_4g8gc")
