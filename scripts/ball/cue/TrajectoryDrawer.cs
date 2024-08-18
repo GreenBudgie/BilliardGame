@@ -19,7 +19,7 @@ public partial class TrajectoryDrawer : Node2D
         EventBus.Instance.ShotDataChanged += _HandleShotDataChange;
         EventBus.Instance.ShotInitialized += _HandleShotInitialization;
         EventBus.Instance.AimingStarted += _HandleAimingStarted;
-        EventBus.Instance.AimingCancelled += _HandleAimingCancelled;
+        EventBus.Instance.ShotCancelled += _HandleShotCancelled;
     }
 
     private void _HandleShotDataChange(ShotData newShotData)
@@ -56,7 +56,7 @@ public partial class TrajectoryDrawer : Node2D
         _HandleShotDataChange(initialShotData);
     }
     
-    private void _HandleAimingCancelled()
+    private void _HandleShotCancelled()
     {
         _trajectory.ClearPoints();
     }

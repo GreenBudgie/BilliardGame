@@ -26,7 +26,7 @@ public partial class Cue : Node2D
         EventBus.Instance.ShotDataChanged += _HandleShotDataChange;
         EventBus.Instance.ShotPerformed += _HandleShotPerformed;
         EventBus.Instance.AimingStarted += _HandleAimingStarted;
-        EventBus.Instance.AimingCancelled += _HandleAimingCancelled;
+        EventBus.Instance.ShotCancelled += _HandleAimingCancelled;
     }
 
     private void _HandleShotAnimation(ShotData shotData)

@@ -156,7 +156,7 @@ public partial class ShootingManager : Node2D
         _shotStrength = 0;
         _aimPosition.Visible = false;
         _aimState = AimState.Preparing;
-        EventBus.Instance.EmitSignal(EventBus.SignalName.AimingCancelled);
+        EventBus.Instance.EmitSignal(EventBus.SignalName.ShotCancelled);
     }
     
     private enum AimState

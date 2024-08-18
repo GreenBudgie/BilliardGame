@@ -38,7 +38,7 @@ public partial class EventBus : Node
     public delegate void AimingStartedEventHandler(ShotData initialShotData);
     
     [Signal]
-    public delegate void AimingCancelledEventHandler();
+    public delegate void ShotCancelledEventHandler();
 
     public static EventBus Instance { get; private set; }
 
