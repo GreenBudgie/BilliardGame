@@ -23,23 +23,6 @@ public partial class EventBus : Node
     [Signal]
     public delegate void ScoreChangedEventHandler(int score);
 
-    // Aiming and shooting
-
-    [Signal]
-    public delegate void ShotPerformedEventHandler(ShotData shotData);
-
-    [Signal]
-    public delegate void ShotInitializedEventHandler(ShotData shotData);
-
-    [Signal]
-    public delegate void ShotDataChangedEventHandler(ShotData shotData);
-
-    [Signal]
-    public delegate void AimingStartedEventHandler(ShotData initialShotData);
-    
-    [Signal]
-    public delegate void ShotCancelledEventHandler();
-
     public static EventBus Instance { get; private set; }
 
     public override void _Ready()

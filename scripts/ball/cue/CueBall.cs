@@ -20,8 +20,6 @@ public partial class CueBall : Ball
 
         PocketScored += _HandlePocketCollision;
         SleepingStateChanged += _MakeIdleIfSleeping;
-        
-        EventBus.Instance.ShotPerformed += _PerformShot;
     }
 
     protected override void RotateSprites(Vector4 finalRotation)

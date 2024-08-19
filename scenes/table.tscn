@@ -239,3 +239,15 @@ offset_top = -112.0
 offset_right = 224.0
 offset_bottom = 112.0
 mouse_filter = 2
+
+[connection signal="CueAnimationEnded" from="Cue" to="ShootingManager" method="_PerformShot"]
+[connection signal="AimPositionChanged" from="ShootingManager" to="TrajectoryDrawer" method="_HandleAimPositionChange"]
+[connection signal="AimPositionChanged" from="ShootingManager" to="Cue" method="_HandleAimPositionChange"]
+[connection signal="AimingStarted" from="ShootingManager" to="TrajectoryDrawer" method="_HandleAimingStarted"]
+[connection signal="AimingStarted" from="ShootingManager" to="Cue" method="_HandleAimingStarted"]
+[connection signal="ShotCancelled" from="ShootingManager" to="TrajectoryDrawer" method="_HandleShotCancelled"]
+[connection signal="ShotCancelled" from="ShootingManager" to="Cue" method="_HandleShotCancelled"]
+[connection signal="ShotInitialized" from="ShootingManager" to="TrajectoryDrawer" method="_HandleShotInitialization"]
+[connection signal="ShotInitialized" from="ShootingManager" to="Cue" method="_HandleShotInitialization"]
+[connection signal="ShotPerformed" from="ShootingManager" to="CueBall" method="_PerformShot"]
+[connection signal="StrengthChanged" from="ShootingManager" to="Cue" method="_HandleStrengthChange"]

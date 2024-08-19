@@ -2,67 +2,72 @@ using Godot;
 
 public partial class Cue : Node2D
 {
+
+    [Signal]
+    public delegate void CueAnimationEndedEventHandler();
+    
     [Export] private CueBall _cueBall;
 
     private Sprite2D _sprite;
-
-    private bool _isVisible;
-
     private Tween _alphaTween;
+    private bool _isVisible;
 
     public override void _Ready()
     {
         _sprite = GetNode<Sprite2D>("Sprite2D");
-        if (_cueBall == null)
-        {
-            GD.PrintErr("Cue ball is not assigned for the cue");
-            QueueFree();
-            return;
-        }
-
         _sprite.Modulate = new Color(1, 1, 1, 0);
 
-        EventBus.Instance.ShotInitialized += _HandleShotAnimation;
-        EventBus.Instance.ShotDataChanged += _HandleShotDataChange;
-        EventBus.Instance.ShotPerformed += _HandleShotPerformed;
-        EventBus.Instance.AimingStarted += _HandleAimingStarted;
-        EventBus.Instance.ShotCancelled += _HandleAimingCancelled;
+        CueAnimationEnded += HideCue;
     }
 
-    private void _HandleShotAnimation(ShotData shotData)
+    private void _HandleShotInitialization(ShotData shotData)
     {
         var shotTween = CreateTween();
         shotTween.TweenProperty(_sprite, "offset", new Vector2(0, _sprite.Offset.Y), 0.4)
             .SetTrans(Tween.TransitionType.Back)
             .SetEase(Tween.EaseType.In);
-        shotTween.Finished += () => EventBus.Instance.EmitSignal(EventBus.SignalName.ShotPerformed, shotData);
+        shotTween.Finished += () => EmitSignal(SignalName.CueAnimationEnded);
     }
 
-    private void _HandleAimingStarted(ShotData initialShotData)
+    private void _HandleAimingStarted(Vector2 aimPosition)
     {
+        if (_cueBall != null)
+        {
+            Position = _cueBall.Position;
+        }
+        
+        UpdateCueOffset(0);
         ShowCue();
-        _HandleShotDataChange(initialShotData);
+        _HandleAimPositionChange(aimPosition);
     }
 
-    private void _HandleShotDataChange(ShotData shotData)
+    private void _HandleAimPositionChange(Vector2 aimPosition)
     {
-        Position = _cueBall.Position;
-        LookAt(shotData.AimPosition);
+        LookAt(aimPosition);
+    }
+    
+    private void _HandleStrengthChange(float strength)
+    {
+        UpdateCueOffset(strength);
+    }
 
-        var offset = ShotStrengthUtil.GetCueOffsetForStrength(shotData.Strength) + _cueBall.Radius;
+    private void _HandleShotCancelled()
+    {
+        HideCue();
+    }
+
+    private void UpdateCueOffset(float strength)
+    {
+        var ballRadius = 8f; // Default fallback radius
+        if (_cueBall != null)
+        {
+            ballRadius = _cueBall.Radius;
+        }
+        
+        var offset = ShotStrengthUtil.GetCueOffsetForStrength(strength) + ballRadius;
         _sprite.Offset = new Vector2(-offset, _sprite.Offset.Y);
     }
-
-    private void _HandleShotPerformed(ShotData shotData)
-    {
-        HideCue();
-    }
-
-    private void _HandleAimingCancelled()
-    {
-        HideCue();
-    }
-
+    
     private void HideCue()
     {
         if (!_isVisible)

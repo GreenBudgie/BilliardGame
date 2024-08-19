@@ -15,14 +15,9 @@ public partial class TrajectoryDrawer : Node2D
     {
         _trajectory = GetNode<Line2D>("Trajectory");
         _rayCast = GetNode<RayCast2D>("RayCast");
-        
-        EventBus.Instance.ShotDataChanged += _HandleShotDataChange;
-        EventBus.Instance.ShotInitialized += _HandleShotInitialization;
-        EventBus.Instance.AimingStarted += _HandleAimingStarted;
-        EventBus.Instance.ShotCancelled += _HandleShotCancelled;
     }
 
-    private void _HandleShotDataChange(ShotData newShotData)
+    private void _HandleAimPositionChange(Vector2 aimPosition)
     {
         if (_cueBall != null)
         {
@@ -31,7 +26,7 @@ public partial class TrajectoryDrawer : Node2D
         
         _trajectory.ClearPoints();
 
-        var relativeAimPosition = newShotData.AimPosition - GlobalPosition;
+        var relativeAimPosition = aimPosition - GlobalPosition;
         var rayCastPosition = relativeAimPosition.Normalized() * MaxRayCastDistance;
         _rayCast.TargetPosition = rayCastPosition;
         _rayCast.ForceRaycastUpdate();
@@ -51,9 +46,9 @@ public partial class TrajectoryDrawer : Node2D
         _trajectory.ClearPoints();
     }
     
-    private void _HandleAimingStarted(ShotData initialShotData)
+    private void _HandleAimingStarted(Vector2 aimPosition)
     {
-        _HandleShotDataChange(initialShotData);
+        _HandleAimPositionChange(aimPosition);
     }
     
     private void _HandleShotCancelled()

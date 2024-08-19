@@ -2,16 +2,49 @@
 
 public partial class ShootingManager : Node2D
 {
+    
+    /// <summary>
+    /// Fired when the player clicked on the table and started aiming.
+    /// </summary>
+    [Signal]
+    public delegate void AimingStartedEventHandler(Vector2 aimPosition);
+    
+    /// <summary>
+    /// Fired when aim position is changed
+    /// </summary>
+    [Signal]
+    public delegate void AimPositionChangedEventHandler(Vector2 aimPosition);
+    
+    /// <summary>
+    /// Fired when aim position is changed
+    /// </summary>
+    [Signal]
+    public delegate void StrengthChangedEventHandler(float strength);
+
+    /// <summary>
+    /// Fired when aiming or dragging has been cancelled
+    /// </summary>
+    [Signal]
+    public delegate void ShotCancelledEventHandler();
+    
+    /// <summary>
+    /// Fired when the shot is initialized and cue animation should start playing
+    /// </summary>
+    [Signal]
+    public delegate void ShotInitializedEventHandler(ShotData shotData);
+    
+    /// <summary>
+    /// Fired when the shot is performed and the cue ball should start moving
+    /// </summary>
+    [Signal]
+    public delegate void ShotPerformedEventHandler(ShotData shotData);
 
     private const float MaxDragDistance = 128;
-    
-    [Export] private Sprite2D _aimPosition;
 
+    [Export] private Sprite2D _aimPosition;
     [Export] private ReferenceRect _tableAreaRect;
 
     private AimState _aimState = AimState.Preparing;
-
-    // Strength is a value between 0 and 1 that represents the strength of a shot
     private float _shotStrength;
 
     public override void _Process(double delta)
@@ -40,33 +73,33 @@ public partial class ShootingManager : Node2D
 
         var isShotPressed = mbEvent.IsActionPressed("shot");
         var isShotCancelled = mbEvent.IsActionPressed("cancel_shot");
-        
+
         if (_aimState == AimState.Preparing)
         {
             if (!isShotPressed || !IsMouseInsideTableArea())
             {
                 return;
             }
-            
+
             GetViewport().SetInputAsHandled();
             StartAiming();
             return;
         }
-        
+
         if (isShotCancelled)
         {
             GetViewport().SetInputAsHandled();
             CancelShot();
             return;
         }
-        
+
         if (_aimState == AimState.Aiming)
         {
             if (!isShotPressed)
             {
                 return;
             }
-            
+
             GetViewport().SetInputAsHandled();
             StartDragging();
             return;
@@ -79,6 +112,11 @@ public partial class ShootingManager : Node2D
         }
     }
 
+    public void _PerformShot()
+    {
+        EmitSignal(SignalName.ShotPerformed, GetShotData());
+    }
+
     private void InitializeShot()
     {
         if (Mathf.IsZeroApprox(_shotStrength))
@@ -89,8 +127,8 @@ public partial class ShootingManager : Node2D
 
         _aimState = AimState.Waiting;
         _aimPosition.Visible = false;
-        
-        EventBus.Instance.EmitSignal(EventBus.SignalName.ShotInitialized, GetShotData());
+
+        EmitSignal(SignalName.ShotInitialized, GetShotData());
     }
 
     private void HandleAiming()
@@ -104,7 +142,7 @@ public partial class ShootingManager : Node2D
         }
 
         _aimPosition.GlobalPosition = newPosition;
-        UpdateShotData();
+        EmitSignal(SignalName.AimPositionChanged, newPosition);
     }
 
     private void HandleDragging()
@@ -120,12 +158,7 @@ public partial class ShootingManager : Node2D
         }
 
         _shotStrength = newStrength;
-        UpdateShotData();
-    }
-
-    private void UpdateShotData()
-    {
-        EventBus.Instance.EmitSignal(EventBus.SignalName.ShotDataChanged, GetShotData());
+        EmitSignal(SignalName.StrengthChanged, newStrength);
     }
 
     private ShotData GetShotData()
@@ -143,9 +176,9 @@ public partial class ShootingManager : Node2D
         _aimPosition.GlobalPosition = GetGlobalMousePosition();
         _aimPosition.Visible = true;
         _aimState = AimState.Aiming;
-        EventBus.Instance.EmitSignal(EventBus.SignalName.AimingStarted, GetShotData());
+        EmitSignal(SignalName.AimingStarted, _aimPosition.GlobalPosition);
     }
-    
+
     private void StartDragging()
     {
         _aimState = AimState.Dragging;
@@ -156,9 +189,9 @@ public partial class ShootingManager : Node2D
         _shotStrength = 0;
         _aimPosition.Visible = false;
         _aimState = AimState.Preparing;
-        EventBus.Instance.EmitSignal(EventBus.SignalName.ShotCancelled);
+        EmitSignal(SignalName.ShotCancelled);
     }
-    
+
     private enum AimState
     {
         Preparing,
