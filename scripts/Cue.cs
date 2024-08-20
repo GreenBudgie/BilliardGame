@@ -7,6 +7,9 @@ public partial class Cue : Node2D
     public delegate void CueAnimationEndedEventHandler();
     
     [Export] private CueBall _cueBall;
+    
+    private const float MinCueOffset = 0;
+    private const float MaxCueOffset = 64;
 
     private Sprite2D _sprite;
     private Tween _alphaTween;
@@ -64,8 +67,13 @@ public partial class Cue : Node2D
             ballRadius = _cueBall.Radius;
         }
         
-        var offset = ShotStrengthUtil.GetCueOffsetForStrength(strength) + ballRadius;
+        var offset = GetCueOffsetForStrength(strength) + ballRadius;
         _sprite.Offset = new Vector2(-offset, _sprite.Offset.Y);
+    }
+    
+    private float GetCueOffsetForStrength(float strength)
+    {
+        return Mathf.Lerp(MinCueOffset, MaxCueOffset, strength);
     }
     
     private void HideCue()

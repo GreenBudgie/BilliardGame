@@ -3,11 +3,12 @@ using Godot;
 
 public partial class CueBall : Ball
 {
+    
+    private const float MinVelocity = 25;
+    private const float MaxVelocity = 1400;
 
     private Vector2 _initialGlobalPosition;
-
     public BallState State { get; private set; }
-
     private Sprite2D _ballSprite;
 
     public override void _Ready()
@@ -30,9 +31,25 @@ public partial class CueBall : Ball
 
     private void _PerformShot(ShotData shotData)
     {
-        var velocity = ShotStrengthUtil.GetVelocity(GlobalPosition, shotData);
+        var velocity = GetVelocity(GlobalPosition, shotData);
         ApplyImpulse(velocity);
         State = BallState.Rolling;
+    }
+    
+    private float GetVelocityMagnitudeForStrength(float strength)
+    {
+        if (strength == 0)
+        {
+            return MaxVelocity;
+        }
+        
+        return Mathf.Lerp(MinVelocity, MaxVelocity, strength);
+    }
+
+    private Vector2 GetVelocity(Vector2 origin, ShotData shotData)
+    {
+        var shotVector = (shotData.AimPosition - origin).Normalized();
+        return shotVector * GetVelocityMagnitudeForStrength(shotData.Strength);
     }
 
     private void _MakeIdleIfSleeping()
