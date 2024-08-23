@@ -1,9 +1,12 @@
-[gd_scene load_steps=5 format=3 uid="uid://b6rmsb7c3jf2a"]
+[gd_scene load_steps=7 format=3 uid="uid://b6rmsb7c3jf2a"]
 
 [ext_resource type="Script" path="res://scripts/Billiard.cs" id="1_ytnsm"]
 [ext_resource type="PackedScene" uid="uid://cdokpkldvgmps" path="res://scenes/table.tscn" id="2_1ew7s"]
 [ext_resource type="Script" path="res://scripts/manager/ScoringManager.cs" id="3_dvin6"]
+[ext_resource type="Script" path="res://scripts/ui/ScoreLabel.cs" id="3_ijfij"]
 [ext_resource type="Script" path="res://scripts/manager/GameStateManager.cs" id="4_v34ee"]
+
+[sub_resource type="Theme" id="Theme_5y3d8"]
 
 [node name="Billiard" type="Node2D"]
 script = ExtResource("1_ytnsm")
@@ -12,6 +15,21 @@ script = ExtResource("1_ytnsm")
 position = Vector2(320, 213)
 
 [node name="UI" type="CanvasLayer" parent="."]
+
+[node name="TopBar" type="HBoxContainer" parent="UI"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 66.0
+grow_horizontal = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+alignment = 1
+
+[node name="ScoreLabel" type="Label" parent="UI/TopBar"]
+layout_mode = 2
+theme = SubResource("Theme_5y3d8")
+text = "Score: 0"
+script = ExtResource("3_ijfij")
 
 [node name="Managers" type="Node" parent="."]
 

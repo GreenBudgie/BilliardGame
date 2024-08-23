@@ -232,6 +232,7 @@ script = ExtResource("11_qhnku")
 _aimPosition = NodePath("AimPosition")
 _tableAreaRect = NodePath("ReferenceRect")
 metadata/_edit_lock_ = true
+metadata/_edit_group_ = true
 
 [node name="AimPosition" type="Sprite2D" parent="ShootingManager"]
 visible = false

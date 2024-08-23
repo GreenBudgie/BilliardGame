@@ -21,16 +21,16 @@ bool should_discard(vec2 pixelated_uv, vec2 texture_size) {
 }
 
 // Get a point on the surface of a sphere with its center at (0, 0, 0) and a radius of 1 after applying an inverse rotation
-// XYZ axis looks like: 
-/* 
-	 ^ Z  
-	 |  
-	 | 
+// XYZ axis looks like:
+/*
+	 ^ Z
+	 |
+	 |
 	 |
 	 +-----------> X
 	/
    /
-  /	
+  /
  V Y
 */
 vec3 get_spherical_coords_after_rotation(vec2 uv, vec2 texture_size) {
@@ -45,13 +45,13 @@ vec3 get_spherical_coords_after_rotation(vec2 uv, vec2 texture_size) {
 	float x_cylinder = (uv.x - 0.5)/(ball_radius_u);
 	// Find y on cylinder with radius = sphere_radius
 	float y_cylinder = sqrt(
-		sphere_radius*sphere_radius - 
+		sphere_radius*sphere_radius -
 		x_cylinder*x_cylinder
 		);
 
 	float y_sphere = sqrt(
-		sphere_radius*sphere_radius - 
-		z_cylinder*z_cylinder - 
+		sphere_radius*sphere_radius -
+		z_cylinder*z_cylinder -
 		x_cylinder*x_cylinder
 		);
 
@@ -59,7 +59,7 @@ vec3 get_spherical_coords_after_rotation(vec2 uv, vec2 texture_size) {
 
 	// Find inversed rotation to get coordinate which will be in current place after rotation
 	vec4 inversed_rotation = quat_conj(rotation);
-	
+
 	return rotate(vector, inversed_rotation);
 }
 
@@ -69,10 +69,10 @@ vec2 get_spherical_uv(vec2 uv, vec2 texture_size) {
 	float x = r_vector.x;
 	float y = r_vector.y;
 	float z = r_vector.z;
-	
+
 	// Get u from 0.25 to 0.75 depending on x ([-1; +1])
 	float new_u = (x + 1.0)/4.0 + 0.25;
-	
+
 	// If we can't see current point
 	if (y < 0.0) {
 		float distance_to_center = abs(new_u - 0.5);

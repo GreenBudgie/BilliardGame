@@ -28,6 +28,8 @@ radius = 8.0
 [node name="CueBall" type="RigidBody2D" groups=["balls"]]
 collision_mask = 14
 physics_material_override = ExtResource("1_sga7i")
+lock_rotation = true
+continuous_cd = 2
 script = ExtResource("2_sxovh")
 BallHitSound = ExtResource("3_c0guk")
 TableHitSound = ExtResource("4_2eddj")

@@ -4,9 +4,18 @@ using Godot;
 
 public partial class ScoringManager : Node
 {
+    public static ScoringManager Instance { get; private set; }
+
+    [Signal]
+    public delegate void ScoreChangedEventHandler(int score);
 
     public int Score { get; private set; }
-    
+
+    public override void _EnterTree()
+    {
+        Instance = this;
+    }
+
     public override void _Ready()
     {
         BallManager.Instance.AllBallsStopped += HandleBallsStop;
@@ -15,7 +24,7 @@ public partial class ScoringManager : Node
     public void IncreaseScore(float amount)
     {
         Score += Mathf.CeilToInt(amount);
-        EventBus.Instance.EmitSignal(EventBus.SignalName.ScoreChanged, Score);
+        EmitSignal(SignalName.ScoreChanged, Score);
     }
 
     private void HandleBallsStop()
@@ -41,5 +50,4 @@ public partial class ScoringManager : Node
 
         BilliardManager.Billiard.GameStateManager.ChangeState(GameState.ShotPreparation);
     }
-
 }
