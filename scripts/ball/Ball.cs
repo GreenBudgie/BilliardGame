@@ -98,7 +98,7 @@ public abstract partial class Ball : RigidBody2D
     {
         if (Sleeping)
         {
-            EventBus.Instance.EmitSignal(EventBus.SignalName.BallStopped, this);
+            BallManager.Instance.HandleBallStopped(this);
         }
     }
     

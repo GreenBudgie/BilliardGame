@@ -9,7 +9,7 @@ public partial class ScoringManager : Node
     
     public override void _Ready()
     {
-        EventBus.Instance.BallStopped += HandleBallStop;
+        BallManager.Instance.AllBallsStopped += HandleBallsStop;
     }
 
     public void IncreaseScore(float amount)
@@ -18,24 +18,16 @@ public partial class ScoringManager : Node
         EventBus.Instance.EmitSignal(EventBus.SignalName.ScoreChanged, Score);
     }
 
-    private void HandleBallStop(Ball ball)
+    private void HandleBallsStop()
     {
-        if (GameManager.Game.GameStateManager.State != GameState.ShotExecution)
-        {
-            return;
-        }
-        var allBallsStopped = GameManager.Game.Table.GetBalls().TrueForAll(b => b.Sleeping);
-        if (allBallsStopped)
-        {
-            EndShotExecution();
-        }
+        EndShotExecution();
     }
 
     private async void EndShotExecution()
     {
-        GameManager.Game.GameStateManager.ChangeState(GameState.ScoreCalculation);
+        BilliardManager.Billiard.GameStateManager.ChangeState(GameState.ScoreCalculation);
         var contexts = new List<PocketScoreContext>();
-        foreach (var pocket in GameManager.Game.Table.Pockets)
+        foreach (var pocket in BilliardManager.Billiard.Table.Pockets)
         {
             var context = await pocket.TriggerScoring();
             if (context != null)
@@ -47,7 +39,7 @@ public partial class ScoringManager : Node
         var scoreSum = contexts.Sum(context => context.Score);
         IncreaseScore(scoreSum);
 
-        GameManager.Game.GameStateManager.ChangeState(GameState.ShotPreparation);
+        BilliardManager.Billiard.GameStateManager.ChangeState(GameState.ShotPreparation);
     }
 
 }

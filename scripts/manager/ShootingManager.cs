@@ -47,6 +47,11 @@ public partial class ShootingManager : Node2D
     private AimState _aimState = AimState.Preparing;
     private float _shotStrength;
 
+    public override void _Ready()
+    {
+        GameStateManager.Instance.StateChanged += _HandleGameStateChange;
+    }
+
     public override void _Process(double delta)
     {
         if (_aimState == AimState.Aiming)
@@ -115,6 +120,14 @@ public partial class ShootingManager : Node2D
     public void _PerformShot()
     {
         EmitSignal(SignalName.ShotPerformed, GetShotData());
+    }
+
+    private void _HandleGameStateChange(GameState state)
+    {
+        if (state == GameState.ShotPreparation)
+        {
+            _aimState = AimState.Preparing;
+        }
     }
 
     private void InitializeShot()

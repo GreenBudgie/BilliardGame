@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://cdokpkldvgmps"]
+[gd_scene load_steps=15 format=3 uid="uid://cdokpkldvgmps"]
 
 [ext_resource type="Script" path="res://scripts/Table.cs" id="1_6ns3v"]
 [ext_resource type="PackedScene" uid="uid://bl3ncvl0gwpwd" path="res://scenes/ball/cue_ball.tscn" id="2_sbviq"]
@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://cxxibhu6k60gt" path="res://scenes/pocket/sticker_position.tscn" id="10_j7oqd"]
 [ext_resource type="Script" path="res://scripts/manager/ShootingManager.cs" id="11_qhnku"]
 [ext_resource type="Texture2D" uid="uid://4kv6rkamvlq" path="res://sprites/ui/aim_spot.png" id="12_8e0q3"]
+[ext_resource type="Script" path="res://scripts/manager/BallManager.cs" id="13_msffk"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_nget6"]
 friction = 0.0
@@ -20,7 +21,7 @@ bounce = 0.8
 [node name="Table" type="Node2D"]
 script = ExtResource("1_6ns3v")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="TableSprite" type="Sprite2D" parent="."]
 texture = ExtResource("3_cr0gw")
 metadata/_edit_lock_ = true
 
@@ -211,17 +212,20 @@ Pocket = NodePath("../..")
 position = Vector2(-16, -68)
 Pocket = NodePath("../..")
 
-[node name="CueBall" parent="." instance=ExtResource("2_sbviq")]
+[node name="BallManager" type="Node2D" parent="."]
+script = ExtResource("13_msffk")
+
+[node name="CueBall" parent="BallManager" instance=ExtResource("2_sbviq")]
 position = Vector2(-112, 0)
 
-[node name="BallRack" parent="." instance=ExtResource("8_3uwkd")]
+[node name="BallRack" parent="BallManager" instance=ExtResource("8_3uwkd")]
 position = Vector2(111, -1)
 
 [node name="TrajectoryDrawer" parent="." node_paths=PackedStringArray("_cueBall") instance=ExtResource("5_qus0d")]
-_cueBall = NodePath("../CueBall")
+_cueBall = NodePath("../BallManager/CueBall")
 
 [node name="Cue" parent="." node_paths=PackedStringArray("_cueBall") instance=ExtResource("6_bek7c")]
-_cueBall = NodePath("../CueBall")
+_cueBall = NodePath("../BallManager/CueBall")
 
 [node name="ShootingManager" type="Node2D" parent="." node_paths=PackedStringArray("_aimPosition", "_tableAreaRect")]
 script = ExtResource("11_qhnku")
@@ -249,5 +253,5 @@ mouse_filter = 2
 [connection signal="ShotCancelled" from="ShootingManager" to="Cue" method="_HandleShotCancelled"]
 [connection signal="ShotInitialized" from="ShootingManager" to="TrajectoryDrawer" method="_HandleShotInitialization"]
 [connection signal="ShotInitialized" from="ShootingManager" to="Cue" method="_HandleShotInitialization"]
-[connection signal="ShotPerformed" from="ShootingManager" to="CueBall" method="_PerformShot"]
+[connection signal="ShotPerformed" from="ShootingManager" to="BallManager/CueBall" method="_PerformShot"]
 [connection signal="StrengthChanged" from="ShootingManager" to="Cue" method="_HandleStrengthChange"]

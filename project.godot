@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Billiard"
-run/main_scene="res://scenes/game.tscn"
+run/main_scene="res://scenes/billiard.tscn"
 config/features=PackedStringArray("4.2", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
@@ -23,7 +23,7 @@ buses/default_bus_layout=""
 
 EventBus="res://scripts/manager/EventBus.cs"
 SoundManager="res://scripts/manager/SoundManager.cs"
-GameManager="res://scripts/manager/GameManager.cs"
+GameManager="res://scripts/manager/BilliardManager.cs"
 
 [display]
 
