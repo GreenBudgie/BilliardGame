@@ -5,14 +5,17 @@ using Godot;
 public partial class BallManager : Node
 {
     [Signal]
+    public delegate void BallScoredEventHandler(Ball ball, Pocket pocket);
+    
+    [Signal]
     public delegate void BallStoppedEventHandler(Ball ball);
     
     [Signal]
     public delegate void AllBallsStoppedEventHandler();
 
-    public static BallManager Instance;
+    public static BallManager Instance { get; private set; }
 
-    public override void _Ready()
+    public override void _EnterTree()
     {
         Instance = this;
     }

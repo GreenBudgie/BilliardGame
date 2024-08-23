@@ -12,7 +12,7 @@ public partial class Billiard : Node2D
         ScoringManager = GetNode<ScoringManager>("Managers/ScoringManager");
         GameStateManager = GetNode<GameStateManager>("Managers/GameStateManager");
         var stickerX2 = GD.Load<PackedScene>("res://scenes/sticker/sticker_x2.tscn");
-        foreach (var pocket in Table.Pockets)
+        foreach (var pocket in PocketManager.Instance.GetPockets())
         {
             var sticker1 = stickerX2.Instantiate<Sticker>();
             pocket.StickerPositions[0].SetSticker(sticker1);

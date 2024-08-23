@@ -18,7 +18,7 @@ public partial class Pocket : Node2D
         var stickerPositionsNode = GetNode<Node2D>("StickerPositions");
         StickerPositions = stickerPositionsNode.GetChildren().Cast<StickerPosition>().ToList();
 
-        EventBus.Instance.BallScored += HandleBallScore;
+        BallManager.Instance.BallScored += _HandleBallScore;
     }
 
     public List<StickerPosition> GetEmptyPositions()
@@ -51,7 +51,7 @@ public partial class Pocket : Node2D
         return context;
     }
     
-    private void HandleBallScore(Ball ball, Pocket pocket)
+    private void _HandleBallScore(Ball ball, Pocket pocket)
     {
         if (pocket != this)
         {

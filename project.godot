@@ -21,7 +21,6 @@ buses/default_bus_layout=""
 
 [autoload]
 
-EventBus="res://scripts/manager/EventBus.cs"
 SoundManager="res://scripts/manager/SoundManager.cs"
 GameManager="res://scripts/manager/BilliardManager.cs"
 

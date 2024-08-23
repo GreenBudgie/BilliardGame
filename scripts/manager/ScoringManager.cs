@@ -34,9 +34,9 @@ public partial class ScoringManager : Node
 
     private async void EndShotExecution()
     {
-        BilliardManager.Billiard.GameStateManager.ChangeState(GameState.ScoreCalculation);
+        GameStateManager.Instance.ChangeState(GameState.ScoreCalculation);
         var contexts = new List<PocketScoreContext>();
-        foreach (var pocket in BilliardManager.Billiard.Table.Pockets)
+        foreach (var pocket in PocketManager.Instance.GetPockets())
         {
             var context = await pocket.TriggerScoring();
             if (context != null)
@@ -48,6 +48,6 @@ public partial class ScoringManager : Node
         var scoreSum = contexts.Sum(context => context.Score);
         IncreaseScore(scoreSum);
 
-        BilliardManager.Billiard.GameStateManager.ChangeState(GameState.ShotPreparation);
+        GameStateManager.Instance.ChangeState(GameState.ShotPreparation);
     }
 }

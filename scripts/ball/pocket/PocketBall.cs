@@ -28,7 +28,7 @@ public partial class PocketBall : Ball
         var ballNumber = GetNode<Label>("SubViewport/CenterContainer/BallNumber");
         ballNumber.Text = BallInfo?.Number.ToString();
 
-        PocketScored += HandlePocketCollision;
+        PocketScored += _HandlePocketCollision;
     }
 
     protected override void RotateSprites(Vector4 finalRotation)
@@ -39,9 +39,9 @@ public partial class PocketBall : Ball
         overlaySpriteMaterial.SetShaderParameter("rotation", finalRotation);
     }
 
-    private void HandlePocketCollision(Pocket pocket)
+    private void _HandlePocketCollision(Pocket pocket)
     {
-        EventBus.Instance.EmitSignal(EventBus.SignalName.BallScored, this, pocket);
+        BallManager.Instance.EmitSignal(BallManager.SignalName.BallScored, this, pocket);
         QueueFree();
     }
 }

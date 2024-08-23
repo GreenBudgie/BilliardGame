@@ -65,7 +65,7 @@ public partial class CueBall : Ball
         LinearVelocity = Vector2.Zero;
         Rotation = 0;
         GlobalPosition = _initialGlobalPosition;
-        EventBus.Instance.EmitSignal(EventBus.SignalName.BallScored, this, pocket);
+        BallManager.Instance.EmitSignal(BallManager.SignalName.BallScored, this, pocket);
     }
 
     public enum BallState
