@@ -35,7 +35,7 @@ font_size = 10
 font_color = Color(0, 0, 0, 1)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_l1t4d"]
-radius = 8.0
+radius = 7.8
 
 [node name="PocketBall" type="RigidBody2D" groups=["balls"]]
 collision_layer = 2

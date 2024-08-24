@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://cdokpkldvgmps"]
+[gd_scene load_steps=19 format=3 uid="uid://cdokpkldvgmps"]
 
 [ext_resource type="Script" path="res://scripts/Table.cs" id="1_6ns3v"]
 [ext_resource type="PackedScene" uid="uid://bl3ncvl0gwpwd" path="res://scenes/ball/cue_ball.tscn" id="2_sbviq"]
@@ -11,13 +11,22 @@
 [ext_resource type="PackedScene" uid="uid://dkpq24jlytnuu" path="res://scenes/ball/ball_rack.tscn" id="8_3uwkd"]
 [ext_resource type="PackedScene" uid="uid://dy8k6t6dye03o" path="res://scenes/pocket/pocket.tscn" id="8_4reo7"]
 [ext_resource type="PackedScene" uid="uid://cxxibhu6k60gt" path="res://scenes/pocket/sticker_position.tscn" id="10_j7oqd"]
+[ext_resource type="PackedScene" uid="uid://d2tf6ct6ufq7e" path="res://scenes/ball/pocket_ball.tscn" id="11_8qw5p"]
 [ext_resource type="Script" path="res://scripts/manager/ShootingManager.cs" id="11_qhnku"]
 [ext_resource type="Texture2D" uid="uid://4kv6rkamvlq" path="res://sprites/ui/aim_spot.png" id="12_8e0q3"]
+[ext_resource type="Script" path="res://scripts/ball/BallInfo.cs" id="12_vd8yy"]
 [ext_resource type="Script" path="res://scripts/manager/BallManager.cs" id="13_msffk"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_nget6"]
 friction = 0.0
 bounce = 0.8
+
+[sub_resource type="Resource" id="Resource_s4iod"]
+script = ExtResource("12_vd8yy")
+IsCueBall = false
+Number = 1
+Color = 0
+Type = 0
 
 [node name="Table" type="Node2D"]
 script = ExtResource("1_6ns3v")
@@ -223,6 +232,10 @@ position = Vector2(-112, 0)
 
 [node name="BallRack" parent="BallManager" instance=ExtResource("8_3uwkd")]
 position = Vector2(111, -1)
+
+[node name="PocketBall" parent="BallManager/BallRack" instance=ExtResource("11_8qw5p")]
+position = Vector2(-168, 16)
+BallInfo = SubResource("Resource_s4iod")
 
 [node name="TrajectoryDrawer" parent="." node_paths=PackedStringArray("_cueBall") instance=ExtResource("5_qus0d")]
 _cueBall = NodePath("../BallManager/CueBall")

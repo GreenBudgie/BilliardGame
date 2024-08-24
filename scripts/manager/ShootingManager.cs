@@ -49,7 +49,7 @@ public partial class ShootingManager : Node2D
 
     public override void _Ready()
     {
-        GameStateManager.Instance.StateChanged += _HandleGameStateChange;
+        ScoringManager.Instance.ScoringEnded += _HandleScoringEnded;
     }
 
     public override void _Process(double delta)
@@ -122,12 +122,9 @@ public partial class ShootingManager : Node2D
         EmitSignal(SignalName.ShotPerformed, GetShotData());
     }
 
-    private void _HandleGameStateChange(GameState state)
+    private void _HandleScoringEnded()
     {
-        if (state == GameState.ShotPreparation)
-        {
-            _aimState = AimState.Preparing;
-        }
+        _aimState = AimState.Preparing;
     }
 
     private void InitializeShot()

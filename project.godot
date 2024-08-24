@@ -80,8 +80,8 @@ fullscreen={
 [physics]
 
 common/physics_ticks_per_second=180
-common/physics_jitter_fix=0.0
 2d/default_gravity=0.0
+2d/default_gravity_vector=Vector2(0, 0)
 2d/default_linear_damp=1.0
 2d/sleep_threshold_linear=4.0
 2d/time_before_sleep=0.0

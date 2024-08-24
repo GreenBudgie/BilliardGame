@@ -23,13 +23,16 @@ shader_parameter/paint_color = Color(0.114897, 0.114897, 0.114897, 1)
 shader_parameter/rotation = Vector4(0, 0, 0, 1)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_81mj7"]
-radius = 8.0
+radius = 7.8
 
 [node name="CueBall" type="RigidBody2D" groups=["balls"]]
 collision_mask = 14
 physics_material_override = ExtResource("1_sga7i")
+gravity_scale = 0.0
 lock_rotation = true
 continuous_cd = 2
+contact_monitor = true
+max_contacts_reported = 4
 script = ExtResource("2_sxovh")
 BallHitSound = ExtResource("3_c0guk")
 TableHitSound = ExtResource("4_2eddj")

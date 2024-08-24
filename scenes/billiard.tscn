@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://cdokpkldvgmps" path="res://scenes/table.tscn" id="2_1ew7s"]
 [ext_resource type="Script" path="res://scripts/manager/ScoringManager.cs" id="3_dvin6"]
 [ext_resource type="Script" path="res://scripts/ui/ScoreLabel.cs" id="3_ijfij"]
-[ext_resource type="Script" path="res://scripts/manager/GameStateManager.cs" id="4_v34ee"]
+[ext_resource type="Script" path="res://scripts/ui/RequiredScoreLabel.cs" id="4_u1isq"]
 
 [sub_resource type="Theme" id="Theme_5y3d8"]
 
@@ -31,10 +31,13 @@ theme = SubResource("Theme_5y3d8")
 text = "Score: 0"
 script = ExtResource("3_ijfij")
 
+[node name="RequiredScoreLabel" type="Label" parent="UI/TopBar"]
+layout_mode = 2
+theme = SubResource("Theme_5y3d8")
+text = "Required: 0"
+script = ExtResource("4_u1isq")
+
 [node name="Managers" type="Node" parent="."]
 
 [node name="ScoringManager" type="Node" parent="Managers"]
 script = ExtResource("3_dvin6")
-
-[node name="GameStateManager" type="Node" parent="Managers"]
-script = ExtResource("4_v34ee")

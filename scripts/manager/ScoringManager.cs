@@ -9,7 +9,12 @@ public partial class ScoringManager : Node
     [Signal]
     public delegate void ScoreChangedEventHandler(int score);
 
+    [Signal]
+    public delegate void ScoringEndedEventHandler();
+
     public int Score { get; private set; }
+
+    public int RequiredScore { get; private set; } = 20;
 
     public override void _EnterTree()
     {
@@ -34,7 +39,6 @@ public partial class ScoringManager : Node
 
     private async void EndShotExecution()
     {
-        GameStateManager.Instance.ChangeState(GameState.ScoreCalculation);
         var contexts = new List<PocketScoreContext>();
         foreach (var pocket in PocketManager.Instance.GetPockets())
         {
@@ -48,6 +52,6 @@ public partial class ScoringManager : Node
         var scoreSum = contexts.Sum(context => context.Score);
         IncreaseScore(scoreSum);
 
-        GameStateManager.Instance.ChangeState(GameState.ShotPreparation);
+        EmitSignal(SignalName.ScoringEnded);
     }
 }
