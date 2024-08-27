@@ -1,0 +1,14 @@
+[gd_scene load_steps=4 format=3 uid="uid://cqccx6b8be0pm"]
+
+[ext_resource type="Script" path="res://scripts/sticker/Sticker.cs" id="1_se7oj"]
+[ext_resource type="Texture2D" uid="uid://rqf2uonq5r8x" path="res://sprites/sticker/sticker_plus_2.png" id="2_p1oby"]
+[ext_resource type="PackedScene" uid="uid://d30p54s60ga8h" path="res://scenes/sticker/actions/sticker_action_add.tscn" id="3_gqcfs"]
+
+[node name="StickerPlus2" type="Node2D"]
+script = ExtResource("1_se7oj")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_p1oby")
+
+[node name="StickerActionAdd" parent="." instance=ExtResource("3_gqcfs")]
+_points = 2.0

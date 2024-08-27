@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://d30p54s60ga8h"]
+
+[ext_resource type="Script" path="res://scripts/sticker/StickerActionAdd.cs" id="1_iwlm6"]
+
+[node name="StickerActionAdd" type="Node2D"]
+script = ExtResource("1_iwlm6")

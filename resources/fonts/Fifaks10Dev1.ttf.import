@@ -15,6 +15,7 @@ dest_files=["res://.godot/imported/Fifaks10Dev1.ttf-9e5e244ac6dfc7ecc82c6ea274b9
 Rendering=null
 antialiasing=1
 generate_mipmaps=false
+disable_embedded_bitmaps=true
 multichannel_signed_distance_field=false
 msdf_pixel_range=8
 msdf_size=48
