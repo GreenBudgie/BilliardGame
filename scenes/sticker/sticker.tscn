@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://copaey1bf7lra"]
+
+[ext_resource type="Script" path="res://scripts/sticker/Sticker.cs" id="1_5tfff"]
+[ext_resource type="PackedScene" uid="uid://dqh2bnnohl8r6" path="res://scenes/component/drag_n_drop_component.tscn" id="2_af1e6"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8tsu1"]
+size = Vector2(28, 28)
+
+[node name="Sticker" type="Node2D"]
+script = ExtResource("1_5tfff")
+
+[node name="DragNDropComponent" parent="." instance=ExtResource("2_af1e6")]
+collision_layer = 16
+collision_mask = 32
+
+[node name="DragNDropCollisionShape" type="CollisionShape2D" parent="DragNDropComponent"]
+shape = SubResource("RectangleShape2D_8tsu1")
+
+[node name="Actions" type="Node2D" parent="."]

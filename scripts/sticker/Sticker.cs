@@ -5,12 +5,28 @@ using Godot;
 
 public partial class Sticker : Node2D
 {
-    
+    private static readonly NodePath ActionsNodePath = "Actions";
+    private static readonly NodePath DragNDropComponentNodePath = "DragNDropComponent";
+
     public Pocket Pocket { get; set; }
+
+    private DragNDropComponent _dragNDropComponent;
+
+    public override void _Ready()
+    {
+        _dragNDropComponent = GetNode<DragNDropComponent>(DragNDropComponentNodePath);
+
+        _dragNDropComponent.DragUpdate += _HandleDragUpdate;
+
+        foreach (var action in GetActions())
+        {
+            action.Sticker = this;
+        }
+    }
 
     public List<StickerAction> GetActions()
     {
-        return GetChildren().OfType<StickerAction>().ToList();
+        return GetNode(ActionsNodePath).GetChildren().OfType<StickerAction>().ToList();
     }
 
     public async Task Trigger(PocketScoreContext context)
@@ -37,4 +53,8 @@ public partial class Sticker : Node2D
             .SetEase(Tween.EaseType.InOut);
     }
 
+    private void _HandleDragUpdate(Vector2 relativeGlobalPosition)
+    {
+        GlobalPosition = relativeGlobalPosition;
+    }
 }

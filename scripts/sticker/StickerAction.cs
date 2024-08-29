@@ -1,14 +1,9 @@
 ﻿using Godot;
 
-public abstract partial class StickerAction : Node
+public abstract partial class StickerAction : Node2D
 {
     
-    protected Sticker Sticker { get; private set; }
-    
-    public override void _Ready()
-    {
-        Sticker = GetParent<Sticker>();
-    }
+    public Sticker Sticker { get; set; }
 
     public abstract void Trigger(PocketScoreContext context);
 
